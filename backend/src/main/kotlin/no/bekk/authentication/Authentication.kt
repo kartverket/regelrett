@@ -33,9 +33,9 @@ fun Application.initializeAuthentication(httpClient: HttpClient = applicationHtt
                 urlProvider = { System.getenv("AUTH_PROVIDER_URL") }
                 providerLookup = {
                     OAuthServerSettings.OAuth2ServerSettings(
-                        name = "auth0",
-                        authorizeUrl = System.getenv("AUTH_AUTHORIZE_URL"),
-                        accessTokenUrl = System.getenv("AUTH_ACCESS_TOKEN_URL"),
+                        name = "azure",
+                        authorizeUrl = "https://login.microsoftonline.com/${System.getenv("TENANT_ID")}/oauth2/v2.0/authorize",
+                        accessTokenUrl = "https://login.microsoftonline.com/${System.getenv("TENANT_ID")}/oauth2/v2.0/token",
                         requestMethod = HttpMethod.Post,
                         clientId = System.getenv("AUTH_CLIENT_ID"),
                         clientSecret = System.getenv("AUTH_CLIENT_SECRET"),
