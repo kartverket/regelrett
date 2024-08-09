@@ -1,13 +1,13 @@
 import { Box, Flex, Tag } from '@kvib/react';
 import { Row } from '@tanstack/react-table';
-import { Choice, Field, RecordType } from '../../types/tableTypes';
+import { Field, Question } from '../../api/types';
 import colorUtils from '../../utils/colorUtils';
 import { AnswerCell } from './AnswerCell';
 
 type TableCellProps = {
   value: any;
   column: Field;
-  row: Row<RecordType>;
+  row: Row<Question>;
   answerable?: boolean;
 };
 
@@ -20,12 +20,14 @@ export const TableCell = ({
   if (answerable) {
     return (
       <AnswerCell
-        value={value}
-        answerType={column.type}
-        questionId={row.original.fields.ID}
-        questionName={row.original.fields.Aktivitet}
-        comment={row.original.fields.comment ?? ''}
-        choices={column.options?.choices}
+        answer={row.original.answers[0]?.answer}
+        type={row.original.metadata.answerMetadata.type}
+        questionId={row.original.id}
+        question={row.original.question}
+        options={column.options}
+        actor={row.original.answers[0]?.actor}
+        team={row.original.answers[0]?.team}
+        updated={row.original.answers[0]?.updated}
       />
     );
   }
@@ -33,9 +35,9 @@ export const TableCell = ({
   if (value == null) {
     return <></>;
   }
-  const backgroundColor = column.options?.choices?.find(
-    (choice: Choice) => choice.name === value
-  )?.color;
+  const backgroundColor = column.options?.find(
+    (choice: any) => choice.name === value
+  );
   const backgroundColorHex = colorUtils.getHexForColor(
     backgroundColor ?? 'grayLight1'
   );
@@ -44,7 +46,7 @@ export const TableCell = ({
   );
 
   switch (column.type) {
-    case 'multipleSelects': {
+    case 'OPTION_MULTIPLE': {
       const valueArray = value.split(',');
       return (
         <Flex flexWrap={'wrap'} gap={'1'}>
@@ -60,7 +62,7 @@ export const TableCell = ({
         </Flex>
       );
     }
-    case 'singleSelect':
+    case 'OPTION_SINGLE':
       return (
         <Tag
           colorScheme={undefined}

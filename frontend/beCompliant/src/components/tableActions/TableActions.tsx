@@ -1,18 +1,17 @@
 import { Flex, Heading, Icon } from '@kvib/react';
+import { Field } from '../../api/types';
 import { TableFilter, TableFilters } from './TableFilter';
-import { TableMetaData } from '../../types/tableTypes';
 
 interface Props {
   filters: TableFilters;
-  tableMetadata: TableMetaData;
+  optionalFields: Field[];
 }
 
 export const TableActions = ({
   filters: tableFilterProps,
-  tableMetadata,
+  optionalFields,
 }: Props) => {
   const { filterOptions, activeFilters, setActiveFilters } = tableFilterProps;
-
   return (
     <Flex flexDirection="column" gap={'2'} mx={'10'}>
       <Flex gap={'2'} alignItems={'center'}>
@@ -29,15 +28,16 @@ export const TableActions = ({
           setActiveFilters={setActiveFilters}
         />
 
-        {tableMetadata?.fields.map((metaColumn) => (
+      {optionalFields?.map((field) => (
           <TableFilter
-            key={metaColumn.id}
-            filterName={metaColumn.name}
-            filterOptions={metaColumn.options}
+            key={field.name}
+            filterName={field.name}
+            filterOptions={field.options}
             activeFilters={activeFilters}
             setActiveFilters={setActiveFilters}
           />
-        ))}
+        ))} 
+
       </Flex>
     </Flex>
   );

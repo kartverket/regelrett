@@ -7,8 +7,14 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useParams } from 'react-router-dom';
+import {
+  Field,
+  OptionalField,
+  OptionalFieldType,
+  Question,
+} from '../api/types';
 import { useColumnVisibility } from '../hooks/useColumnVisibility';
-import { Field, RecordType } from '../types/tableTypes';
+
 import { formatDateTime } from '../utils/formatTime';
 import { Comment } from './table/Comment';
 import { DataTable } from './table/DataTable';
@@ -17,7 +23,7 @@ import { DataTableHeader } from './table/DataTableHeader';
 import { TableCell } from './table/TableCell';
 
 type TableComponentProps = {
-  data: RecordType[];
+  data: Question[];
   fields: Field[];
 };
 
@@ -34,6 +40,7 @@ export function TableComponent({ data, fields }: TableComponentProps) {
     showOnlyFillModeColumns,
     getShownColumns,
   ] = useColumnVisibility();
+
   const columns: ColumnDef<any, any>[] = fields.map((field, index) => ({
     header: ({ column }) => (
       <DataTableHeader
@@ -43,11 +50,20 @@ export function TableComponent({ data, fields }: TableComponentProps) {
       />
     ),
     id: field.name,
-    accessorFn: (row) => {
-      return Array.isArray(row.fields[field.name])
-        ? row.fields[field.name].join(',')
-        : row.fields[field.name];
+
+    accessorFn: (row: Question) => {
+      if (!row.metadata.optionalFields) {
+        return null;
+      }
+      const out = row.metadata.optionalFields.find(
+        (op: OptionalField) => op.key === field.name
+      );
+
+      if (out) {
+        return out.value.join(',');
+      }
     },
+
     cell: ({ cell, getValue, row }: CellContext<any, any>) => (
       <DataTableCell cell={cell}>
         <TableCell
@@ -71,16 +87,15 @@ export function TableComponent({ data, fields }: TableComponentProps) {
       );
     },
     id: 'Når',
-    accessorFn: (row) => row.fields['updated'] ?? '',
+    accessorFn: (row) => row.answers[0]?.updated ?? '',
     cell: ({ cell, getValue, row }: CellContext<any, any>) => (
       <DataTableCell cell={cell}>
         <TableCell
           row={row}
           value={getValue() ? formatDateTime(getValue()) : 'Ikke oppdatert'}
           column={{
-            id: `updated-${cell.id}`,
             name: 'Når',
-            type: 'date',
+            type: OptionalFieldType.DATE,
             options: null,
           }}
         />
@@ -99,12 +114,12 @@ export function TableComponent({ data, fields }: TableComponentProps) {
       );
     },
     id: 'Kommentar',
-    accessorFn: (row) => row.fields['comment'] ?? '',
+    accessorFn: (row: Question) => row.comments[0]?.comment ?? '',
     cell: ({ cell, getValue, row }: CellContext<any, any>) => (
       <DataTableCell cell={cell}>
         <Comment
           comment={getValue()}
-          questionId={row.original.fields.ID}
+          questionId={row.original.id}
           team={team}
         />
       </DataTableCell>

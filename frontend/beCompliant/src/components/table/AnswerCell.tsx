@@ -1,33 +1,24 @@
 import { Button, Input, Select, Stack, Textarea } from '@kvib/react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Answer, AnswerMetadata, AnswerType } from '../../api/types';
 import { useSubmitAnswers } from '../../hooks/useSubmitAnswers';
-import { Choice } from '../../types/tableTypes';
 import colorUtils from '../../utils/colorUtils';
-import { Comment } from './Comment';
 
-type AnswerCellProps = {
-  value: any;
-  answerType: string;
-  questionId: string;
-  questionName: string;
-  comment: string;
-  choices?: Choice[];
-};
+type AnswerCellProps = Answer & AnswerMetadata;
 
 export function AnswerCell({
-  value,
-  answerType,
+  answer,
+  question,
   questionId,
-  questionName,
-  comment,
-  choices,
+  options,
+  type,
 }: AnswerCellProps) {
   const params = useParams();
   const team = params.teamName;
 
   const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>(
-    value
+    answer
   );
 
   const { mutate: submitAnswer } = useSubmitAnswers();
@@ -46,7 +37,7 @@ export function AnswerCell({
     submitAnswer({
       actor: 'Unknown',
       questionId: questionId,
-      question: questionName,
+      question: question,
       Svar: selectedAnswer ?? '',
       updated: '',
       team: team,
@@ -59,32 +50,31 @@ export function AnswerCell({
     submitAnswer({
       actor: 'Unknown',
       questionId: questionId,
-      question: questionName,
+      question: question,
       Svar: newAnswer,
       updated: '',
       team: team,
     });
   };
 
-  switch (answerType) {
-    case 'multilineText':
+  switch (type) {
+    case AnswerType.TEXT_MULTI_LINE:
       return (
         <Stack spacing={2}>
           <Textarea value={selectedAnswer} onChange={handleTextAreaAnswer} />
           <Button onClick={submitTextAnswer}>Submit</Button>
-          <Comment comment={comment} questionId={questionId} team={team} />
         </Stack>
       );
-    case 'singleSelect':
-      if (!choices)
+    case AnswerType.SELECT_SINGLE:
+      if (!options)
         throw new Error(
           `Failed to fetch choices for single selection answer cell`
         );
-      const selectedChoice = choices.find(
-        (choice) => choice.name === selectedAnswer
+      const selectedChoice = options.find(
+        (option) => option === selectedAnswer
       );
       const selectedAnswerBackgroundColor = selectedChoice
-        ? (colorUtils.getHexForColor(selectedChoice.color) ?? undefined)
+        ? colorUtils.getHexForColor(selectedChoice) ?? undefined
         : undefined;
       return (
         <Stack spacing={2}>
@@ -96,9 +86,9 @@ export function AnswerCell({
             width="170px"
             style={{ backgroundColor: selectedAnswerBackgroundColor }}
           >
-            {choices.map((choice) => (
-              <option value={choice.name} key={choice.id}>
-                {choice.name}
+            {options.map((option) => (
+              <option value={option} key={option}>
+                {option}
               </option>
             ))}
           </Select>

@@ -1,11 +1,11 @@
+import { Box, Header } from '@kvib/react';
 import {
-  createBrowserRouter,
-  Link as ReactRouterLink,
   Outlet,
+  Link as ReactRouterLink,
+  createBrowserRouter,
 } from 'react-router-dom';
-import FrontPage from './pages/FrontPage';
-import { Header, Box } from '@kvib/react';
 import { ActivityPage } from './pages/ActivityPage';
+import FrontPage from './pages/FrontPage';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +18,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/team/:teamName',
+        element: <ActivityPage />,
+      },
+      {
+        path: '/table/:tableId/:teamName',
         element: <ActivityPage />,
       },
       {

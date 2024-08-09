@@ -8,7 +8,7 @@ export enum AnswerType {
 export type Answer = {
   actor: string;
   answer: string;
-  quesiton: string;
+  question: string;
   questionId: string;
   team: string | null;
   updated: Date;
@@ -37,6 +37,7 @@ export enum OptionalFieldType {
   OPTION_MULTIPLE = 'OPTION_MULTIPLE',
   OPTION_SINGLE = 'OPTION_SINGLE',
   TEXT = 'TEXT',
+  DATE = 'date',
 }
 
 export type OptionalField = {
@@ -58,6 +59,11 @@ export type Question = {
 export type QuestionMetadata = {
   answerMetadata: AnswerMetadata;
   optionalFields: OptionalField[] | null;
+};
+
+export type ActiveFilter = {
+  filterName: string;
+  filterValue: string;
 };
 
 export type Table = {

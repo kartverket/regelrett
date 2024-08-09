@@ -1,14 +1,15 @@
 import { Text } from '@kvib/react';
-import { RecordType } from '../../types/tableTypes';
+import { Question } from '../../api/types';
 
 interface TableStatisticsProps {
-  filteredData: RecordType[];
+  filteredData: Question[];
 }
 
 export const TableStatistics = ({ filteredData }: TableStatisticsProps) => {
-  const numberOfQuestions = filteredData.length;
+  const numberOfQuestions = filteredData?.length;
+
   const numberOfAnswers = filteredData.reduce((count, data) => {
-    if (data.fields.Svar) {
+    if (data.answers[0]?.answer) {
       count++;
     }
     return count;
