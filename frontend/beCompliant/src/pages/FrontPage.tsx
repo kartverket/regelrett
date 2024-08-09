@@ -1,10 +1,12 @@
 import { Heading, Link, StackDivider, VStack } from '@kvib/react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { Page } from '../components/layout/Page';
+import { useFetchUserinfo } from '../hooks/useFetchUserinfo';
 
 const FrontPage = () => {
-  const teams = ['Team 1', 'Team 2', 'Team 3'];
+  const { userInfo } = useFetchUserinfo();
 
+  const teams = userInfo?.groups;
   return (
     <Page gap={'4'} alignItems={'center'}>
       <VStack>
@@ -16,7 +18,7 @@ const FrontPage = () => {
           divider={<StackDivider />}
           style={{ width: '40ch' }}
         >
-          {teams.map((team) => {
+          {teams?.map((team) => {
             return (
               <Link
                 as={ReactRouterLink}

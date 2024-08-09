@@ -32,6 +32,7 @@ fun Application.configureRouting() {
             metodeverkRouting()
             questionRouting()
             tableRouting()
+            userInfoRouting()
         }
     }
 }
