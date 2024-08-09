@@ -4,6 +4,8 @@ import no.bekk.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import no.bekk.authentication.initializeAuthentication
+import no.bekk.authentication.installSessions
 import java.io.FileInputStream
 import java.util.*
 
@@ -28,7 +30,9 @@ fun Application.module() {
         json()
     }
 
-    configureRouting()
     configureCors()
     runFlywayMigration()
+    installSessions()
+    initializeAuthentication()
+    configureRouting()
 }

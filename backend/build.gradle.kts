@@ -33,8 +33,9 @@ buildscript {
     }
 }
 
-
 dependencies {
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+    implementation("com.auth0:java-jwt:4.4.0")
     implementation("io.ktor:ktor-server-config-yaml:2.3.12")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
@@ -44,9 +45,12 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-auth:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     implementation("org.jetbrains.exposed:exposed-core:0.36.1")
+    implementation("com.microsoft.azure:msal4j:1.16.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.36.1")
     implementation("org.jooq:jooq:3.19.8")
     implementation("org.jooq:jooq-meta:3.19.8")
@@ -58,7 +62,6 @@ dependencies {
     implementation("io.ktor:ktor-server-cors:$ktor_version")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-
 }
 
 //tasks.register("prepareKotlinBuildScriptModel"){}

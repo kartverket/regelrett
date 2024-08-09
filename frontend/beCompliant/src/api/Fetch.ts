@@ -7,6 +7,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
  * @param {string} [options.method='get'] - The HTTP method (get, post, put, delete, etc.)
  * @param {Object} [options.data] - The data to be sent as the request body
  * @param {Object} [options.params] - The URL parameters to be sent with the request
+ * @param {Object} [options.withCredentials] - Include credentials (cookies) with the request
  * @returns {Promise} - A promise that resolves to the response data
  */
 export const axiosFetch = async <T>({
@@ -14,6 +15,7 @@ export const axiosFetch = async <T>({
   method = 'GET',
   data,
   params,
+  withCredentials = true,
   ...rest
 }: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
   try {
@@ -22,6 +24,7 @@ export const axiosFetch = async <T>({
       method,
       data,
       params,
+      withCredentials,
       ...rest,
     });
   } catch (error) {
