@@ -39,6 +39,8 @@ env:
   REGISTRY: ghcr.io
   ARGO_VERSION_FILE: image-url-regelrett-backend
   IMAGE_NAME: ${{ github.repository }}-backend
+  REGION: europe-north1
+  GCP_APP_NAME: regelrett-backend
 
 jobs:
   build:
@@ -199,3 +201,64 @@ jobs:
           git pull
           git commit -am "Update ${{ env.ARGO_VERSION_FILE }}"
           git push
+  
+
+  push-to-artifact-registry:
+    name: Deploy to Google Cloud Plattform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+        # Auth Docker to access the artifact registry
+      - name: "Docker auth"
+        run: |-
+          gcloud auth configure-docker europe-north1-docker.pkg.dev --quiet
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: europe-north1-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Push to Google Artifact Registry
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ${{ github.workspace }}/backend
+          tags: |
+            ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
+
+  deploy-to-vm:
+    name: Deploy Docker Image to VM
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: SSH into VM and deploy container
+        run: |
+          gcloud compute ssh regelrett-backend-vm --zone €{{ env.REGION }} --project ${{ secrets.GCP_PROJECT_ID }} -- \
+            'docker pull ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest &&
+             docker stop ${{ env.GCP_APP_NAME }} || true &&
+             docker rm ${{ env.GCP_APP_NAME }} || true &&
+             docker run -d --name ${{ env.GCP_APP_NAME }} -p 8080:8080 ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
+  
