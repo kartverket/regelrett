@@ -257,7 +257,7 @@ jobs:
 
       - name: SSH into VM and deploy container
         run: |
-          gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }} --project ${{ secrets.GCP_PROJECT_ID }} -- \
+          gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} -- \
             'docker pull "${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest" &&
              docker stop "${{ env.GCP_APP_NAME }}" || true &&
              docker rm ${{ env.GCP_APP_NAME }} || true &&
