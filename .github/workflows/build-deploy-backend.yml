@@ -250,7 +250,7 @@ jobs:
         run: docker pull ${{ needs.build.outputs.image_url }}
 
       - name: Tag image for Google Artifact Registry
-        run: docker tag ${{ needs.build-dev.outputs.image_url }} ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
+        run: docker tag ${{ needs.build.outputs.image_url }} ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
 
       - name: Push image to Google Artifact Registry
         run: docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
