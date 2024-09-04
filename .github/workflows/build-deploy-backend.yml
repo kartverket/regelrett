@@ -232,7 +232,7 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          project_id: ${{ env.PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
         # Auth Docker to access the artifact registry
       - name: "Docker auth"
@@ -250,18 +250,18 @@ jobs:
         run: docker pull ${{ needs.build.outputs.image_url }}
 
       - name: Tag image for Google Artifact Registry
-        run: docker tag ${{ needs.build.outputs.image_url }} ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
+        run: docker tag ${{ needs.build.outputs.image_url }} ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
 
       - name: Push image to Google Artifact Registry
-        run: docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
+        run: docker push ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
 
       - name: SSH into VM and deploy container
         run: |
           gcloud compute ssh regelrett-backend-vm --zone €{{ env.REGION }} --project ${{ secrets.GCP_PROJECT_ID }} -- \
-            'docker pull ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest &&
+            'docker pull ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest &&
              docker stop ${{ env.GCP_APP_NAME }} || true &&
              docker rm ${{ env.GCP_APP_NAME }} || true &&
-             docker run -d --name ${{ env.GCP_APP_NAME }} -p 8080:8080 ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
+             docker run -d --name ${{ env.GCP_APP_NAME }} -p 8080:8080 ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
 
 
 
