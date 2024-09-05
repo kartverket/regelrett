@@ -265,7 +265,6 @@ jobs:
             sudo docker run -d --name '${{ env.GCP_APP_NAME }}' -p 8080:8080 '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
           "
 
-
   push-to-artifact-registry:
     name: Deploy to Google Cloud Plattform
     runs-on: ubuntu-latest
