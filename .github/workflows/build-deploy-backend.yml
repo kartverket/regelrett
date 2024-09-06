@@ -271,6 +271,11 @@ jobs:
             sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&
             sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
-            sudo docker run -d --name '${{ env.GCP_APP_NAME }}' -p 8080:8080 -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}   '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
+            sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
+              -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
+              -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
+              -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
+              -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
+              '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
           "
 
