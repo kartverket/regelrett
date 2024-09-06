@@ -202,7 +202,7 @@ jobs:
           git commit -am "Update ${{ env.ARGO_VERSION_FILE }}"
           git push
   
-
+  
   copy-deploy-gcp:
     name: Copy Docker Image from GitHub Container Registry to Google Artifact Registry and deploy
     needs: build
@@ -259,6 +259,15 @@ jobs:
         run: |
           gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
             sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev &&
+            sudo docker stop $(sudo docker ps -q) || true &&
+            sudo docker rm $(sudo docker ps -a -q) || true &&
+            sudo docker network rm container_network || true &&
+            sudo docker network create container_network &&
+            sudo docker run --name regelrett-db --network container_network  -it \
+              -e POSTGRES_PASSWORD=pwd \
+              -e POSTGRES_USER=postgres \
+              -e POSTGRES_DB=regelrett \
+              -p 5432:5432 -d postgres:15.4
             sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&
             sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
