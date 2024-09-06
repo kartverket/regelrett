@@ -276,6 +276,7 @@ jobs:
               -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
               -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
+              -e DB_URL=regelrett-db
               '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
           "
 
