@@ -89,6 +89,11 @@ jobs:
       - name: Run npm install and build
         working-directory: frontend/beCompliant
         run: |
+          # Ensure .env.dev_gcp is available
+          if [ ! -f .env.dev_gcp ]; then
+            echo "Error: .env.dev_gcp file not found!"
+            exit 1
+          fi
           npm ci
           npm run build:dev_gcp
 
@@ -128,8 +133,9 @@ jobs:
 
 
       - name: Build and Push Docker Image
+        working-directory: frontend/beCompliant
         run: |
-          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest ./frontend/beCompliant
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Cloud Run
