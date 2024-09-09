@@ -34,7 +34,6 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: europe-north1
-  IMAGE_NAME: ${{ github.repository }}-frontend
 
 jobs:
   build-dev:
@@ -47,6 +46,9 @@ jobs:
       image_url: ${{ steps.setOutput.outputs.image_url }}
 
     steps:
+      - name: Set repository name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)" >> $GITHUB_ENV
+
       - name: Checkout code
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
         uses: actions/checkout@v4
