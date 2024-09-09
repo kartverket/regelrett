@@ -42,6 +42,7 @@ env:
   REGION: europe-north1
   GCP_APP_NAME: regelrett-backend
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
+  GCP_BACKEND_URL: http://34.88.207.102:8080
 
 
 jobs:
@@ -279,6 +280,7 @@ jobs:
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
               -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
               -e DB_URL='${{ env.DB_URL }}' \
+              -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
               '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
           "
 
