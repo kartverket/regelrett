@@ -139,7 +139,6 @@ jobs:
             --platform managed \
             --allow-unauthenticated 
 
-
 #  copy-deploy-gcp:
 #    name: Copy Docker Image from GitHub Container Registry to Google Artifact Registry and deploy with cloud run
 #    needs: build-dev
