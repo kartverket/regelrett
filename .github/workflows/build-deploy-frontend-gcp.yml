@@ -127,7 +127,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest /frontend/beCompliant
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest ./frontend/beCompliant
           docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Cloud Run
