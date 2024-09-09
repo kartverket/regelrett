@@ -1,4 +1,4 @@
-name: Build and deploy frontend to SKIP
+name: Build and deploy frontend to GCP
 on:
   workflow_dispatch:
     inputs:
@@ -127,7 +127,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build /frontend/beCompliant -t europe-north1-docker.pkg.dev/***/regelrett-artifact-registry/:latest \
+          docker build -t europe-north1-docker.pkg.dev/***/regelrett-artifact-registry/:latest /frontend/beCompliant
           docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
 
       - name: Deploy to Cloud Run
