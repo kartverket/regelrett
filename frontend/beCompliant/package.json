@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build:dev": "tsc && vite build --mode dev",
+    "build:dev_gcp": "tsc && vite build --mode dev_gcp",
     "build:prod": "tsc && vite build --mode prod",
     "start": "vite",
     "lint": "eslint  --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
