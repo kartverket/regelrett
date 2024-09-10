@@ -43,7 +43,6 @@ jobs:
   build-and-push:
     name: Build and push docker image to GAR
     runs-on: ubuntu-latest
-    outputs:
     permissions:
       contents: write
       packages: write
