@@ -92,11 +92,11 @@ jobs:
       - name: Build docker image
         working-directory: backend
         run: |
-          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest .
+          docker build -t ${{ env.DOCKER_IMAGE_URL }} .
 
       - name: Push Docker image to GAR
         run: |
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.DOCKER_IMAGE_URL }}
 
   deploy-to-gcp-vm:
     name: Build and push docker image to GAR
