@@ -43,6 +43,7 @@ jobs:
   build-and-push:
     name: Build and push docker image to GAR
     runs-on: ubuntu-latest
+    outputs:
     permissions:
       contents: write
       packages: write
@@ -51,6 +52,13 @@ jobs:
     steps:
       - name: Set repository name
         run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)" >> $GITHUB_ENV
+
+      - name: Set Docker image URL
+        id: setOutput
+        run: |
+          IMAGE_URL="${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest"
+          echo "DOCKER_IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
+          echo "::set-output name=docker_image_url::$IMAGE_URL"
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,7 +85,7 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          project_id: ${{ env.PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: "Docker auth"
         run: |-
@@ -86,11 +94,11 @@ jobs:
       - name: Build docker image
         working-directory: backend
         run: |
-          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest .
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest .
 
       - name: Push Docker image to GAR
         run: |
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
 
   deploy-to-gcp-vm:
     name: Build and push docker image to GAR
@@ -131,7 +139,7 @@ jobs:
               -e POSTGRES_USER=postgres \
               -e POSTGRES_DB=regelrett \
               -p 5432:5432 -d postgres:15.4
-            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&
+            sudo docker pull '${{ needs.build-and-push.outputs.image_url }}' &&
             sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
@@ -143,5 +151,5 @@ jobs:
               -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
               -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
               -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
-              '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
+              '${{ needs.build-and-push.outputs.image_url }}'
           "
