@@ -129,6 +129,7 @@ jobs:
         run: |
           gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
             sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev &&
+            echo $(sudo docker ps -a -q) &&
             sudo docker stop $(sudo docker ps -a -q) || true &&
             sudo docker rm $(sudo docker ps -a -q) || true &&
             sudo docker network rm container_network || true &&
