@@ -92,11 +92,11 @@ jobs:
       - name: Build docker image
         working-directory: backend
         run: |
-          docker build -t ${{ env.DOCKER_IMAGE_URL }} .
+          docker build -t ${{ env.IMAGE_URL }} .
 
       - name: Push Docker image to GAR
         run: |
-          docker push ${{ env.DOCKER_IMAGE_URL }}
+          docker push ${{ env.IMAGE_URL }}
 
   deploy-to-gcp-vm:
     name: Build and push docker image to GAR
