@@ -45,18 +45,13 @@ jobs:
     permissions:
       contents: write
       packages: write
-    outputs:
-      image_url: ${{ steps.setOutput.outputs.image_url }}
     steps:
       - name: Set repository name
         run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)-backend" >> $GITHUB_ENV
 
       - name: Set Docker image URL
         id: setOutput
-        run: |
-          IMAGE_URL="${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest"
-          echo "DOCKER_IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
-          echo "::set-output name=docker_image_url::$IMAGE_URL"
+        run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -66,6 +61,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           architecture: 'x64'
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -106,6 +106,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: "google-github-actions/auth@v2"
@@ -138,7 +143,7 @@ jobs:
               -e POSTGRES_USER=postgres \
               -e POSTGRES_DB=regelrett \
               -p 5432:5432 -d postgres:15.4
-            sudo docker pull '${{ needs.build-and-push.outputs.image_url }}' &&
+            sudo docker pull '${{ env.IMAGE_URL }}' &&
             sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
@@ -150,5 +155,5 @@ jobs:
               -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
               -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
               -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
-              '${{ needs.build-and-push.outputs.image_url }}'
+              '${{ env.IMAGE_URL }}'
           "
