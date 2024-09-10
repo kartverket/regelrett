@@ -283,7 +283,7 @@ jobs:
               -e DB_URL='${{ env.DB_URL }}' \
               -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
               -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
-              -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+              -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
               '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
           "
 
