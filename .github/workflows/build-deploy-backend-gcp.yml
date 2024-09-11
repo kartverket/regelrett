@@ -132,7 +132,7 @@ jobs:
       - name: SSH into VM and deploy container
         run: |
           gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
-            sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev &&
+            sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet &&
             echo 'This is the value: $(sudo docker ps -a -q)' &&
             sudo docker stop $(sudo docker ps -a -q) || true &&
             sudo docker rm $(sudo docker ps -a -q) || true &&
@@ -143,7 +143,8 @@ jobs:
               -e POSTGRES_USER=postgres \
               -e POSTGRES_DB=regelrett \
               -p 5432:5432 -d postgres:15.4
-            sudo docker pull '${{ env.IMAGE_URL }}' &&
+#            sudo docker pull '${{ env.IMAGE_URL }}' &&
+            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&               
             sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
