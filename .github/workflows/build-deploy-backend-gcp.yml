@@ -109,6 +109,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug env variables
+        run: |
+          echo "IMAGE_NAME is: ${{ env.IMAGE_NAME }}"
+          echo "IMAGE_URL IS: ${{ env.IMAGE_URL }}"
+
       - name: Set up Node.js 20
         uses: actions/setup-node@v3
         with:
