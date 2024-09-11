@@ -207,83 +207,83 @@ jobs:
           git push
   
   
-  copy-deploy-gcp:
-    name: Copy Docker Image from GitHub Container Registry to Google Artifact Registry and deploy
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      image_url: ${{ steps.setOutput.outputs.image_url }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: "google-github-actions/auth@v2"
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
-        # Auth Docker to access the artifact registry
-      - name: "Docker auth"
-        run: |-
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
-
-      - name: Login to GAR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGION }}-docker.pkg.dev
-          username: _json_key
-          password: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Pull image from GHCR
-        run: docker pull ${{ needs.build.outputs.image_url }}
-
-      - name: Tag image for Google Artifact Registry
-        run: docker tag ${{ needs.build.outputs.image_url }} ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
-
-      - name: Push image to Google Artifact Registry
-        run: docker push ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
-
-      - name: SSH into VM and deploy container
-        run: |
-          gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
-            sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev &&
-            sudo docker stop $(sudo docker ps -q) || true &&
-            sudo docker rm $(sudo docker ps -a -q) || true &&
-            sudo docker network rm container_network || true &&
-            sudo docker network create container_network &&
-            sudo docker run --name regelrett-db --network container_network  -it \
-              -e POSTGRES_PASSWORD=pwd \
-              -e POSTGRES_USER=postgres \
-              -e POSTGRES_DB=regelrett \
-              -p 5432:5432 -d postgres:15.4
-            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&
-            sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
-            sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
-            sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
-              -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
-              -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
-              -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
-              -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
-              -e DB_URL='${{ env.DB_URL }}' \
-              -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
-              -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
-              -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
-              '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
-          "
+#  copy-deploy-gcp:
+#    name: Copy Docker Image from GitHub Container Registry to Google Artifact Registry and deploy
+#    needs: build
+#    runs-on: ubuntu-latest
+#    outputs:
+#      image_url: ${{ steps.setOutput.outputs.image_url }}
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Docker
+#        uses: docker/setup-buildx-action@v2
+#
+#      - name: Log in to GitHub Container Registry
+#        uses: docker/login-action@v2
+#        with:
+#          registry: ${{ env.REGISTRY }}
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Authenticate to Google Cloud
+#        id: auth
+#        uses: "google-github-actions/auth@v2"
+#        with:
+#          credentials_json: ${{ secrets.GCP_SA_KEY }}
+#
+#      - name: Set up Google Cloud SDK
+#        uses: google-github-actions/setup-gcloud@v1
+#        with:
+#          project_id: ${{ secrets.GCP_PROJECT_ID }}
+#
+#        # Auth Docker to access the artifact registry
+#      - name: "Docker auth"
+#        run: |-
+#          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+#
+#      - name: Login to GAR
+#        uses: docker/login-action@v3
+#        with:
+#          registry: ${{ env.REGION }}-docker.pkg.dev
+#          username: _json_key
+#          password: ${{ secrets.GCP_SA_KEY }}
+#
+#      - name: Pull image from GHCR
+#        run: docker pull ${{ needs.build.outputs.image_url }}
+#
+#      - name: Tag image for Google Artifact Registry
+#        run: docker tag ${{ needs.build.outputs.image_url }} ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
+#
+#      - name: Push image to Google Artifact Registry
+#        run: docker push ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest
+#
+#      - name: SSH into VM and deploy container
+#        run: |
+#          gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
+#            sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev &&
+#            sudo docker stop $(sudo docker ps -q) || true &&
+#            sudo docker rm $(sudo docker ps -a -q) || true &&
+#            sudo docker network rm container_network || true &&
+#            sudo docker network create container_network &&
+#            sudo docker run --name regelrett-db --network container_network  -it \
+#              -e POSTGRES_PASSWORD=pwd \
+#              -e POSTGRES_USER=postgres \
+#              -e POSTGRES_DB=regelrett \
+#              -p 5432:5432 -d postgres:15.4
+#            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&
+#            sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
+#            sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
+#            sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
+#              -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
+#              -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
+#              -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
+#              -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
+#              -e DB_URL='${{ env.DB_URL }}' \
+#              -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
+#              -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
+#              -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
+#              '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest'
+#          "
 
