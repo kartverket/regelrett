@@ -142,9 +142,7 @@ jobs:
               -e POSTGRES_PASSWORD=pwd \
               -e POSTGRES_USER=postgres \
               -e POSTGRES_DB=regelrett \
-              -p 5432:5432 -d postgres:15.4
-#            sudo docker pull '${{ env.IMAGE_URL }}' &&
-               
+              -p 5432:5432 -d postgres:15.4               
             sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&               
             sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
             sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
