@@ -35,7 +35,7 @@ env:
   REGION: europe-north1
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
   KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
-  GCP_BACKEND_URL: https://34.88.207.102:8443
+  GCP_PROVIDER_URL: https://34.88.207.102:8443/callback
 
 jobs:
   build-and-push:
@@ -167,7 +167,7 @@ jobs:
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
               -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
               -e DB_URL='${{ env.DB_URL }}' \
-              -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
+              -e AUTH_PROVIDER_URL=${{ env.GCP_PROVIDER_URL }} \
               -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
               -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
               -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
