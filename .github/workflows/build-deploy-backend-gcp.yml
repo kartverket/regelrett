@@ -33,7 +33,6 @@ on:
 
 env:
   REGION: europe-north1
-  IMAGE_NAME: regelrett-backend
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
   KEYSTORE_PATH: '/etc/regelrett/keystore'
   GCP_BACKEND_URL: http://34.88.207.102:8080
