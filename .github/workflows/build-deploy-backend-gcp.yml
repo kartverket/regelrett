@@ -34,7 +34,7 @@ on:
 env:
   REGION: europe-north1
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
-  KEYSTORE_PATH: '/etc/regelrett/keystore'
+  KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
   GCP_BACKEND_URL: http://34.88.207.102:8080
 
 jobs:
