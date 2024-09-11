@@ -50,8 +50,12 @@ jobs:
         run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)-backend" >> $GITHUB_ENV
 
       - name: Set Docker image URL
-        id: setOutput
         run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
+
+      - name: Debug env variables
+        run: |
+          echo "IMAGE_NAME is: ${{ env.IMAGE_NAME }}"
+          echo "IMAGE_URL IS: ${{ env.IMAGE_URL }}"
 
       - name: Checkout code
         uses: actions/checkout@v4
