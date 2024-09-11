@@ -133,6 +133,7 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
 
+
       - name: SSH into VM and deploy container
         run: |
           gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
