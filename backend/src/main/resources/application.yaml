@@ -5,17 +5,11 @@ ktor:
   application:
     modules:
       - no.bekk.ApplicationKt.module
-  server:
-    netty:
-      ssl:
-        keyStore: $KEYSTORE_PATH
-        keyStorePassword: $KEYSTORE_PASSWORD
-        privateKeyPassword: $KEYSTORE_PASSWORD
-#  security:
-#    ssl:
-#      keyStore: $KEYSTORE_PATH
-#      keyStorePassword: $KEYSTORE_PASSWORD
-#      privateKeyPassword: $KEYSTORE_PASSWORD
+  security:
+    ssl:
+      keyStore: $KEYSTORE_PATH
+      keyStorePassword: $KEYSTORE_PASSWORD
+      privateKeyPassword: $KEYSTORE_PASSWORD
 
 airTable:
   accessToken: $AIRTABLE_ACCESS_TOKEN
