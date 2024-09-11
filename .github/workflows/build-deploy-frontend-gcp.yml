@@ -94,7 +94,9 @@ jobs:
             echo "Error: .env.dev_gcp file not found!"
             exit 1
           fi
+          cat .env
           cp .env.dev_gcp .env
+          cat .env
           npm ci
           npm run build:dev_gcp
 
