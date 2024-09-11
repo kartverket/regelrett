@@ -155,5 +155,6 @@ jobs:
               -e AUTH_PROVIDER_URL=${{ env.GCP_BACKEND_URL }} \
               -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
               -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
+              -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
               '${{ env.IMAGE_URL }}'
           "
