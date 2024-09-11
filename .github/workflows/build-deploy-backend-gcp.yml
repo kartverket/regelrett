@@ -33,7 +33,7 @@ on:
 
 env:
   REGION: europe-north1
-  GCP_APP_NAME: regelrett-backend
+  IMAGE_NAME: regelrett-backend
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
   KEYSTORE_PATH: '/etc/regelrett/keystore'
   GCP_BACKEND_URL: http://34.88.207.102:8080
@@ -148,10 +148,10 @@ jobs:
               -e POSTGRES_USER=postgres \
               -e POSTGRES_DB=regelrett \
               -p 5432:5432 -d postgres:15.4               
-            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.GCP_APP_NAME }}:latest' &&               
-            sudo docker stop '${{ env.GCP_APP_NAME }}' || true &&
-            sudo docker rm '${{ env.GCP_APP_NAME }}' || true &&
-            sudo docker run -d --name '${{ env.GCP_APP_NAME }}' --network container_network -p 8080:8080 \
+            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest' &&               
+            sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
+            sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
+            sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 8080:8080 \
               -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
               -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
