@@ -44,7 +44,7 @@ fun Route.authenticationRouting() {
                 call.respond(HttpStatusCode.Unauthorized, mapOf("authenticated" to false))
             }
             call.respond(HttpStatusCode.OK, mapOf("authenticated" to true))
-        }
+            }
         catch (ex: Exception) {
             // Handle verification failure
             logger.error("Failed to check authentication status with error message: ${ex.message}")
