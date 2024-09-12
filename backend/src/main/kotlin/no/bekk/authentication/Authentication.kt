@@ -30,9 +30,11 @@ fun Application.installSessions() {
     install(Sessions) {
         cookie<UserSession>("user_session") {
             cookie.path = "/"
+            cookie.domain = "regelrett.bekk.no"
             cookie.maxAgeInSeconds = 180 * 60
             cookie.secure = true
             cookie.httpOnly = true
+            cookie.extensions["SameSite"] = "None"
         }
     }
 
