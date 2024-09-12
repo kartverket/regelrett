@@ -36,7 +36,7 @@ env:
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
   KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
   GCP_PROVIDER_URL: https://34.88.207.102:8443/callback
-  FRONTEND_URL_HOST: https://regelrett-frontend-1024826672490.europe-north1.run.app
+  FRONTEND_URL_HOST: regelrett-frontend-1024826672490.europe-north1.run.app
 
 jobs:
   build-and-push:
