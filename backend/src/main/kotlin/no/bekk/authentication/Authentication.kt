@@ -38,12 +38,12 @@ fun Application.installSessions() {
     }
 
     // Intercept every request to refresh the session cookie
-    intercept(Plugins) {
-        val session: UserSession? = call.sessions.get<UserSession>()
-        if (session != null) {
-            call.sessions.set("user_session", session)
-        }
-    }
+//    intercept(Plugins) {
+//        val session: UserSession? = call.sessions.get<UserSession>()
+//        if (session != null) {
+//            call.sessions.set("user_session", session)
+//        }
+//    }
 }
 
 fun Application.initializeAuthentication(httpClient: HttpClient = applicationHttpClient) {
