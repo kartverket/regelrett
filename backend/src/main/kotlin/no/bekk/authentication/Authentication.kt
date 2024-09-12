@@ -33,6 +33,7 @@ fun Application.installSessions() {
             cookie.maxAgeInSeconds = 180 * 60
             cookie.secure
             cookie.httpOnly = true
+            cookie.extensions["SameSite"] = "None"  // Allow cross-origin cookies
         }
     }
 
