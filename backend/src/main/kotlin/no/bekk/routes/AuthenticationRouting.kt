@@ -11,6 +11,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import io.ktor.util.debug.*
 import no.bekk.authentication.UserSession
 import no.bekk.configuration.AppConfig
 import no.bekk.configuration.getIssuer
@@ -67,7 +68,6 @@ fun Route.authenticationRouting() {
                     call.sessions.set(UserSession(state, principal.accessToken))
                     val redirects = mutableMapOf<String, String>()
                     redirects[state]?.let { redirect ->
-                        logger.debug("Redirecting to: $redirect")
                         call.respondRedirect(redirect)
                         return@get
                     }

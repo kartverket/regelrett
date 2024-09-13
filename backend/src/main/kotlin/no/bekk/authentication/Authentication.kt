@@ -17,10 +17,8 @@ import no.bekk.configuration.*
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.services.FriskService
 import no.bekk.services.MicrosoftService
-import no.bekk.util.logger
 import java.net.URL
 import java.util.concurrent.TimeUnit
-import java.util.logging.Logger
 
 val applicationHttpClient = HttpClient(CIO) {
     install(ContentNegotiation) {
@@ -33,10 +31,9 @@ fun Application.installSessions() {
         cookie<UserSession>("user_session") {
             cookie.path = "/"
             cookie.maxAgeInSeconds = 180 * 60
-            cookie.secure = true
             cookie.httpOnly = true
             cookie.extensions["SameSite"] = "None"  // Allow cross-origin cookies
-            cookie.domain = "regelrett-frontend-1024826672490.europe-north1.run.app"
+            cookie.secure = true
         }
     }
 
@@ -44,9 +41,7 @@ fun Application.installSessions() {
     intercept(Plugins) {
         val session: UserSession? = call.sessions.get<UserSession>()
         if (session != null) {
-            logger.debug("Session exists. UserSession: {}", session)
             call.sessions.set("user_session", session)
-            logger.debug("Session updated.")
         }
     }
 }

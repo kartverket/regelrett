@@ -7,7 +7,7 @@ import no.bekk.configuration.AppConfig
 
 fun Application.configureCors() {
     install(CORS) {
-        allowHost(AppConfig.frontend.host)
+        allowHost(AppConfig.frontend.host, schemes = listOf("https"))
         allowCredentials = true
         allowSameOrigin = true
         allowHeader(HttpHeaders.ContentType)
