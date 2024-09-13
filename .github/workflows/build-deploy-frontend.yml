@@ -35,6 +35,8 @@ env:
   REGISTRY: ghcr.io
   ARGO_VERSION_FILE: image-url-regelrett-frontend
   IMAGE_NAME: ${{ github.repository }}-frontend
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: europe-north1
 
 jobs:
   build-dev:
