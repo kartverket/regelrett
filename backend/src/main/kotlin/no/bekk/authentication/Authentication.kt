@@ -34,7 +34,6 @@ fun Application.installSessions() {
             cookie.httpOnly = true
             cookie.extensions["SameSite"] = "None"  // Allow cross-origin cookies
             cookie.secure = true
-            //cookie.domain = "regelrett.bekk.no"
         }
     }
 
