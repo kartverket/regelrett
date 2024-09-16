@@ -1,9 +1,15 @@
 ktor:
   deployment:
     port: 8080
+    sslPort: 8443
   application:
     modules:
       - no.bekk.ApplicationKt.module
+  security:
+    ssl:
+      keyStore: $KEYSTORE_PATH
+      keyStorePassword: $KEYSTORE_PASSWORD
+      privateKeyPassword: $KEYSTORE_PASSWORD
 
 airTable:
   accessToken: $AIRTABLE_ACCESS_TOKEN
@@ -30,15 +36,7 @@ oAuth:
 frontend:
   host: "$FRONTEND_URL_HOST:localhost:3000"
 
-backend:
-  host: "$BACKEND_URL_HOST:localhost:8080"
-
 db:
   url: "$DB_URL:jdbc:postgresql://localhost:5432/regelrett"
   username: "$DB_NAME:postgres"
   password: "$DB_PASSWORD:pwd"
-
-frisk:
-  apiUrl: "$FRISK_API_URL:http://localhost:8081"
-  tenantId: $FRISK_TENANT_ID
-  clientId: $FRISK_CLIENT_ID
