@@ -163,7 +163,7 @@ jobs:
             sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
             sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
             sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 8443:8443 \
-              -e 
+              -e ENV=gcp \
               -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
               -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
