@@ -17,20 +17,7 @@ version = "0.0.1"
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
     val isDevelopment: Boolean = project.ext.has("development")
-    val environment: String = System.getenv("ENV") ?: "local"
-    logger.info("environment: $environment")
-
-    val configFile = if (environment == "gcp") {
-        "application-gcp.yaml"
-    } else {
-        "application.yaml"
-    }
-
-    applicationDefaultJvmArgs = listOf(
-        "-Dio.ktor.development=$isDevelopment",
-        "-Dio.ktor.config=$configFile"
-
-    )
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 repositories {

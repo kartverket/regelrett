@@ -37,7 +37,6 @@ env:
   KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
   GCP_PROVIDER_URL: https://regelrett.bekk.no:8443/callback
   FRONTEND_URL_HOST: regelrett-frontend-1024826672490.europe-north1.run.app
-  ENV: gcp
 
 jobs:
   build-and-push:
@@ -71,6 +70,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+
+      - name: Copy Application Config
+        working-directory: backend/src/main/resources
+        run: cp application-gcp.yaml application.yaml
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -164,7 +167,6 @@ jobs:
             sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
             sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
             sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 8443:8443 \
-              -e ENV=${{ env.ENV }} \
               -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
               -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
