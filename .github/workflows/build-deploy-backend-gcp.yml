@@ -35,7 +35,7 @@ env:
   REGION: europe-north1
   DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
   KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
-  GCP_PROVIDER_URL: https://regelrett.bekk.no:8443/callback
+  GCP_PROVIDER_URL: https://regelrett-frontend-1024826672490.europe-north1.run.app/api/callback
   FRONTEND_URL_HOST: regelrett-frontend-1024826672490.europe-north1.run.app
 
 jobs:
