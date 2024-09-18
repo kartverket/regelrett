@@ -251,7 +251,7 @@ jobs:
     environment:
       name: dev
     permissions:
-      id-token: write
+      id-token: read
       contents: write
       packages: write
       actions: write
