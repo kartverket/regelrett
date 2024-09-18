@@ -16,7 +16,7 @@ on:
         type: boolean
   pull_request:
     branches:
-      - main
+      - nginx
     paths-ignore:
       - backend**
       - .sikkerhet**
@@ -29,7 +29,7 @@ on:
       - compose.yaml
       - README**
     branches:
-      - main
+      - nginx
 
 env:
   REGISTRY: ghcr.io
