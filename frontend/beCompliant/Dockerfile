@@ -1,10 +1,6 @@
 ARG FRONTEND_URL="localhost:3000"
 ARG BACKEND_URL="localhost:8080"
 
-ENV FRONTEND_URL=${FRONTEND_URL}
-ENV BACKEND_URL=${BACKEND_URL}
-
-
 FROM nginx:alpine
 
 COPY nginx/nginx.conf.template /etc/nginx/nginx.conf.template
