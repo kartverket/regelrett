@@ -52,11 +52,6 @@ jobs:
       - name: Set Docker image URL
         run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
 
-      - name: Debug env variables
-        run: |
-          echo "IMAGE_NAME is: ${{ env.IMAGE_NAME }}"
-          echo "IMAGE_URL IS: ${{ env.IMAGE_URL }}"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -65,11 +60,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           architecture: 'x64'
-
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
 
       - name: Copy Application Config
         working-directory: backend/src/main/resources
