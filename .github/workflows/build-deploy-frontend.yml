@@ -121,6 +121,10 @@ jobs:
           push: ${{ !github.event.pull_request.draft }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            FRONTEND_URL=${{ env.FRONTEND_URL_DEV }}
+            BACKEND_URL=${{ env.BACKEND_URL_DEV }}      
+      
 
       - name: Set output with build values
         id: setOutput
@@ -209,6 +213,9 @@ jobs:
           push: ${{ !github.event.pull_request.draft }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            FRONTEND_URL=${{ env.FRONTEND_URL_PROD }}
+            BACKEND_URL=${{ env.BACKEND_URL_PROD }} 
 
       - name: Set output with build values
         id: setOutput
