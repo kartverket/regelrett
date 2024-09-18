@@ -2,8 +2,7 @@ events {}
 http {
     server {
         listen 3000;
-        server_name https://regelrett-frontend-1024826672490.europe-north1.run.app/;
-        #server_name http://localhost;
+        server_name ${FRONTEND_URL};
 
         # Frontend Route
         location / {
@@ -15,8 +14,7 @@ http {
         # Backend Route
         location /api/ {
             rewrite ^/api/(.*) /$1 break;
-            proxy_pass https://regelrett.bekk.no:8443;
-            #proxy_pass http://localhost:8080;
+            proxy_pass ${BACKEND_URL};
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

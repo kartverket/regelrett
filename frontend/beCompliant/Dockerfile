@@ -1,10 +1,10 @@
 FROM nginx:alpine
 
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf.template /etc/nginx/nginx.conf.template
 
 COPY ./dist /usr/share/nginx/html/
 
 EXPOSE 80 443
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c", "envsubst '${FRONTEND_URL} ${BACKEND_URL}' < /etc/nginx/templates/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
 

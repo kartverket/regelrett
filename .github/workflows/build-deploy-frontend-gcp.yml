@@ -34,6 +34,8 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: europe-north1
+  FRONTEND_URL: https://regelrett-frontend-1024826672490.europe-north1.run.app/
+  BACKEND_URL: https://regelrett.bekk.no:8443
 
 jobs:
   build-dev:
@@ -102,7 +104,10 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest ./frontend/beCompliant
+          docker build \
+          --build-arg FRONTEND_URL=${{ env.FRONTEND_URL }} \
+          --build-arg BACKEND_URL=${{ env.BACKEND_URL }} \
+          -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest ./frontend/beCompliant
           docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Cloud Run
