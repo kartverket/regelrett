@@ -1,5 +1,5 @@
-ARG FRONTEND_URL="localhost:3000"
-ARG BACKEND_URL="localhost:8080"
+ARG FRONTEND_URL
+ARG BACKEND_URL
 
 FROM nginx:alpine
 
