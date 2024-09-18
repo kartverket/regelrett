@@ -94,7 +94,7 @@ jobs:
         env:
           BRANCH: ${{ github.ref_name }}
         run: |
-          if [[ "$BRANCH" == "main" || "$BRANCH" == "master"  || "BRANCH" == "nginx"]]; then
+          if [[ "$BRANCH" == "main" || "$BRANCH" == "master"  || "$BRANCH" == "nginx"]]; then
             echo "image_tag=latest" >> $GITHUB_OUTPUT
           else
             echo "image_tag=prebuild-temp" >> $GITHUB_OUTPUT
