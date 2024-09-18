@@ -220,8 +220,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            FRONTEND_URL=${{ env.FRONTEND_URL_PROD }}
-            BACKEND_URL=${{ env.BACKEND_URL_PROD }} 
+            FRONTEND_URL=${{ env.FRONTEND_URL}}
+            BACKEND_URL=${{ env.BACKEND_URL}} 
 
       - name: Set output with build values
         id: setOutput
