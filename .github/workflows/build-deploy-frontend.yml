@@ -16,7 +16,7 @@ on:
         type: boolean
   pull_request:
     branches:
-      - nginx
+      - main
     paths-ignore:
       - backend**
       - .sikkerhet**
@@ -29,7 +29,7 @@ on:
       - compose.yaml
       - README**
     branches:
-      - nginx
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -94,7 +94,7 @@ jobs:
         env:
           BRANCH: ${{ github.ref_name }}
         run: |
-          if [[ "$BRANCH" == "main" || "$BRANCH" == "master" || "$BRANCH" == "nginx" ]]; then
+          if [[ "$BRANCH" == "main" || "$BRANCH" == "master" ]]; then
             echo "image_tag=latest" >> $GITHUB_OUTPUT
           else
             echo "image_tag=prebuild-temp" >> $GITHUB_OUTPUT
@@ -127,7 +127,7 @@ jobs:
           build-args: |
             FRONTEND_URL=${{ env.FRONTEND_URL }}
             BACKEND_URL=${{ env.BACKEND_URL }}      
-      
+
 
       - name: Set output with build values
         id: setOutput
@@ -220,8 +220,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            FRONTEND_URL=${{ env.FRONTEND_URL}}
-            BACKEND_URL=${{ env.BACKEND_URL}} 
+            FRONTEND_URL=${{ env.FRONTEND_URL }}
+            BACKEND_URL=${{ env.BACKEND_URL }} 
 
       - name: Set output with build values
         id: setOutput
@@ -245,16 +245,13 @@ jobs:
 
   deploy-dev:
     name: Deploy to dev
-    if: ${{ (github.ref == 'refs/heads/main' && (github.event_name != 'workflow_dispatch' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dev == 'true'))) || true }}
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_dispatch' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dev == 'true')) }}
     needs: build-dev
     runs-on: ubuntu-latest
     environment:
       name: dev
     permissions:
       id-token: write
-      contents: write
-      packages: write
-      actions: write
     steps:
       - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f # v1.0.0
         id: octo-sts
