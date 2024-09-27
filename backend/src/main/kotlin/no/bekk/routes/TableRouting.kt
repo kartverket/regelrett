@@ -22,7 +22,7 @@ fun Route.tableRouting() {
             val team = call.request.queryParameters["team"]
 
             try {
-                val table = tableService.getTable(tableId, team)
+                val table = tableService.getTable(team)
                 logger.info("Successfully retrieved table for tableId: $tableId")
                 call.respond(table)
             } catch (e: IllegalArgumentException) {

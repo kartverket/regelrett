@@ -59,6 +59,8 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.2")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }

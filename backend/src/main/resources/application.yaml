@@ -7,10 +7,15 @@ ktor:
 
 airTable:
   accessToken: $AIRTABLE_ACCESS_TOKEN
-  baseUrl: "https://api.airtable.com"
   metadataPath: "/v0/meta/bases/appzJQ8Tkmm8DobrJ/tables"
   metodeVerkPath: "/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?view=viw2XliGUJu5448Hk"
   allePath: "/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v"
+  tableId: "$TABLE_ID:570e9285-3228-4396-b82b-e9752e23cd73"
+  tableReference: "$TABLE_REFERENCE:tblLZbUqA0XnUgC2v"
+
+data:
+  url: "$DATA_SOURCE:https://api.airtable.com"
+  source: "$DATA_SOURCE_TYPE:AIRTABLE"
 
 microsoftGraph:
   baseUrl: "https://graph.microsoft.com"

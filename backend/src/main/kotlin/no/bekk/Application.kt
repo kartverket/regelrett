@@ -17,10 +17,18 @@ private fun loadAppConfig(config: ApplicationConfig) {
     // AirTable config
     AppConfig.airTable = AirTableConfig.apply {
         accessToken = config.propertyOrNull("airTable.accessToken")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.accessToken\"")
-        baseUrl = config.propertyOrNull("airTable.baseUrl")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.baseUrl\"")
         metadataPath = config.propertyOrNull("airTable.metadataPath")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.metadataPath\"")
         metodeVerkPath = config.propertyOrNull("airTable.metodeVerkPath")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.metodeVerkPath\"")
         allePath = config.propertyOrNull("airTable.allePath")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.allePath\"")
+        tableId = config.propertyOrNull("airTable.tableId")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.tableId\"")
+        tableReference = config.propertyOrNull("airTable.tableReference")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"airTable.tableReference\"")
+
+    }
+
+    // Data source config
+    AppConfig.data = DataConfig.apply {
+        url = config.propertyOrNull("data.url")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"data.url\"")
+        source = config.propertyOrNull("data.source")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"data.source\"")
     }
 
     // MicrosoftGraph config

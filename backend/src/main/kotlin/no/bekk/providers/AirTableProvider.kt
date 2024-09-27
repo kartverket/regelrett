@@ -1,4 +1,4 @@
-package no.bekk.services
+package no.bekk.providers
 
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -12,8 +12,16 @@ import no.bekk.configuration.AppConfig
 import no.bekk.domain.AirtableResponse
 import no.bekk.domain.MetadataResponse
 import no.bekk.domain.Record
+import no.bekk.domain.mapToQuestion
+import no.bekk.model.airtable.AirTableFieldType
+import no.bekk.model.airtable.mapAirTableFieldTypeToAnswerType
+import no.bekk.model.airtable.mapAirTableFieldTypeToOptionalFieldType
+import no.bekk.model.internal.Column
+import no.bekk.model.internal.Option
+import no.bekk.model.internal.Table
 
-class AirTableService {
+
+class AirTableProvider: Provider {
 
     val json = Json { ignoreUnknownKeys = true }
 
@@ -25,6 +33,52 @@ class AirTableService {
                 }
             }
         }
+    }
+
+    override suspend fun getTable(team: String?): Table {
+        val metodeverkData = fetchDataFromMetodeverk()
+        val airTableMetadata = fetchDataFromMetadata()
+        val tableReferenceId = AppConfig.airTable.tableReference
+        val tableId = AppConfig.airTable.tableId
+
+        val tableMetadata = airTableMetadata.tables.first { it.id == tableReferenceId }
+        if (tableMetadata.fields == null) {
+            throw IllegalArgumentException("Table $tableReferenceId has no fields")
+        }
+
+        val questions = metodeverkData.records.map { record ->
+            record.mapToQuestion(
+                metaDataFields = tableMetadata.fields,
+                answerType = mapAirTableFieldTypeToAnswerType(AirTableFieldType.fromString(record.fields.jsonObject["Svartype"]?.jsonPrimitive?.content ?: "unknown")),
+                answerOptions = record.fields.jsonObject["Svaralternativ"]?.jsonArray?.map { it.jsonPrimitive.content }
+            )
+        }
+
+        val columns = tableMetadata.fields.map { field ->
+            Column(
+                type = mapAirTableFieldTypeToOptionalFieldType(AirTableFieldType.fromString(field.type)),
+                name = field.name,
+                options = field.options?.choices?.map { choice ->
+                    Option(name = choice.name, color = choice.color)
+                }
+            )
+        }
+
+        return Table(
+            id = tableId,
+            name = tableMetadata.name,
+            columns = columns,
+            records = questions
+        )
+    }
+
+    private suspend fun fetchDataFromMetadata(): MetadataResponse {
+        val response: HttpResponse = client.get(AppConfig.data.url + AppConfig.airTable.metadataPath)
+        val responseBody = response.body<String>()
+        val metadataResponse: MetadataResponse = json.decodeFromString(responseBody)
+        val filteredMetaData = filterDataOnStop(metadataResponse = metadataResponse)
+        return filteredMetaData
+
     }
 
     private fun filterDataOnStop(metadataResponse: MetadataResponse): MetadataResponse {
@@ -46,16 +100,7 @@ class AirTableService {
         return metadataResponse.copy(tables = newTables)
     }
 
-    suspend fun fetchDataFromMetadata(): MetadataResponse {
-        val response: HttpResponse = client.get(AppConfig.airTable.baseUrl + AppConfig.airTable.metadataPath)
-        val responseBody = response.body<String>()
-        val metadataResponse: MetadataResponse = json.decodeFromString(responseBody)
-        val filteredMetaData = filterDataOnStop(metadataResponse = metadataResponse)
-        return filteredMetaData
-
-    }
-
-    suspend fun fetchDataFromMetodeverk(): AirtableResponse {
+    private suspend fun fetchDataFromMetodeverk(): AirtableResponse {
         var offset: String? = null
         val allRecords = mutableListOf<Record>()
         do {
@@ -68,10 +113,9 @@ class AirTableService {
         return AirtableResponse(allRecords)
     }
 
-
     private suspend fun fetchMetodeverkPage(offset: String? = null): AirtableResponse {
         val url = buildString {
-            append(AppConfig.airTable.baseUrl + AppConfig.airTable.metodeVerkPath)
+            append(AppConfig.data.url + AppConfig.airTable.metodeVerkPath)
             if (offset != null) {
                 append("&offset=$offset")
             }

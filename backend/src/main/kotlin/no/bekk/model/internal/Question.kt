@@ -21,7 +21,7 @@ data class Question(
 data class OptionalField(
     val key: String,
     val value: List<String>,
-    val type: OptionalFieldType,
+    val type: OptionalFieldType?,
     val options: List<String>?,
 )
 

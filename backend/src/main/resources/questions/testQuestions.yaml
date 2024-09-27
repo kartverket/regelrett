@@ -1,0 +1,64 @@
+id: "hehe"
+name: "YAML-data"
+columns:
+  - Kortnavn
+  - Kontroller
+  - Priority
+  - Svar
+records:
+  - id: "Z-420"
+    question: "How many countries are there in the world?"
+    metadata:
+      answerMetadata:
+        type: "SELECT_SINGLE"
+        options:
+          - "180"
+          - "190"
+          - "195"
+          - "205"
+      optionalFields:
+        - key: "Kontroller"
+          value:
+            - "How many countries are there in the world?"
+        - key: "Kortnavn"
+          value:
+            - "Antall land"
+        - key: "Priority"
+          value:
+            - "High"
+  - id: "Z-421"
+    question: "What is the capital of France?"
+    metadata:
+      answerMetadata:
+        type: "TEXT_SINGLE_LINE"
+      optionalFields:
+        - key: "Kontroller"
+          value:
+            - "What is the capital of France?"
+        - key: "Priority"
+          value:
+            - "High"
+        - key: "Subject"
+          value:
+            - "Geography"
+            - "History"
+          type: "OPTION_MULTIPLE"
+          options:
+            - "Geography"
+            - "History"
+            - "Science"
+  - id: "Z-422"
+    question: "What is the capital of Spain?"
+    metadata:
+      answerMetadata:
+        type: "TEXT_SINGLE_LINE"
+      optionalFields:
+        - key: "Kontroller"
+          value:
+            - "What is the capital of Spain?"
+        - key: "Kortnavn"
+          value:
+            - "Antall land"
+        - key: "Priority"
+          value:
+            - "High"
