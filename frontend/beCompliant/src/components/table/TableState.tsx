@@ -1,12 +1,12 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
-export type KommentarCellState = {
+export type CommentState = {
   isEditMode: boolean;
   editedComment: string | null;
 };
 
 export type RowState = {
-  kommentar: KommentarCellState;
+  comment: CommentState;
 };
 
 export type TableState = {
@@ -20,7 +20,7 @@ type TableStateContextType = {
 };
 
 const initialRowState: RowState = {
-  kommentar: {
+  comment: {
     isEditMode: false,
     editedComment: null,
   },
@@ -45,7 +45,7 @@ export const TableStateProvider = ({ children }: PropsWithChildren) => {
   };
 
   const setRowState = (rowId: string, rowState: RowState) => {
-    setTableState({ ...tableState, [rowId]: rowState });
+    setTableState((prevTableState) => ({ ...prevTableState, [rowId]: rowState }));
   };
 
   const value = {
@@ -65,26 +65,26 @@ export const useTableState = () => {
   return useContext<TableStateContextType>(TableStateContext);
 };
 
-export const useKommentarCellState = (rowId: string) => {
+export const useCommentState = (rowId: string) => {
   const { getRowState, setRowState } = useTableState();
   const rowState = getRowState(rowId);
 
   const setIsEditing = (isEditMode: boolean) => {
     setRowState(rowId, {
       ...rowState,
-      kommentar: { editedComment: null, isEditMode },
+      comment: { ...rowState.comment, isEditMode },
     });
   };
 
   const setEditedComment = (editedComment: string | null) => {
     setRowState(rowId, {
       ...rowState,
-      kommentar: { ...rowState.kommentar, editedComment },
+      comment: { ...rowState.comment, editedComment },
     });
   };
 
   return {
-    ...rowState.kommentar,
+    ...rowState.comment,
     setIsEditing,
     setEditedComment,
   };

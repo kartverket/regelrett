@@ -3,7 +3,7 @@ import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useSubmitComment } from '../../hooks/useSubmitComment';
 import { DeleteCommentModal } from './DeleteCommentModal';
 import { LastUpdated } from './LastUpdated';
-import { useKommentarCellState } from './TableState';
+import { useCommentState } from './TableState';
 
 // Replace with type from api when the internal data model is implemented
 type Props = {
@@ -23,14 +23,12 @@ export function Comment({
 }: Props) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { setEditedComment, setIsEditing, editedComment, isEditMode } =
-    useKommentarCellState(questionId);
+    useCommentState(questionId);
   const [commentDeleted, setCommentDeleted] = useState(false);
+  console.log(editedComment);
 
-  const {
-    mutate: submitComment,
-    isPending: isLoading,
-    data,
-  } = useSubmitComment(setIsEditing, team);
+  const { mutate: submitComment, isPending: isLoading } =
+    useSubmitComment(setIsEditing);
   const {
     isOpen: isDeleteOpen,
     onOpen: onDeleteOpen,
@@ -50,7 +48,7 @@ export function Comment({
   };
 
   const handleDiscardChanges = () => {
-    setEditedComment(null);
+    setEditedComment(comment);
     setIsEditing(false);
   };
 
@@ -76,6 +74,8 @@ export function Comment({
   };
 
   if (isEditMode) {
+    console.log('editedComment: ', editedComment);
+    console.log('comment: ', comment);
     return (
       <Flex minWidth="200px" gap="2" justifyContent="space-between">
         <Textarea
@@ -113,7 +113,7 @@ export function Comment({
   }
 
   // change this when the new data model is implemented. Because this should not be an empty string
-  if ((comment === '' && data?.data.comment == null) || commentDeleted) {
+  if (comment === '' || commentDeleted) {
     return (
       <IconButton
         aria-label="Legg til kommentar"
@@ -141,7 +141,7 @@ export function Comment({
           whiteSpace="normal"
           fontSize="md"
         >
-          {data?.data.comment ?? comment}
+          {comment}
         </Text>
         <Flex flexDirection="column" gap="2">
           <IconButton
@@ -149,7 +149,10 @@ export function Comment({
             colorScheme="blue"
             icon="edit"
             variant="secondary"
-            onClick={() => setIsEditing(true)}
+            onClick={() => {
+              setEditedComment(comment);
+              setIsEditing(true);
+            }}
             background="white"
           />
           <IconButton
