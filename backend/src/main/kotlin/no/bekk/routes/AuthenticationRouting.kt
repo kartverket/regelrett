@@ -64,10 +64,7 @@ fun Route.authenticationRouting() {
             currentPrincipal?.let { principal ->
                 logger.debug("Received OAuth2 principal: {}", principal)
                 principal.state?.let { state ->
-<<<<<<< HEAD
                     logger.debug("Session set for user: {}", state)
-=======
->>>>>>> 0e07cc6f (testing nginx api url)
                     call.sessions.set(UserSession(state, principal.accessToken))
                     val redirects = mutableMapOf<String, String>()
                     redirects[state]?.let { redirect ->
