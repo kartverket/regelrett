@@ -39,6 +39,7 @@ env:
   REGISTRY: ghcr.io
   ARGO_VERSION_FILE: image-url-regelrett-backend
   IMAGE_NAME: ${{ github.repository }}-backend
+  REGION: europe-north1
 
 jobs:
   build:
@@ -60,8 +61,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-
 
       - name: Checkout specific commit
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.commit_sha == '' }}
@@ -199,3 +198,4 @@ jobs:
           git pull
           git commit -am "Update ${{ env.ARGO_VERSION_FILE }}"
           git push
+  

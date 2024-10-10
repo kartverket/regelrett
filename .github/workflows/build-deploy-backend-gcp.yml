@@ -1,0 +1,178 @@
+name: Build and deploy backend to GCP
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Commit hash to deploy'
+        default: ''
+        type: string
+      dev:
+        description: 'Deploy to dev'
+        required: true
+        type: boolean
+      prod:
+        description: 'Deploy to prod'
+        required: true
+        type: boolean
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - frontend**
+      - .sikkerhet**
+      - compose.yaml
+      - README**
+  push:
+    paths-ignore:
+      - frontend**
+      - .sikkerhet**
+      - compose.yaml
+      - README**
+    branches:
+      - main
+
+env:
+  REGION: europe-north1
+  DB_URL: 'jdbc:postgresql://regelrett-db:5432/regelrett'
+  KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
+  GCP_PROVIDER_URL: https://regelrett-frontend-1024826672490.europe-north1.run.app/api/callback
+  FRONTEND_URL_HOST: regelrett-frontend-1024826672490.europe-north1.run.app
+  FRISK_API_URL: https://frisk-backend.fly.dev
+
+jobs:
+  build-and-push:
+    name: Build and push docker image to GAR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Set repository name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)-backend" >> $GITHUB_ENV
+
+      - name: Set Docker image URL
+        run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          architecture: 'x64'
+
+      - name: Copy Application Config
+        working-directory: backend/src/main/resources
+        run: cp application-gcp.yaml application.yaml
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Execute Gradle build
+        working-directory: backend
+        run: ./gradlew shadowJar
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: "Docker auth"
+        run: |-
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build docker image
+        working-directory: backend
+        run: |
+          docker build -t ${{ env.IMAGE_URL }} .
+
+      - name: Push Docker image to GAR
+        run: |
+          docker push ${{ env.IMAGE_URL }}
+
+  deploy-to-gcp-vm:
+    name: Build and push docker image to GAR
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set repository name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)-backend" >> $GITHUB_ENV
+
+      - name: Set Docker image URL
+        run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
+
+      - name: Debug env variables
+        run: |
+          echo "IMAGE_NAME is: ${{ env.IMAGE_NAME }}"
+          echo "IMAGE_URL IS: ${{ env.IMAGE_URL }}"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGION }}-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Debug env variables
+        run: |
+          echo "FRISK_API_URL is: ${{ env.FRISK_API_URL }}" 
+
+      - name: SSH into VM and deploy container
+        run: |
+          gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
+            sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet &&
+            echo 'This is the value: $(sudo docker ps -a -q)' &&
+            sudo docker stop $(sudo docker ps -a -q) || true &&
+            sudo docker rm $(sudo docker ps -a -q) || true &&
+            sudo docker network rm container_network || true &&
+            sudo docker network create container_network &&
+            sudo docker run --name regelrett-db --network container_network  -it \
+              -e POSTGRES_PASSWORD=pwd \
+              -e POSTGRES_USER=postgres \
+              -e POSTGRES_DB=regelrett \
+              -p 5432:5432 -d postgres:15.4               
+            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest' &&               
+            sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
+            sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
+            sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 8443:8443 \
+              -e AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
+              -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
+              -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
+              -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
+              -e FRISK_TENANT_ID=${{ secrets.FRISK_TENANT_ID }} \
+              -e FRISK_CLIENT_ID=${{ secrets.FRISK_CLIENT_ID }} \
+              -e FRISK_API_URL=${{ env.FRISK_API_URL }} \
+              -e DB_URL='${{ env.DB_URL }}' \
+              -e AUTH_PROVIDER_URL=${{ env.GCP_PROVIDER_URL }} \
+              -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
+              -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
+              -e FRONTEND_URL_HOST=${{ env.FRONTEND_URL_HOST }} \
+              -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
+              '${{ env.IMAGE_URL }}'
+          "

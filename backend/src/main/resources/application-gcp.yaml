@@ -1,21 +1,22 @@
 ktor:
   deployment:
     port: 8080
+    sslPort: 8443
   application:
     modules:
       - no.bekk.ApplicationKt.module
+  security:
+    ssl:
+      keyStore: $KEYSTORE_PATH
+      keyStorePassword: $KEYSTORE_PASSWORD
+      privateKeyPassword: $KEYSTORE_PASSWORD
 
 airTable:
+  accessToken: $AIRTABLE_ACCESS_TOKEN
   baseUrl: "https://api.airtable.com"
-  sikkerhetskontroller:
-    accessToken: $AIRTABLE_ACCESS_TOKEN
-    baseId: "appzJQ8Tkmm8DobrJ"
-    tableId: "tblLZbUqA0XnUgC2v"
-    viewId: "viw2XliGUJu5448Hk"
-  driftskontinuitet:
-    accessToken: $AIRTABLE_ACCESS_TOKEN
-    baseId: "appsIiBWlCCSsMmRB"
-    tableId: "tbl4pNqNp2wLyI6iv"
+  metadataPath: "/v0/meta/bases/appzJQ8Tkmm8DobrJ/tables"
+  metodeVerkPath: "/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?view=viw2XliGUJu5448Hk"
+  allePath: "/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v"
 
 microsoftGraph:
   baseUrl: "https://graph.microsoft.com"
@@ -44,6 +45,7 @@ db:
   password: "$DB_PASSWORD:pwd"
 
 frisk:
-  apiUrl: "$FRISK_API_URL:http://localhost:8081"
+  apiUrl: $FRISK_API_URL
   tenantId: $FRISK_TENANT_ID
   clientId: $FRISK_CLIENT_ID
+

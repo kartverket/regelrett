@@ -35,11 +35,16 @@ env:
   REGISTRY: ghcr.io
   ARGO_VERSION_FILE: image-url-regelrett-frontend
   IMAGE_NAME: ${{ github.repository }}-frontend
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: europe-north1
 
 jobs:
   build-dev:
     name: Build and push docker image for dev
     runs-on: ubuntu-latest
+    env:
+      FRONTEND_URL: https://regelrett.atgcp1-dev.kartverket-intern.cloud
+      BACKEND_URL: https://api.regelrett.atgcp1-dev.kartverket-intern.cloud
     permissions:
       contents: write
       packages: write
@@ -119,6 +124,10 @@ jobs:
           push: ${{ !github.event.pull_request.draft }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            FRONTEND_URL=${{ env.FRONTEND_URL }}
+            BACKEND_URL=${{ env.BACKEND_URL }}      
+
 
       - name: Set output with build values
         id: setOutput
@@ -128,6 +137,9 @@ jobs:
   build-prod:
     name: Build and push docker image for prod
     runs-on: ubuntu-latest
+    env:
+      FRONTEND_URL: https://regelrett.atgcp1-prod.kartverket-intern.cloud
+      BACKEND_URL: https://api.regelrett.atgcp1-prod.kartverket-intern.cloud
     permissions:
       contents: write
       packages: write
@@ -207,6 +219,9 @@ jobs:
           push: ${{ !github.event.pull_request.draft }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            FRONTEND_URL=${{ env.FRONTEND_URL }}
+            BACKEND_URL=${{ env.BACKEND_URL }} 
 
       - name: Set output with build values
         id: setOutput

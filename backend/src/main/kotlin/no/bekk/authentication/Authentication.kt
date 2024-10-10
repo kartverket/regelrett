@@ -31,8 +31,9 @@ fun Application.installSessions() {
         cookie<UserSession>("user_session") {
             cookie.path = "/"
             cookie.maxAgeInSeconds = 180 * 60
-            cookie.secure
             cookie.httpOnly = true
+            cookie.extensions["SameSite"] = "None"  // Allow cross-origin cookies
+            cookie.secure = true
         }
     }
 

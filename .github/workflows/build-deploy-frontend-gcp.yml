@@ -1,0 +1,120 @@
+name: Build and deploy frontend to GCP
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Commit hash to deploy'
+        default: ''
+        type: string
+      dev:
+        description: 'Deploy to dev'
+        required: true
+        type: boolean
+      prod:
+        description: 'Deploy to prod'
+        required: true
+        type: boolean
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - backend**
+      - .sikkerhet**
+      - compose.yaml
+      - README**
+  push:
+    paths-ignore:
+      - backend**
+      - .sikkerhet**
+      - compose.yaml
+      - README**
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: europe-north1
+  FRONTEND_URL: https://regelrett-frontend-1024826672490.europe-north1.run.app/
+  BACKEND_URL: https://regelrett.bekk.no:8443
+
+jobs:
+  build-dev:
+    name: Build and push docker image for dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    outputs:
+      image_url: ${{ steps.setOutput.outputs.image_url }}
+
+    steps:
+      - name: Set repository name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)-frontend" >> $GITHUB_ENV
+
+      - name: Checkout code
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
+        uses: actions/checkout@v4
+
+      - name: Checkout code
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.commit_sha == '' }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout specific commit
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.commit_sha == '' }}
+        run: git checkout ${{ github.event.inputs.commit_sha }}
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: "Docker auth"
+        run: |-
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 22.x
+          cache: "npm"
+          cache-dependency-path: "./frontend/beCompliant/package-lock.json"
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: Run npm install and build
+        working-directory: frontend/beCompliant
+        run: |
+          # Ensure .env.dev_gcp is available
+          if [ ! -f .env.dev_gcp ]; then
+            echo "Error: .env.dev_gcp file not found!"
+            exit 1
+          fi
+          cat .env
+          cp .env.dev_gcp .env
+          cat .env
+          npm ci
+          npm run build:dev_gcp
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build \
+          --build-arg FRONTEND_URL=${{ env.FRONTEND_URL }} \
+          --build-arg BACKEND_URL=${{ env.BACKEND_URL }} \
+          -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest ./frontend/beCompliant
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.IMAGE_NAME }} \
+            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/regelrett-artifact-registry/${{ env.IMAGE_NAME }}:latest \
+            --port 3000 \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated
