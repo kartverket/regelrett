@@ -36,6 +36,9 @@ oAuth:
 frontend:
   host: "$FRONTEND_URL_HOST:localhost:3000"
 
+backend:
+  host: "$BACKEND_URL_HOST:localhost:8080"
+
 db:
   url: "$DB_URL:jdbc:postgresql://localhost:5432/regelrett"
   username: "$DB_NAME:postgres"
