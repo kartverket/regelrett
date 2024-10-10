@@ -139,6 +139,9 @@ jobs:
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
 
+      - name: Debug env variables
+        run: |
+          echo "FRISK_API_URL is: ${{ env.FRISK_API_URL }}" 
 
       - name: SSH into VM and deploy container
         run: |
