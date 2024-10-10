@@ -174,7 +174,5 @@ jobs:
               -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
               -e FRONTEND_URL_HOST=${{ env.FRONTEND_URL_HOST }} \
               -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
-              '${{ env.IMAGE_URL }}' &&
-
-            sudo docker exec '${{ env.FRISK_API_URL }}' env | grep FRISK_API_URL
+              '${{ env.IMAGE_URL }}'
           "
