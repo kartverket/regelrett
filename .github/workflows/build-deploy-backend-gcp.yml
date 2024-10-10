@@ -176,5 +176,5 @@ jobs:
               -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
               '${{ env.IMAGE_URL }}' &&
 
-            sudo docker exec '${{ env.IMAGE_NAME }}' env | grep FRISK_API_URL
+            sudo docker exec '${{ env.FRISK_API_URL }}' env | grep FRISK_API_URL
           "
