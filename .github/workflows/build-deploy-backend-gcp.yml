@@ -37,6 +37,7 @@ env:
   KEYSTORE_PATH: '/etc/regelrett/keystore/keystore.jks'
   GCP_PROVIDER_URL: https://regelrett-frontend-1024826672490.europe-north1.run.app/api/callback
   FRONTEND_URL_HOST: regelrett-frontend-1024826672490.europe-north1.run.app
+  FRISK_API_URL: https://frisk-backend.fly.dev
 
 jobs:
   build-and-push:
@@ -161,6 +162,9 @@ jobs:
               -e CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
               -e CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
+              -e FRISK_TENANT_ID=${{ secrets.FRISK_TENANT_ID }} \
+              -e FRISK_CLIENT_ID=${{ secrets.FRISK_CLIENT_ID }} \
+              -e FRISK_API_URL=${{ env.FRISK_API_URL }} \
               -e DB_URL='${{ env.DB_URL }}' \
               -e AUTH_PROVIDER_URL=${{ env.GCP_PROVIDER_URL }} \
               -e KEYSTORE_PATH=${{ env.KEYSTORE_PATH }} \
