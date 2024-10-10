@@ -40,3 +40,9 @@ db:
   url: "$DB_URL:jdbc:postgresql://localhost:5432/regelrett"
   username: "$DB_NAME:postgres"
   password: "$DB_PASSWORD:pwd"
+
+frisk:
+  apiUrl: $FRISK_API_URL
+  tenantId: $FRISK_TENANT_ID
+  clientId: $FRISK_CLIENT_ID
+
