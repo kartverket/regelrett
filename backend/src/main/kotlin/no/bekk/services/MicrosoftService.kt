@@ -13,6 +13,7 @@ import no.bekk.configuration.AppConfig
 import no.bekk.configuration.getTokenUrl
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphGroupsResponse
+import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.domain.MicrosoftOnBehalfOfTokenResponse
 
 class MicrosoftService {
@@ -64,5 +65,17 @@ class MicrosoftService {
                 displayName = it.displayName.split("TEAM - ").last()
             )
         }
+    }
+
+    suspend fun fetchCurrentUser(bearerToken: String): MicrosoftGraphUser {
+        val url = "${AppConfig.microsoftGraph.baseUrl}/v1.0/me?\$select=id,displayName"
+
+        val response: HttpResponse = client.get(url) {
+            bearerAuth(bearerToken)
+            header("ConsistencyLevel", "eventual")
+        }
+
+        val responseBody = response.body<String>()
+        return json.decodeFromString<MicrosoftGraphUser>(responseBody)
     }
 }

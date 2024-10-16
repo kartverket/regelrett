@@ -12,3 +12,9 @@ data class MicrosoftGraphGroup(
     val id: String,
     val displayName: String,
 )
+
+@Serializable
+data class MicrosoftGraphUser(
+    val id: String,
+    val displayName: String,
+)

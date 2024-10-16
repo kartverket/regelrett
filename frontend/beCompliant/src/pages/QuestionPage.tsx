@@ -12,6 +12,7 @@ import { QuestionInfoBox } from '../components/questionPage/QuestionInfoBox';
 import { UnsavedChangesModal } from '../components/table/UnsavedChangesModal';
 import { useState } from 'react';
 import { QuestionHistory } from '../components/questionPage/QuestionHistory';
+import { useFetchCurrentUser } from '../hooks/useFetchCurrentUser';
 
 export const QuestionPage = () => {
   const { teamId, recordId, tableId, contextId, ...params } = useParams();
@@ -53,6 +54,12 @@ export const QuestionPage = () => {
   );
 
   const {
+    data: user,
+    error: userError,
+    isPending: userIsLoading,
+  } = useFetchCurrentUser();
+
+  const {
     isOpen: isDiscardOpen,
     onOpen: onDiscardOpen,
     onClose: onDiscardClose,
@@ -62,11 +69,16 @@ export const QuestionPage = () => {
   const [isAnswerEdited, setIsAnswerEdited] = useState(false);
   const navigate = useNavigate();
 
-  if (questionIsLoading || answersIsLoading || commentsIsLoading) {
+  if (
+    questionIsLoading ||
+    answersIsLoading ||
+    commentsIsLoading ||
+    userIsLoading
+  ) {
     return <LoadingState />;
   }
 
-  if (questionError || answersError || commentsError) {
+  if (questionError || answersError || commentsError || userError) {
     return <ErrorState message="Noe gikk galt, prøv gjerne igjen" />;
   }
 
@@ -122,6 +134,7 @@ export const QuestionPage = () => {
             isAnswerEdited={isAnswerEdited}
             setIsAnswerEdited={setIsAnswerEdited}
             contextId={contextId}
+            user={user}
           />
           <QuestionInfoBox question={question} tableId={tableId} />
         </Flex>
@@ -135,6 +148,7 @@ export const QuestionPage = () => {
           isEditing={isCommentEditing}
           setIsEditing={setIsCommentEditing}
           marginTop={{ base: '10', md: '24' }}
+          user={user}
         />
         <QuestionHistory answers={answers} />
       </Flex>

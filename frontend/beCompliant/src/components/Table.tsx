@@ -16,15 +16,16 @@ import { DataTable } from './table/DataTable';
 import { DataTableCell } from './table/DataTableCell';
 import { DataTableHeader } from './table/DataTableHeader';
 import { TableCell } from './table/TableCell';
-import { OptionalField, Question, Table } from '../api/types';
+import { OptionalField, Question, Table, User } from '../api/types';
 import { getSortFuncForColumn } from './table/TableSort';
 
 type Props = {
   data: Question[];
   tableData: Table;
+  user: User;
 };
 
-export function TableComponent({ data, tableData }: Props) {
+export function TableComponent({ data, tableData, user }: Props) {
   const params = useParams();
   const team = params.teamId;
   const contextId = params.contextId;
@@ -70,6 +71,7 @@ export function TableComponent({ data, tableData }: Props) {
             column={field}
             row={row}
             answerable={index == 3}
+            user={user}
           />
         </DataTableCell>
       ),
@@ -113,6 +115,7 @@ export function TableComponent({ data, tableData }: Props) {
           team={team}
           functionId={functionId}
           contextId={contextId}
+          user={user}
         />
       </DataTableCell>
     ),

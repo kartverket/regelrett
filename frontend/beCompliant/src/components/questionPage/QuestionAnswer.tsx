@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Answer, AnswerType, Question } from '../../api/types';
+import { Answer, AnswerType, Question, User } from '../../api/types';
 import { PercentAnswer } from '../answers/PercentAnswer';
 import { RadioAnswer } from './RadioAnswer';
 import { TextAreaAnswer } from './TextAreaAnswer';
@@ -16,6 +16,7 @@ type Props = {
   contextId?: string;
   isAnswerEdited: boolean;
   setIsAnswerEdited: (value: boolean) => void;
+  user: User;
 };
 
 export function QuestionAnswer({
@@ -27,6 +28,7 @@ export function QuestionAnswer({
   functionId,
   contextId,
   tableId,
+  user,
 }: Props) {
   const [answerInput, setAnswerInput] = useState<string | undefined>(
     answers.at(-1)?.answer
@@ -43,7 +45,7 @@ export function QuestionAnswer({
 
   const submitAnswer = (newAnswer: string, unitAnswer?: string) => {
     submitAnswerHook({
-      actor: 'Unknown',
+      actor: user.id,
       recordId: question.recordId,
       questionId: question.id,
       question: question.question,
@@ -67,6 +69,7 @@ export function QuestionAnswer({
           functionId={functionId}
           tableId={tableId}
           contextId={contextId}
+          user={user}
         />
       );
     case AnswerType.TEXT_MULTI_LINE:
@@ -80,6 +83,7 @@ export function QuestionAnswer({
           isAnswerEdited={isAnswerEdited}
           setIsAnswerEdited={setIsAnswerEdited}
           tableId={tableId}
+          user={user}
         />
       );
     case AnswerType.PERCENT:

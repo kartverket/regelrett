@@ -18,6 +18,7 @@ import { useFetchUserinfo } from '../hooks/useFetchUserinfo';
 import { useFetchTables } from '../hooks/useFetchTables';
 import { TablePicker } from '../components/tableActions/TablePicker';
 import { useFetchFriskFunction } from '../hooks/useFetchFriskFunction';
+import { useFetchCurrentUser } from '../hooks/useFetchCurrentUser';
 
 export const ActivityPage = () => {
   const params = useParams();
@@ -62,6 +63,11 @@ export const ActivityPage = () => {
     error: funcError,
     isPending: funcIsPending,
   } = useFetchFriskFunction(functionId);
+  const {
+    data: user,
+    error: userError,
+    isPending: userIsPending,
+  } = useFetchCurrentUser();
 
   useEffect(() => {
     if (tablesData && !activeTableId) {
@@ -79,7 +85,8 @@ export const ActivityPage = () => {
     answerError ||
     userinfoError ||
     tablesError ||
-    funcError;
+    funcError ||
+    userError;
 
   const functionName = func?.name;
 
@@ -89,7 +96,8 @@ export const ActivityPage = () => {
     answerIsPending ||
     userinfoIsPending ||
     tablesIsPending ||
-    (functionId && funcIsPending);
+    (functionId && funcIsPending) ||
+    userIsPending;
 
   const statusFilterOptions: Column = {
     options: [
@@ -136,7 +144,7 @@ export const ActivityPage = () => {
         setActiveFilters={setActiveFilters}
       />
       <TableActions filters={filters} tableMetadata={tableData.columns} />
-      <TableComponent data={filteredData} tableData={tableData} />
+      <TableComponent data={filteredData} tableData={tableData} user={user} />
     </Page>
   );
 };

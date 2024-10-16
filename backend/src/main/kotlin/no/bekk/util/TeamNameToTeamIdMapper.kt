@@ -1,10 +1,7 @@
 package no.bekk.util
 
-import com.azure.identity.ClientSecretCredentialBuilder
-import com.microsoft.graph.models.Group
-import com.microsoft.graph.serviceclient.GraphServiceClient
-import no.bekk.configuration.AppConfig
 import no.bekk.configuration.getDatabaseConnection
+import no.bekk.services.MicrosoftGraphService
 import java.util.*
 
 class TeamNameToTeamIdMapper {
@@ -49,13 +46,13 @@ class TeamNameToTeamIdMapper {
             val commentsUpdateStatement = connection.prepareStatement("UPDATE comments SET team = ? WHERE team = ?")
 
             for (teamName in answersTeams) {
-                val group = MicrosoftService.getGroup(teamName)
+                val group = MicrosoftGraphService().getGroup(teamName)
                 answersUpdateStatement.setString(1, group.id)
                 answersUpdateStatement.setString(2, teamName)
                 answersUpdateStatement.addBatch()
             }
             for (teamName in commentsTeams) {
-                val group = MicrosoftService.getGroup(teamName)
+                val group = MicrosoftGraphService().getGroup(teamName)
                 commentsUpdateStatement.setString(1, group.id)
                 commentsUpdateStatement.setString(2, teamName)
                 commentsUpdateStatement.addBatch()
@@ -72,24 +69,5 @@ class TeamNameToTeamIdMapper {
             connection.autoCommit = true
             connection.close()
         }
-    }
-}
-
-private object MicrosoftService {
-    private val tenantId = AppConfig.oAuth.tenantId
-    private val clientId = AppConfig.oAuth.clientId
-    private val clientSecret = AppConfig.oAuth.clientSecret
-
-    private val scopes = "https://graph.microsoft.com/.default"
-    private val credential = ClientSecretCredentialBuilder().clientId(clientId).tenantId(tenantId).clientSecret(clientSecret).build()
-    private val graphClient = GraphServiceClient(credential, scopes)
-
-    fun getGroup(groupName: String): Group {
-        return graphClient.groups().get {
-            it.queryParameters.filter = "displayName eq 'AAD - TF - TEAM - $groupName'"
-            it.queryParameters.select = arrayOf("id","displayName")
-            it.queryParameters.count = true
-            it.headers.add("ConsistencyLevel", "eventual")
-        }.value[0]
     }
 }

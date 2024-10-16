@@ -7,6 +7,8 @@ const PATH_LOGIN = '/login';
 const PATH_LOGOUT = '/logout';
 const PATH_AUTH_STATUS = '/auth-status';
 const PATH_USERINFO = '/userinfo';
+const PATH_CURRENT_USER = '/currenUser';
+const PATH_USERNAME = '/username';
 const PATH_COLUMNS = '/columns';
 const PATH_FIRSK_FUNCTIONS = '/frisk/functions';
 const PATH_FIRSK_METADATA = '/frisk/metadata';
@@ -21,7 +23,8 @@ const API_URL_COMMENTS = `${API_URL_BASE}${PATH_COMMENTS}`;
 export const API_URL_LOGIN = `${API_URL_BASE}${PATH_LOGIN}`;
 export const API_URL_LOGOUT = `${API_URL_BASE}${PATH_LOGOUT}`;
 export const API_URL_AUTH_STATUS = `${API_URL_BASE}${PATH_AUTH_STATUS}`;
-export const API_URL_USERINFO = `${API_URL_BASE}${PATH_USERINFO}`;
+const API_URL_USERINFO = `${API_URL_BASE}${PATH_USERINFO}`;
+const API_URL_CURRENT_USER = `${API_URL_BASE}${PATH_USERINFO}${PATH_CURRENT_USER}`;
 const API_URL_FRISK_FUNCTIONS = `${API_URL_BASE}${PATH_FIRSK_FUNCTIONS}`;
 const API_URL_FRISK_METADATA = `${API_URL_BASE}${PATH_FIRSK_METADATA}`;
 
@@ -127,6 +130,15 @@ export const apiConfig = {
   userinfo: {
     queryKey: [PATH_USERINFO],
     url: API_URL_USERINFO,
+  },
+  currentUser: {
+    queryKey: [PATH_CURRENT_USER],
+    url: API_URL_CURRENT_USER,
+  },
+  username: {
+    queryKey: () => [PATH_USERNAME],
+    url: (userId: string) =>
+      `${API_URL_BASE}${PATH_USERINFO}/${userId}${PATH_USERNAME}`,
   },
   authStatus: {
     queryKey: [PATH_AUTH_STATUS],

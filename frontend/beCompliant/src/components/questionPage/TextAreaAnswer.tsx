@@ -1,6 +1,6 @@
 import { Text, Textarea, Stack, Button, Flex } from '@kvib/react';
 import { useSubmitAnswers } from '../../hooks/useSubmitAnswers';
-import { Question } from '../../api/types';
+import { Question, User } from '../../api/types';
 import { useEffect, useState } from 'react';
 
 type Props = {
@@ -12,6 +12,7 @@ type Props = {
   contextId?: string;
   isAnswerEdited: boolean;
   setIsAnswerEdited: (value: boolean) => void;
+  user: User;
 };
 
 export function TextAreaAnswer({
@@ -23,6 +24,7 @@ export function TextAreaAnswer({
   contextId,
   isAnswerEdited,
   setIsAnswerEdited,
+  user,
 }: Props) {
   const [answerInput, setAnswerInput] = useState<string | undefined>(
     latestAnswer
@@ -37,7 +39,7 @@ export function TextAreaAnswer({
   const submitTextAnswer = () => {
     if (answerInput !== latestAnswer) {
       submitAnswer({
-        actor: 'Unknown',
+        actor: user.id,
         recordId: question.recordId ?? '',
         questionId: question.id,
         question: question.question,

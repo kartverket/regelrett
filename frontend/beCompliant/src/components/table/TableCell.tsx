@@ -1,7 +1,7 @@
 import { Flex, Link, Tag, Text } from '@kvib/react';
 import { Row } from '@tanstack/react-table';
 import { AnswerCell } from './AnswerCell';
-import { Column, OptionalFieldType, Question } from '../../api/types';
+import { Column, OptionalFieldType, Question, User } from '../../api/types';
 import colorUtils from '../../utils/colorUtils';
 import { Link as ReactRouterLink } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ type Props = {
   column: Column;
   row: Row<Question>;
   answerable?: boolean;
+  user: User;
 };
 
 export const TableCell = ({
@@ -19,6 +20,7 @@ export const TableCell = ({
   column,
   row,
   answerable = false,
+  user,
 }: Props) => {
   if (answerable) {
     return (
@@ -34,6 +36,7 @@ export const TableCell = ({
         updated={row.original.answers.at(-1)?.updated}
         choices={row.original.metadata?.answerMetadata.options}
         options={column.options}
+        user={user}
       />
     );
   }

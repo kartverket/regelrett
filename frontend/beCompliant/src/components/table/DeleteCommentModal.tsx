@@ -11,6 +11,7 @@ import {
   Text,
 } from '@kvib/react';
 import { useDeleteComment } from '../../hooks/useDeleteComment';
+import { User } from '../../api/types';
 
 type Props = {
   onOpen: () => void;
@@ -24,6 +25,7 @@ type Props = {
   tableId: string;
   setEditMode: (value: boolean) => void;
   setCommentDeleted?: (deleted: boolean) => void;
+  user: User;
 };
 export function DeleteCommentModal({
   onClose,
@@ -36,6 +38,7 @@ export function DeleteCommentModal({
   tableId,
   setEditMode,
   setCommentDeleted,
+  user,
 }: Props) {
   const handleDeleteSuccess = () => {
     setEditMode(false);
@@ -48,7 +51,7 @@ export function DeleteCommentModal({
 
   const handleCommentDelete = async () => {
     deleteComment({
-      actor: 'Unknown',
+      actor: user.id,
       recordId: recordId,
       questionId: questionId,
       team: team ?? null,

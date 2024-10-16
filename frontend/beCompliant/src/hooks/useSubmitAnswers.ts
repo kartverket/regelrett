@@ -4,7 +4,7 @@ import { apiConfig } from '../api/apiConfig';
 import { useToast } from '@kvib/react';
 
 type SubmitAnswerRequest = {
-  actor: 'Unknown';
+  actor: string;
   recordId: string;
   questionId: string;
   question: string;
@@ -50,7 +50,12 @@ export function useSubmitAnswers(
       queryClient.refetchQueries({
         queryKey: [
           team
-            ? apiConfig.answers.withTeam.queryKey(tableId, team, functionId, contextId)
+            ? apiConfig.answers.withTeam.queryKey(
+                tableId,
+                team,
+                functionId,
+                contextId
+              )
             : apiConfig.answers.queryKey,
         ],
       });

@@ -2,7 +2,7 @@ import { Text } from '@kvib/react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSubmitAnswers } from '../../hooks/useSubmitAnswers';
-import { AnswerType } from '../../api/types';
+import { AnswerType, User } from '../../api/types';
 import { Option } from '../../api/types';
 import { PercentAnswer } from '../answers/PercentAnswer';
 import { TimeAnswer } from '../answers/TimeAnswer';
@@ -21,6 +21,7 @@ type Props = {
   updated?: Date;
   choices?: string[] | null;
   options?: Option[] | null;
+  user: User;
 };
 
 export function AnswerCell({
@@ -34,6 +35,7 @@ export function AnswerCell({
   updated,
   choices,
   options,
+  user,
 }: Props) {
   const params = useParams();
   const team = params.teamId;
@@ -53,7 +55,7 @@ export function AnswerCell({
 
   const submitAnswer = (newAnswer: string, unitAnswer?: string) => {
     submitAnswerHook({
-      actor: 'Unknown',
+      actor: user.id,
       recordId: recordId,
       questionId: questionId,
       tableId: tableId,

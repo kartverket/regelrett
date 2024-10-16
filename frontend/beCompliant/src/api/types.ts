@@ -101,3 +101,8 @@ export type FriskMetadata = {
   key: string;
   value: string;
 };
+
+export type User = {
+  id: string;
+  displayName: string;
+};

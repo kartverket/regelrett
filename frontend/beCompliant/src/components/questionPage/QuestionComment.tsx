@@ -10,7 +10,7 @@ import {
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useSubmitComment } from '../../hooks/useSubmitComment';
 import { DeleteCommentModal } from '../table/DeleteCommentModal';
-import { Question } from '../../api/types';
+import { Question, User } from '../../api/types';
 
 type Props = FlexProps & {
   question: Question;
@@ -21,6 +21,7 @@ type Props = FlexProps & {
   contextId?: string;
   isEditing: boolean;
   setIsEditing: (value: boolean) => void;
+  user: User;
 };
 
 export function QuestionComment({
@@ -32,6 +33,7 @@ export function QuestionComment({
   contextId,
   isEditing,
   setIsEditing,
+  user,
   ...rest
 }: Props) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -48,7 +50,7 @@ export function QuestionComment({
   const handleCommentSubmit = () => {
     if (editedComment !== latestComment && editedComment != null) {
       submitComment({
-        actor: 'Unknown',
+        actor: user.id,
         recordId: question.recordId,
         questionId: question.id,
         team: team ?? null,
@@ -173,6 +175,7 @@ export function QuestionComment({
             functionId={functionId}
             tableId={tableId}
             setEditMode={setIsEditing}
+            user={user}
           />
         </>
       )}
