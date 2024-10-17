@@ -8,6 +8,7 @@ import {
   Stack,
 } from '@kvib/react';
 import { LastUpdated } from '../table/LastUpdated';
+import { useEffect } from 'react';
 
 type Props = {
   value: string | undefined;
@@ -30,6 +31,12 @@ export function TimeAnswer({
   submitAnswer,
   showLastUpdated = false,
 }: Props) {
+  useEffect(() => {
+    if (!unit && choices && choices.length > 0) {
+      setAnswerUnit(choices[0]);
+    }
+  }, [unit, choices, setAnswerUnit]);
+
   const handleTimeAnswerValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const numericValue = Number(value);
