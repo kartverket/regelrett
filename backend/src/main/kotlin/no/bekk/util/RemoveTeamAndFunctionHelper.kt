@@ -24,42 +24,46 @@ class RemoveTeamAndFunctionHelper {
             connection.prepareStatement(deleteFunctionAnswersQuery).execute()
             connection.prepareStatement(deleteFunctionCommentsQuery).execute()
 
-            val getAllTeamsAnswersQuery = "SELECT DISTINCT team FROM answers WHERE team IS NOT NULL"
-            val getAllTeamsCommentsQuery = "SELECT DISTINCT team FROM answers WHERE team IS NOT NULL"
+            val getAllTeamsAnswersQuery = "SELECT DISTINCT team, table_id FROM answers WHERE team IS NOT NULL"
+            val getAllTeamsCommentsQuery = "SELECT DISTINCT team, table_id FROM answers WHERE team IS NOT NULL"
 
-            val teams = mutableSetOf<String>()
+            val teams = mutableSetOf<Pair<String, String>>()
 
             var resultSet = connection.prepareStatement(getAllTeamsAnswersQuery).executeQuery()
             while (resultSet.next()) {
                 teams.add(
-                    resultSet.getString("team")
+                    Pair(resultSet.getString("team"), resultSet.getString("table_id"))
                 )
             }
             resultSet = connection.prepareStatement(getAllTeamsCommentsQuery).executeQuery()
             while (resultSet.next()) {
                 teams.add(
-                    resultSet.getString("team")
+                    Pair(resultSet.getString("team"), resultSet.getString("table_id"))
                 )
             }
 
-
-            val updateAnswersStatement = connection.prepareStatement("UPDATE answers SET context_id = ?, team = NULL WHERE team = ?")
-            val updateCommentsStatement = connection.prepareStatement("UPDATE comments SET context_id = ?, team = NULL WHERE team = ?")
-            for (team in teams) {
+            val updateAnswersStatement = connection.prepareStatement("UPDATE answers SET context_id = ?, table_id = ?, team = NULL WHERE team = ?")
+            val updateCommentsStatement = connection.prepareStatement("UPDATE comments SET context_id = ?, table_id = ?, team = NULL WHERE team = ?")
+            var idx = 0
+            for ((team, tableId) in teams) {
                 val group = MicrosoftServiceInternal2.getGroup(team)
                 val inserted = contextRepository.insertContext(
                     DatabaseContextRequest(
                         teamId = team,
-                        name = group.displayName
+                        tableId = tableId,
+                        name = group.displayName + idx + idx
                     )
                 )
                 updateAnswersStatement.setObject(1, UUID.fromString(inserted.id))
-                updateAnswersStatement.setString(2, group.id)
+                updateAnswersStatement.setString(2, inserted.tableId)
+                updateAnswersStatement.setString(3, group.id)
                 updateAnswersStatement.addBatch()
 
                 updateCommentsStatement.setObject(1, UUID.fromString(inserted.id))
-                updateCommentsStatement.setString(2, group.id)
+                updateCommentsStatement.setString(2, inserted.tableId)
+                updateCommentsStatement.setString(3, group.id)
                 updateCommentsStatement.addBatch()
+                idx++
             }
 
             updateAnswersStatement.executeBatch()

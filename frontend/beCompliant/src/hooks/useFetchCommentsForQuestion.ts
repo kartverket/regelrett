@@ -5,14 +5,14 @@ import { axiosFetch } from '../api/Fetch';
 
 export function useFetchCommentsForQuestion(
   tableId?: string,
-  recordId?: string,
-  contextId?: string
+  contextId?: string,
+  recordId?: string
 ) {
   return useQuery({
-    queryKey: apiConfig.comments.queryKey(tableId!, recordId!, contextId!),
+    queryKey: apiConfig.comments.queryKey(tableId!, contextId!, recordId!),
     queryFn: () =>
       axiosFetch<Comment[]>({
-        url: apiConfig.comments.url(tableId!, recordId!, contextId!),
+        url: apiConfig.comments.url(tableId!, contextId!, recordId!),
       }).then((response) => response.data),
     enabled: !!tableId && !!recordId && !!contextId,
   });

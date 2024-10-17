@@ -12,21 +12,35 @@ import {
   Spinner,
   Stack,
 } from '@kvib/react';
-import { Form } from 'react-router-dom';
-import { useSubmitContext } from '../hooks/useSubmitContext';
+import { Form, useNavigate } from 'react-router-dom';
+import {
+  SubmitContextResponse,
+  useSubmitContext,
+} from '../hooks/useSubmitContext';
 import { FormEvent, useEffect, useState } from 'react';
+import { useFetchTables } from '../hooks/useFetchTables';
 
 export const CreateContextPage = () => {
+  const navigate = useNavigate();
+
   const {
     data: userinfo,
     isPending: isUserinfoLoading,
     isError: isUserinfoError,
   } = useFetchUserinfo();
 
+  const {
+    data: tablesData,
+    error: tablesError,
+    isPending: tablesIsPending,
+  } = useFetchTables();
+
   const { mutate: submitContext } = useSubmitContext();
 
   const [teamId, setTeamId] = useState<string>('');
+  const [tableId, setTableId] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (userinfo?.groups && userinfo.groups.length > 0) {
@@ -34,24 +48,41 @@ export const CreateContextPage = () => {
     }
   }, [userinfo]);
 
+  useEffect(() => {
+    if (tablesData && tablesData.length > 0) {
+      setTableId(tablesData[0].id);
+    }
+  }, [tablesData]);
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (teamId && name) {
-      submitContext({ teamId, name });
+    if (teamId && name && tableId) {
+      setIsSubmitting(true); // Start submission
+      submitContext(
+        { teamId, tableId, name },
+        {
+          onSuccess: (data) => {
+            setIsSubmitting(false);
+            navigate(`/context/${data.data.id}/${data.data.tableId}`);
+          },
+          onError: () => {
+            setIsSubmitting(false);
+          },
+        }
+      );
     } else {
-      console.error('Both teamId and contextName must be provided');
+      console.error('teamId, tableId, and contextName must be provided');
     }
   };
 
-  if (isUserinfoLoading) {
+  if (isUserinfoLoading || tablesIsPending) {
     return (
       <Center style={{ height: '100svh' }}>
         <Spinner size="xl" />
       </Center>
     );
   }
-  if (isUserinfoError) {
+  if (isUserinfoError || tablesError) {
     return (
       <Center height="70svh" flexDirection="column" gap="4">
         <Icon icon="error" size={64} weight={600} />
@@ -59,6 +90,8 @@ export const CreateContextPage = () => {
       </Center>
     );
   }
+
+  const isButtonDisabled = !teamId || !tableId || !name || isSubmitting;
 
   return (
     <Stack
@@ -88,6 +121,22 @@ export const CreateContextPage = () => {
           </FormControl>
         </Box>
         <Box marginBottom="1rem">
+          <FormLabel htmlFor="tableSelect">Velg tabell</FormLabel>
+          <FormControl>
+            <Select
+              id="tableSelect"
+              value={tableId}
+              onChange={(e) => setTableId(e.target.value)}
+            >
+              {tablesData?.map((table) => (
+                <option key={table.id} value={table.id}>
+                  {table.name}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box marginBottom="1rem">
           <FormControl>
             <FormLabel htmlFor="contextName">Navn på kontekst</FormLabel>
             <Input
@@ -100,8 +149,8 @@ export const CreateContextPage = () => {
             />
           </FormControl>
         </Box>
-        <Button type="submit" variant="primary">
-          Opprett
+        <Button type="submit" variant="primary" disabled={isButtonDisabled}>
+          {isSubmitting ? <Spinner size="sm" /> : 'Opprett'}
         </Button>
       </Form>
     </Stack>

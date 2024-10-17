@@ -32,7 +32,7 @@ export const QuestionPage = () => {
     data: comments,
     error: commentsError,
     isPending: commentsIsLoading,
-  } = useFetchCommentsForQuestion(tableId, recordId, contextId);
+  } = useFetchCommentsForQuestion(tableId, contextId, recordId);
 
   const {
     isOpen: isDiscardOpen,

@@ -124,7 +124,7 @@ suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
     return teamId in groups.map { it.id }
 }
 
-suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
+suspend fun hasContextAccess(call: ApplicationCall, contextId: String,): Boolean {
     val contextRepository = ContextRepository()
     val context = contextRepository.getContext(contextId)
     return hasTeamAccess(call, context.teamId)
