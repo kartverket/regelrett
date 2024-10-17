@@ -14,14 +14,6 @@ on:
         description: 'Deploy to prod'
         required: true
         type: boolean
-  pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - backend**
-      - .sikkerhet**
-      - compose.yaml
-      - README**
   push:
     paths-ignore:
       - backend**
