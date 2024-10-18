@@ -5,6 +5,7 @@ import { axiosFetch } from '../api/Fetch';
 export type Context = {
   id: string;
   name: string;
+  tableId: string;
   teamId: string;
 };
 

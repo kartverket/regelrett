@@ -70,7 +70,7 @@ const FrontPage = () => {
             return (
               <div key={team.id}>
                 <Text>{team.displayName}</Text>
-                <TeamContexts teamId={team.id} tableId={tables.at(0)?.id} />
+                <TeamContexts teamId={team.id} />
               </div>
             );
           })}
@@ -80,13 +80,7 @@ const FrontPage = () => {
   );
 };
 
-function TeamContexts({
-  teamId,
-  tableId,
-}: {
-  teamId: string;
-  tableId?: string;
-}) {
+function TeamContexts({ teamId }: { teamId: string; tableId?: string }) {
   const { data: contexts, isPending: contextsIsPending } =
     useFetchTeamContexts(teamId);
 
@@ -101,7 +95,7 @@ function TeamContexts({
           <ContextLink
             key={context.id}
             contextId={context.id}
-            tableId={tableId}
+            tableId={context.tableId}
           />
         );
       })}
