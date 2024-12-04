@@ -72,7 +72,7 @@ suspend fun hasContextAccess(call: ApplicationCall, contextId: String,): Boolean
     return hasTeamAccess(call, context.teamId)
 }
 
-suspend fun hasUploadCSVAccess(call: ApplicationCall): Boolean {
+suspend fun hasSuperUserAccess(call: ApplicationCall): Boolean {
     val user = getCurrentUser(call)
     return user.mail == AppConfig.oAuth.superUserMail
 }

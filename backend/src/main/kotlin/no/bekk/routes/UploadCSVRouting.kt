@@ -4,7 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import no.bekk.authentication.hasUploadCSVAccess
+import no.bekk.authentication.hasSuperUserAccess
 import no.bekk.configuration.Database
 import java.io.StringWriter
 import java.sql.ResultSet
@@ -16,7 +16,7 @@ import io.ktor.http.ContentType
 fun Route.uploadCSVRouting() {
     route("/dump-csv") {
         post {
-            if (!hasUploadCSVAccess(call)) {
+            if (!hasSuperUserAccess(call)) {
                 call.respond(HttpStatusCode.Unauthorized)
                 return@post
             }
