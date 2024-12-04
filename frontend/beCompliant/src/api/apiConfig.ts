@@ -7,6 +7,7 @@ const PATH_USERINFO = '/userinfo';
 const PATH_USERNAME = '/username';
 const PATH_COLUMNS = '/columns';
 const PATH_CONTEXTS = '/contexts';
+const PATH_DUMP_CSV = '/dump-csv';
 
 // Base URLs
 
@@ -16,6 +17,7 @@ const API_URL_ANSWERS = `${API_URL_BASE}${PATH_ANSWERS}`;
 const API_URL_ANSWER = `${API_URL_BASE}${PATH_ANSWER}`;
 const API_URL_COMMENTS = `${API_URL_BASE}${PATH_COMMENTS}`;
 const API_URL_CONTEXTS = `${API_URL_BASE}${PATH_CONTEXTS}`;
+const API_URL_DUMP_CSV = `${API_URL_BASE}${PATH_DUMP_CSV}`;
 export const API_URL_USERINFO = `${API_URL_BASE}${PATH_USERINFO}`;
 
 export const apiConfig = {
@@ -96,5 +98,9 @@ export const apiConfig = {
       url: (teamId: string, tableId: string) =>
         `${API_URL_CONTEXTS}?teamId=${teamId}&tableId=${tableId}`,
     },
+  },
+  dumpCSV: {
+    queryKey: [PATH_DUMP_CSV],
+    url: API_URL_DUMP_CSV,
   },
 } as const;

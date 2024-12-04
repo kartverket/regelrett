@@ -71,3 +71,8 @@ suspend fun hasContextAccess(call: ApplicationCall, contextId: String,): Boolean
     val context = ContextRepository.getContext(contextId)
     return hasTeamAccess(call, context.teamId)
 }
+
+suspend fun hasUploadCSVAccess(call: ApplicationCall): Boolean {
+    val user = getCurrentUser(call)
+    return user.mail == System.getenv("SUPER_USER_MAIL")
+}

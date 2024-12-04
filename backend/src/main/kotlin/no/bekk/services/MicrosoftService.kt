@@ -66,7 +66,7 @@ object MicrosoftService {
     }
 
     suspend fun fetchCurrentUser(bearerToken: String): MicrosoftGraphUser {
-        val url = "${AppConfig.microsoftGraph.baseUrl}/v1.0/me?\$select=id,displayName"
+        val url = "${AppConfig.microsoftGraph.baseUrl}/v1.0/me?\$select=id,displayName,mail"
 
         val response: HttpResponse = client.get(url) {
             bearerAuth(bearerToken)

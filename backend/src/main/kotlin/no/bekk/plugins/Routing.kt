@@ -25,6 +25,7 @@ fun Application.configureRouting() {
             questionRouting()
             tableRouting()
             userInfoRouting()
+            uploadCSVRouting()
         }
 
         airTableWebhookRouting()
