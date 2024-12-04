@@ -110,33 +110,12 @@ object ContextRepository {
         }
     }
 
-<<<<<<< HEAD
     fun deleteContext(id: String): Boolean {
         val sqlStatementContext = "DELETE FROM contexts WHERE id = ?"
         Database.getConnection().use { conn ->
             conn.prepareStatement(sqlStatementContext).use { statement ->
                 statement.setObject(1, UUID.fromString(id))
                 return statement.executeUpdate() > 0
-=======
-    fun getAllContexts(): List<DatabaseContext> {
-        val sqlStatement = "SELECT * FROM contexts ORDER BY team_id ASC"
-        Database.getConnection().use { conn ->
-            conn.prepareStatement(sqlStatement).use { statement ->
-                val result = statement.executeQuery()
-                val contexts = mutableListOf<DatabaseContext>()
-
-                if (result.next()) {
-                    contexts.add(DatabaseContext(
-                        id = result.getString("id"),
-                        teamId = result.getString("team_id"),
-                        tableId = result.getString("table_id"),
-                        name = result.getString("name")
-                    ))
-                } else {
-                    throw RuntimeException("Error getting context")
-                }
-                return contexts
->>>>>>> 1691c7dd (csv dump)
             }
         }
     }
