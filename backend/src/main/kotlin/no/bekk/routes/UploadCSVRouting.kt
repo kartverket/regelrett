@@ -15,10 +15,10 @@ import io.ktor.http.ContentType
 
 fun Route.uploadCSVRouting() {
     route("/dump-csv") {
-        post {
+        get {
             if (!hasSuperUserAccess(call)) {
                 call.respond(HttpStatusCode.Unauthorized)
-                return@post
+                return@get
             }
             val csvData = getLatestAnswersAndComments()
             val csv = csvData.toCsv()
@@ -33,7 +33,7 @@ fun Route.uploadCSVRouting() {
                 bytes = csv.toByteArray(Charsets.UTF_8),
                 contentType = ContentType.Text.CSV.withCharset(Charsets.UTF_8)
             )
-            return@post
+            return@get
 
         }
     }

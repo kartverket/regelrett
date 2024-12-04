@@ -13,7 +13,7 @@ export function useDumpCSV() {
     mutationFn: async (): Promise<Blob> => {
       const response = await axiosFetch({
         url: URL,
-        method: 'POST',
+        method: 'GET',
         responseType: 'blob',
       });
       return response.data as Blob;
