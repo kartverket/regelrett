@@ -74,5 +74,5 @@ suspend fun hasContextAccess(call: ApplicationCall, contextId: String,): Boolean
 
 suspend fun hasUploadCSVAccess(call: ApplicationCall): Boolean {
     val user = getCurrentUser(call)
-    return user.mail == System.getenv("SUPER_USER_MAIL")
+    return user.mail == AppConfig.oAuth.superUserMail
 }
