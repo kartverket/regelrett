@@ -22,6 +22,8 @@ import { getSortFuncForColumn } from './table/TableSort';
 import { TableActions } from './tableActions/TableActions';
 import { TableFilters } from './tableActions/TableFilter';
 import { useEffect, useState } from 'react';
+import { IconButton, Text } from '@kvib/react';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   filters: TableFilters;
@@ -50,6 +52,8 @@ export function TableComponent({
     hasHiddenColumns,
     showOnlyFillModeColumns,
   ] = useColumnVisibility();
+
+  const navigate = useNavigate();
 
   const initialSorting: SortingState = JSON.parse(
     localStorage.getItem(`sortingState_${tableData.id}`) || '[]'
@@ -155,6 +159,34 @@ export function TableComponent({
     // If not found, push it at the end (or handle it differently as needed)
     columns.push(commentColumn);
   }
+
+  const emptyColumn: ColumnDef<any, any> = {
+    header: ({ column }) => {
+      return (
+        <DataTableHeader
+          column={column}
+          header={''}
+          setColumnVisibility={setColumnVisibility}
+        />
+      );
+    },
+    id: 'Se mer',
+    cell: ({ cell, row }: CellContext<any, any>) => (
+      <DataTableCell cell={cell}>
+        <IconButton
+          aria-label="se mer"
+          icon="open_in_full"
+          size="md"
+          variant="ghost"
+          onClick={() => navigate(`${row.original.recordId}`)}
+        />
+        <Text fontSize="sm" color="green.700">
+          Se mer
+        </Text>
+      </DataTableCell>
+    ),
+  };
+  columns.unshift(emptyColumn);
 
   const globalFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const searchTerm = String(filterValue).toLowerCase();
