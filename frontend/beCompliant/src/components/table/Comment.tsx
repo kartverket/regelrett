@@ -104,8 +104,7 @@ export function Comment({
             colorScheme="blue"
             icon="check"
             variant="primary"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               handleCommentSubmit();
             }}
             isLoading={isLoading}
@@ -116,8 +115,7 @@ export function Comment({
             colorScheme="red"
             icon="close"
             variant="primary"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               handleDiscardChanges();
             }}
             isDisabled={isLoading}
@@ -135,8 +133,7 @@ export function Comment({
         colorScheme="blue"
         icon="add_comment"
         variant="secondary"
-        onClick={(e) => {
-          e.stopPropagation();
+        onClick={() => {
           setRowState(questionId, {
             comment: { editedComment: comment, isEditMode: true },
           });
@@ -169,8 +166,7 @@ export function Comment({
             colorScheme="blue"
             icon="edit"
             variant="secondary"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               setRowState(questionId, {
                 comment: { editedComment: comment, isEditMode: true },
               });
@@ -182,8 +178,7 @@ export function Comment({
             colorScheme="red"
             icon="delete"
             variant="secondary"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={() => {
               onDeleteOpen();
             }}
             background="white"

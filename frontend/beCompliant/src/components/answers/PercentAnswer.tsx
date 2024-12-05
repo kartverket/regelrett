@@ -46,7 +46,6 @@ export function PercentAnswer({
           <NumberInput value={value} background={'white'} borderRadius="5px">
             <NumberInputField
               onChange={handlePercentAnswer}
-              onClick={(e) => e.stopPropagation()}
               type="number"
               borderRight={'none'}
               borderRightRadius={0}

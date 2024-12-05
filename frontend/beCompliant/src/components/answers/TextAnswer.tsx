@@ -33,7 +33,6 @@ export function TextAnswer({
           <Textarea
             value={value}
             onChange={handleTextAnswer}
-            onClick={(e) => e.stopPropagation()}
             background="white"
             onBlur={() => {
               if (value != initialValue) {
