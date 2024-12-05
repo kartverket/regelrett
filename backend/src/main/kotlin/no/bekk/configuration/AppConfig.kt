@@ -43,6 +43,7 @@ object OAuthConfig {
     lateinit var clientId: String
     lateinit var clientSecret: String
     lateinit var providerUrl: String
+    lateinit var superUserMail: String
 }
 
 fun OAuthConfig.getIssuer() = AppConfig.oAuth.baseUrl + "/" + AppConfig.oAuth.tenantId + AppConfig.oAuth.issuerPath

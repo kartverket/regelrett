@@ -19,6 +19,7 @@ import { useFetchTeamContexts } from '../hooks/useFetchTeamContexts';
 import { useFetchContext } from '../hooks/useFetchContext';
 import { useFetchTables } from '../hooks/useFetchTables';
 import { DeleteContextModal } from '../components/DeleteContextModal';
+import { useDumpCSV } from '../hooks/useDumpCSV';
 
 const FrontPage = () => {
   const {
@@ -26,6 +27,8 @@ const FrontPage = () => {
     isPending: isUserinfoLoading,
     isError: isUserinfoError,
   } = useFetchUserinfo();
+
+  const { mutateAsync: dumpCSV } = useDumpCSV();
 
   if (isUserinfoLoading) {
     return (
@@ -56,6 +59,28 @@ const FrontPage = () => {
     );
   }
 
+  const handleExportCSV = async () => {
+    try {
+      const csvData = await dumpCSV();
+      const blob = new Blob([csvData], {
+        type: 'text/csv;charset=utf-8;',
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'data.csv');
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading CSV:', error);
+    }
+  };
+
   return (
     <Page gap="4" alignItems="center">
       <VStack>
@@ -67,6 +92,15 @@ const FrontPage = () => {
           divider={<StackDivider />}
           style={{ width: '40ch' }}
         >
+          <Button
+            padding="0"
+            variant="tertiary"
+            colorScheme="blue"
+            onClick={() => handleExportCSV()}
+            rightIcon="download"
+          >
+            Eksporter skjemautfyllinger
+          </Button>
           {teams.map((team) => {
             return (
               <div key={team.id}>

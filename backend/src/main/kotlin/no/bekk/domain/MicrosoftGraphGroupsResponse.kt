@@ -17,6 +17,7 @@ data class MicrosoftGraphGroup(
 data class MicrosoftGraphUser(
     val id: String,
     val displayName: String,
+    val mail: String,
 )
 
 @Serializable

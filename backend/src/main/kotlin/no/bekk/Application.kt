@@ -56,6 +56,7 @@ private fun loadAppConfig(config: ApplicationConfig) {
         clientId = config.propertyOrNull("oAuth.clientId")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"oAuth.clientId\"")
         clientSecret = config.propertyOrNull("oAuth.clientSecret")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"oAuth.clientSecret\"")
         providerUrl = config.propertyOrNull("oAuth.providerUrl")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"oAuth.providerUrl\"")
+        superUserMail = config.propertyOrNull("oAuth.superUserMail")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"oAuth.superUserMail\"")
     }
 
     // Frontend config
