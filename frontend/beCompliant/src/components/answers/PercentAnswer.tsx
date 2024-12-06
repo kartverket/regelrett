@@ -8,6 +8,7 @@ import {
 import { LastUpdated } from '../table/LastUpdated';
 import { useRef } from 'react';
 import { LastUpdatedQuestionPage } from '../questionPage/LastUpdatedQuestionPage';
+import { RefreshAnswer } from '../table/RefreshAnswer';
 
 type Props = {
   value: string | undefined;
@@ -15,6 +16,7 @@ type Props = {
   setAnswerInput: React.Dispatch<React.SetStateAction<string | undefined>>;
   submitAnswer: (newAnswer: string) => void;
   isActivityPageView?: boolean;
+  answerExpiry: number | null;
 };
 
 export function PercentAnswer({
@@ -23,6 +25,7 @@ export function PercentAnswer({
   setAnswerInput,
   submitAnswer,
   isActivityPageView = false,
+  answerExpiry,
 }: Props) {
   const initialValue = useRef(value).current;
 
@@ -71,6 +74,12 @@ export function PercentAnswer({
           />
         </InputGroup>
       </Stack>
+      <RefreshAnswer
+        updated={updated}
+        answerExpiry={answerExpiry}
+        submitAnswer={submitAnswer}
+        value={value}
+      />
       {isActivityPageView ? (
         <LastUpdated updated={updated} />
       ) : (

@@ -2,6 +2,7 @@ import { Text, RadioGroup, Radio, Stack, Flex } from '@kvib/react';
 import { useSubmitAnswers } from '../../hooks/useSubmitAnswers';
 import { Question, User } from '../../api/types';
 import { LastUpdatedQuestionPage } from './LastUpdatedQuestionPage';
+import { RefreshAnswer } from '../table/RefreshAnswer';
 
 type Props = {
   question: Question;
@@ -9,6 +10,7 @@ type Props = {
   contextId: string;
   user: User;
   lastUpdated?: Date;
+  answerExpiry: number | null;
 };
 
 export function RadioAnswer({
@@ -17,6 +19,7 @@ export function RadioAnswer({
   contextId,
   user,
   lastUpdated,
+  answerExpiry,
 }: Props) {
   const { mutate: submitAnswer } = useSubmitAnswers(
     contextId,
@@ -25,11 +28,15 @@ export function RadioAnswer({
   const { type: answerType, options } = question.metadata.answerMetadata;
 
   const handleSelectionAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    submitRadioAnswer(e.target.value);
+  };
+
+  const submitRadioAnswer = (answer: string) => {
     submitAnswer({
       actor: user.id,
       recordId: question.recordId ?? '',
       questionId: question.id,
-      answer: e.target.value,
+      answer: answer,
       answerType: answerType,
       contextId: contextId,
     });
@@ -54,6 +61,12 @@ export function RadioAnswer({
           ))}
         </Stack>
       </RadioGroup>
+      <RefreshAnswer
+        updated={lastUpdated}
+        answerExpiry={answerExpiry}
+        submitAnswer={submitRadioAnswer}
+        value={latestAnswer}
+      />
       <LastUpdatedQuestionPage lastUpdated={lastUpdated} />
     </Flex>
   );

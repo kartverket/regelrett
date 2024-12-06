@@ -26,7 +26,8 @@ fun Record.mapToQuestion(
     metaDataFields: List<Field>,
     answerType: AnswerType,
     answerOptions: List<String>?,
-    answerUnits: List<String>?
+    answerUnits: List<String>?,
+    answerExpiry: Int?
 ) = Question(
         id = fields.jsonObject["ID"]?.jsonPrimitive?.content ?: UUID.randomUUID().toString(),
         recordId = recordId,
@@ -36,7 +37,8 @@ fun Record.mapToQuestion(
             answerMetadata = AnswerMetadata(
                 type = answerType,
                 options = answerOptions,
-                units = answerUnits
+                units = answerUnits,
+                expiry = answerExpiry
             ),
             optionalFields = metaDataFields.filterNot { it.name == "Svar" }.map {
                 OptionalField(

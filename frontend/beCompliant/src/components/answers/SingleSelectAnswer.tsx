@@ -2,6 +2,7 @@ import { Option } from '../../api/types';
 import { Select, Stack } from '@kvib/react';
 import { LastUpdated } from '../table/LastUpdated';
 import colorUtils from '../../utils/colorUtils';
+import { RefreshAnswer } from '../table/RefreshAnswer';
 
 type Props = {
   value: string | undefined;
@@ -10,6 +11,7 @@ type Props = {
   options?: Option[] | null;
   setAnswerInput: React.Dispatch<React.SetStateAction<string | undefined>>;
   submitAnswer: (newAnswer: string) => void;
+  answerExpiry: number | null;
 };
 
 export function SingleSelectAnswer({
@@ -19,6 +21,7 @@ export function SingleSelectAnswer({
   options,
   setAnswerInput,
   submitAnswer,
+  answerExpiry,
 }: Props) {
   const handleSelectionAnswer = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newAnswer: string = e.target.value;
@@ -54,6 +57,12 @@ export function SingleSelectAnswer({
           </option>
         ))}
       </Select>
+      <RefreshAnswer
+        updated={updated}
+        answerExpiry={answerExpiry}
+        submitAnswer={submitAnswer}
+        value={value}
+      />
       <LastUpdated updated={updated} />
     </Stack>
   );

@@ -38,6 +38,7 @@ export const TableCell = ({
         choices={row.original.metadata?.answerMetadata.options}
         options={column.options}
         user={user}
+        answerExpiry={row.original.metadata?.answerMetadata.expiry}
       />
     );
   }

@@ -9,6 +9,7 @@ import {
 import { LastUpdated } from '../table/LastUpdated';
 import { useEffect, useRef } from 'react';
 import { LastUpdatedQuestionPage } from '../questionPage/LastUpdatedQuestionPage';
+import { RefreshAnswer } from '../table/RefreshAnswer';
 
 type Props = {
   value: string | undefined;
@@ -19,6 +20,7 @@ type Props = {
   setAnswerUnit: React.Dispatch<React.SetStateAction<string | undefined>>;
   submitAnswer: (newAnswer: string, unit?: string) => void;
   isActivityPageView?: boolean;
+  answerExpiry: number | null;
 };
 
 export function TimeAnswer({
@@ -30,6 +32,7 @@ export function TimeAnswer({
   setAnswerUnit,
   submitAnswer,
   isActivityPageView = false,
+  answerExpiry,
 }: Props) {
   const initialValue = useRef(value).current;
   const initialUnit = useRef(unit).current;
@@ -91,6 +94,13 @@ export function TimeAnswer({
           </NumberInput>
         </InputGroup>
       </Stack>
+      <RefreshAnswer
+        updated={updated}
+        answerExpiry={answerExpiry}
+        submitAnswer={submitAnswer}
+        value={value}
+        unitAnswer={unit}
+      />
       {isActivityPageView ? (
         <LastUpdated updated={updated} />
       ) : (

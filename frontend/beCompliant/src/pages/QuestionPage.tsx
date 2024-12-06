@@ -133,6 +133,7 @@ export const QuestionPage = () => {
             contextId={contextId}
             user={userinfo.user}
             choices={question.metadata.answerMetadata.options}
+            answerExpiry={question.metadata.answerMetadata.expiry}
           />
           <QuestionInfoBox question={question} tableId={context.tableId} />
         </Flex>

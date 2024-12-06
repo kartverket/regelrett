@@ -3,6 +3,7 @@ import { useSubmitAnswers } from '../../hooks/useSubmitAnswers';
 import { Question, User } from '../../api/types';
 import { useEffect, useState } from 'react';
 import { LastUpdatedQuestionPage } from './LastUpdatedQuestionPage';
+import { RefreshAnswer } from '../table/RefreshAnswer';
 
 type Props = {
   question: Question;
@@ -10,6 +11,7 @@ type Props = {
   contextId: string;
   user: User;
   lastUpdated?: Date;
+  answerExpiry: number | null;
 };
 
 export function TextAreaAnswer({
@@ -18,6 +20,7 @@ export function TextAreaAnswer({
   contextId,
   user,
   lastUpdated,
+  answerExpiry,
 }: Props) {
   const [answerInput, setAnswerInput] = useState<string | undefined>(
     latestAnswer
@@ -28,16 +31,14 @@ export function TextAreaAnswer({
   );
 
   const submitTextAnswer = () => {
-    if (answerInput !== latestAnswer) {
-      submitAnswer({
-        actor: user.id,
-        recordId: question.recordId ?? '',
-        questionId: question.id,
-        answer: answerInput ?? '',
-        answerType: question.metadata.answerMetadata.type,
-        contextId: contextId,
-      });
-    }
+    submitAnswer({
+      actor: user.id,
+      recordId: question.recordId ?? '',
+      questionId: question.id,
+      answer: answerInput ?? '',
+      answerType: question.metadata.answerMetadata.type,
+      contextId: contextId,
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -59,9 +60,19 @@ export function TextAreaAnswer({
           onChange={handleChange}
           background="white"
           resize="vertical"
-          onBlur={submitTextAnswer}
+          onBlur={() => {
+            if (answerInput !== latestAnswer) {
+              submitTextAnswer();
+            }
+          }}
         />
       </Stack>
+      <RefreshAnswer
+        updated={lastUpdated}
+        answerExpiry={answerExpiry}
+        submitAnswer={submitTextAnswer}
+        value={latestAnswer}
+      />
       <LastUpdatedQuestionPage lastUpdated={lastUpdated} />
     </Flex>
   );

@@ -1,6 +1,7 @@
 import { Checkbox, Stack } from '@kvib/react';
 import { LastUpdated } from '../table/LastUpdated';
 import { LastUpdatedQuestionPage } from '../questionPage/LastUpdatedQuestionPage';
+import { RefreshAnswer } from '../table/RefreshAnswer';
 
 type Props = {
   value: string | undefined;
@@ -9,6 +10,7 @@ type Props = {
   submitAnswer: (newAnswer: string) => void;
   choices?: string[] | null;
   isActivityPageView?: boolean;
+  answerExpiry: number | null;
 };
 
 export function CheckboxAnswer({
@@ -18,6 +20,7 @@ export function CheckboxAnswer({
   submitAnswer,
   choices,
   isActivityPageView = false,
+  answerExpiry,
 }: Props) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.checked
@@ -41,6 +44,12 @@ export function CheckboxAnswer({
             : choices[1]
           : ''}
       </Checkbox>
+      <RefreshAnswer
+        updated={updated}
+        answerExpiry={answerExpiry}
+        submitAnswer={submitAnswer}
+        value={value}
+      />
       {isActivityPageView ? (
         <LastUpdated updated={updated} />
       ) : (

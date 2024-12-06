@@ -22,6 +22,7 @@ export type AnswerMetadata = {
   type: AnswerType;
   units: string[] | null;
   options: string[] | null;
+  expiry: number | null;
 };
 
 export type Comment = {

@@ -14,6 +14,7 @@ type Props = {
   contextId: string;
   user: User;
   choices?: string[] | null;
+  answerExpiry: number | null;
 };
 
 export function QuestionAnswer({
@@ -22,6 +23,7 @@ export function QuestionAnswer({
   contextId,
   user,
   choices,
+  answerExpiry,
 }: Props) {
   const [answerInput, setAnswerInput] = useState<string | undefined>(
     answers.at(-1)?.answer
@@ -55,6 +57,7 @@ export function QuestionAnswer({
           contextId={contextId}
           user={user}
           lastUpdated={answers.at(-1)?.updated}
+          answerExpiry={answerExpiry}
         />
       );
     case AnswerType.TEXT_MULTI_LINE:
@@ -65,6 +68,7 @@ export function QuestionAnswer({
           contextId={contextId}
           user={user}
           lastUpdated={answers.at(-1)?.updated}
+          answerExpiry={answerExpiry}
         />
       );
     case AnswerType.PERCENT:
@@ -78,6 +82,7 @@ export function QuestionAnswer({
             updated={answers.at(-1)?.updated}
             setAnswerInput={setAnswerInput}
             submitAnswer={submitAnswer}
+            answerExpiry={answerExpiry}
           />
         </Flex>
       );
@@ -95,6 +100,7 @@ export function QuestionAnswer({
             setAnswerUnit={setAnswerUnit}
             unit={answerUnit}
             units={question.metadata.answerMetadata.units}
+            answerExpiry={answerExpiry}
           />
         </Flex>
       );
@@ -106,6 +112,7 @@ export function QuestionAnswer({
           setAnswerInput={setAnswerInput}
           submitAnswer={submitAnswer}
           choices={choices}
+          answerExpiry={answerExpiry}
         />
       );
 

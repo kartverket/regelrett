@@ -45,6 +45,7 @@ class AirTableProvider(
     private val SVAR = "Svar"
     private val SVARTYPE = "Svartype"
     private val SVARENHET = "Svarenhet"
+    private val SVARVARIGHET = "Svarvarighet"
 
     override suspend fun getTable(): Table {
         val cachedTable = tableCache.getIfPresent(id)
@@ -112,7 +113,8 @@ class AirTableProvider(
                             )
                         ),
                         answerOptions = record.fields.jsonObject[SVAR]?.jsonArray?.map { it.jsonPrimitive.content },
-                        answerUnits = record.fields.jsonObject[SVARENHET]?.jsonArray?.map { it.jsonPrimitive.content }
+                        answerUnits = record.fields.jsonObject[SVARENHET]?.jsonArray?.map { it.jsonPrimitive.content },
+                        answerExpiry = record.fields.jsonObject[SVARVARIGHET]?.jsonPrimitive?.intOrNull
                     )
 
                 } catch (e: IllegalArgumentException) {
@@ -172,7 +174,8 @@ class AirTableProvider(
                 )
             ),
             answerOptions = record.fields.jsonObject[SVAR]?.jsonArray?.map { it.jsonPrimitive.content },
-            answerUnits = record.fields.jsonObject[SVARENHET]?.jsonArray?.map { it.jsonPrimitive.content }
+            answerUnits = record.fields.jsonObject[SVARENHET]?.jsonArray?.map { it.jsonPrimitive.content },
+            answerExpiry = record.fields.jsonObject[SVARVARIGHET]?.jsonPrimitive?.intOrNull
         )
 
         return question
