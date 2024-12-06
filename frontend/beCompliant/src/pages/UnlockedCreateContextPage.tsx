@@ -1,10 +1,12 @@
-import { UserInfo } from '../hooks/useFetchUserinfo';
+import { useFetchUserinfo } from '../hooks/useFetchUserinfo';
 import { CopyContextDropdown } from '../components/createContextPage/CopyContextDropdown';
 import {
-  Box,
   Button,
+  Center,
   FormControl,
   FormLabel,
+  Heading,
+  Icon,
   Input,
   Select,
   Skeleton,
@@ -12,12 +14,11 @@ import {
   Stack,
   Text,
 } from '@kvib/react';
-import { Form, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { FormEvent, useCallback, useEffect } from 'react';
 import { Table } from '../api/types';
 
 type Props = {
-  userinfo: { data: UserInfo | undefined; isPending: boolean };
   tablesData: { data: Table[] | undefined; isPending: boolean };
   handleSumbit: (event: FormEvent<HTMLFormElement>) => void;
   isLoading: boolean;
@@ -28,7 +29,6 @@ type Props = {
 };
 
 export const UnlockedCreateContextPage = ({
-  userinfo,
   tablesData,
   handleSumbit,
   isLoading,
@@ -40,6 +40,12 @@ export const UnlockedCreateContextPage = ({
   const [search, setSearch] = useSearchParams();
   const tableId = search.get('tableId');
   const copyContext = search.get('copyContext');
+
+  const {
+    data: userinfo,
+    isPending: isUserinfoLoading,
+    isError: isUserinfoError,
+  } = useFetchUserinfo();
 
   const setTeamId = useCallback(
     (newTeamId: string) => {
@@ -68,8 +74,8 @@ export const UnlockedCreateContextPage = ({
   // Effect to set default values
   useEffect(() => {
     if (teamId == null) {
-      if (userinfo.data?.groups && userinfo.data.groups.length > 0) {
-        setTeamId(userinfo.data.groups[0].id);
+      if (userinfo?.groups && userinfo.groups.length > 0) {
+        setTeamId(userinfo.groups[0].id);
       }
     }
 
@@ -93,6 +99,15 @@ export const UnlockedCreateContextPage = ({
     setTableId,
   ]);
 
+  if (isUserinfoError) {
+    return (
+      <Center height="70svh" flexDirection="column" gap="4">
+        <Icon icon="error" size={64} weight={600} />
+        <Heading size="md">Noe gikk galt, prøv gjerne igjen</Heading>
+      </Center>
+    );
+  }
+
   return (
     <Stack
       direction="column"
@@ -100,14 +115,14 @@ export const UnlockedCreateContextPage = ({
       justifyContent="center"
       marginTop="8rem"
     >
-      <Form style={{ width: '40%' }} onSubmit={handleSumbit}>
+      <form onSubmit={handleSumbit}>
         <Text fontSize="3xl" fontWeight="bold" mb="32px">
           Opprett sikkerhetsskjema
         </Text>
-        <Box marginBottom="1rem">
-          <FormLabel htmlFor="select">Velg team</FormLabel>
+        <Stack gap="16px">
           <FormControl>
-            <Skeleton isLoaded={!userinfo.isPending}>
+            <FormLabel htmlFor="select">Velg team</FormLabel>
+            <Skeleton isLoaded={!isUserinfoLoading}>
               <Select
                 id="select"
                 placeholder="Velg team"
@@ -117,7 +132,7 @@ export const UnlockedCreateContextPage = ({
                 borderColor="gray.200"
                 value={teamId ?? undefined}
               >
-                {userinfo.data?.groups.map((group) => (
+                {userinfo?.groups.map((group) => (
                   <option key={group.id} value={group.id}>
                     {group.displayName}
                   </option>
@@ -125,10 +140,8 @@ export const UnlockedCreateContextPage = ({
               </Select>
             </Skeleton>
           </FormControl>
-        </Box>
-        <Box marginBottom="1rem">
-          <FormLabel htmlFor="tableSelect">Velg sikkerhetsskjema</FormLabel>
           <FormControl>
+            <FormLabel htmlFor="tableSelect">Velg sikkerhetsskjema</FormLabel>
             <Skeleton isLoaded={!tablesData.isPending}>
               <Select
                 id="tableSelect"
@@ -147,16 +160,13 @@ export const UnlockedCreateContextPage = ({
               </Select>
             </Skeleton>
           </FormControl>
-        </Box>
-        {tableId && tableId.trim() && teamId && teamId.trim() && (
-          <CopyContextDropdown
-            tableId={tableId}
-            teamId={teamId}
-            copyContext={copyContext}
-            setCopyContext={setCopyContext}
-          />
-        )}
-        <Box marginBottom="50px">
+          {tableId && tableId.trim() && teamId && teamId.trim() && (
+            <CopyContextDropdown
+              tableId={tableId}
+              copyContext={copyContext}
+              setCopyContext={setCopyContext}
+            />
+          )}
           <FormControl>
             <FormLabel htmlFor="contextName">Navn på skjemautfylling</FormLabel>
             <Input
@@ -170,16 +180,16 @@ export const UnlockedCreateContextPage = ({
               borderColor="gray.200"
             />
           </FormControl>
-        </Box>
-        <Button
-          type="submit"
-          variant="primary"
-          colorScheme="blue"
-          disabled={isButtonDisabled}
-        >
-          {isLoading ? <Spinner size="sm" /> : 'Opprett skjema'}
-        </Button>
-      </Form>
+          <Button
+            type="submit"
+            variant="primary"
+            colorScheme="blue"
+            disabled={isButtonDisabled}
+          >
+            {isLoading ? <Spinner size="sm" /> : 'Opprett skjema'}
+          </Button>
+        </Stack>
+      </form>
     </Stack>
   );
 };

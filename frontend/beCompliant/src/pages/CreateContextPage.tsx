@@ -1,7 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LockedCreateContextPage } from './LockedCreateContextPage';
 import { UnlockedCreateContextPage } from './UnlockedCreateContextPage';
-import { useFetchUserinfo } from '../hooks/useFetchUserinfo';
 import { useFetchTables } from '../hooks/useFetchTables';
 import { Center, Heading, Icon } from '@kvib/react';
 import { useSubmitContext } from '../hooks/useSubmitContext';
@@ -30,18 +29,12 @@ export const CreateContextPage = () => {
   const { mutate: submitContext, isPending: isLoading } = useSubmitContext();
 
   const {
-    data: userinfo,
-    isPending: isUserinfoLoading,
-    isError: isUserinfoError,
-  } = useFetchUserinfo();
-
-  const {
     data: tablesData,
     isPending: tablesIsPending,
     error: tablesError,
   } = useFetchTables();
 
-  if (isUserinfoError || tablesError) {
+  if (tablesError) {
     return (
       <Center height="70svh" flexDirection="column" gap="4">
         <Icon icon="error" size={64} weight={600} />
@@ -90,10 +83,6 @@ export const CreateContextPage = () => {
 
   return locked ? (
     <LockedCreateContextPage
-      userinfo={{
-        data: userinfo,
-        isPending: isUserinfoLoading,
-      }}
       tablesData={{
         data: tablesData,
         isPending: tablesIsPending,
@@ -107,10 +96,6 @@ export const CreateContextPage = () => {
     />
   ) : (
     <UnlockedCreateContextPage
-      userinfo={{
-        data: userinfo,
-        isPending: isUserinfoLoading,
-      }}
       tablesData={{
         data: tablesData,
         isPending: tablesIsPending,
