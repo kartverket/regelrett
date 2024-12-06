@@ -10,6 +10,7 @@ import {
   Flex,
   useDisclosure,
   Button,
+  useToast,
 } from '@kvib/react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { Page } from '../components/layout/Page';
@@ -18,7 +19,8 @@ import { useFetchTeamContexts } from '../hooks/useFetchTeamContexts';
 import { useFetchContext } from '../hooks/useFetchContext';
 import { useFetchTables } from '../hooks/useFetchTables';
 import { DeleteContextModal } from '../components/DeleteContextModal';
-import { useDumpCSV } from '../hooks/useDumpCSV';
+import { apiConfig } from '../api/apiConfig';
+import { axiosFetch } from '../api/Fetch';
 
 const FrontPage = () => {
   const {
@@ -27,7 +29,7 @@ const FrontPage = () => {
     isError: isUserinfoError,
   } = useFetchUserinfo();
 
-  const { mutateAsync: dumpCSV } = useDumpCSV();
+  const toast = useToast();
 
   if (isUserinfoLoading) {
     return (
@@ -60,8 +62,17 @@ const FrontPage = () => {
 
   const handleExportCSV = async () => {
     try {
-      const csvData = await dumpCSV();
-      const blob = new Blob([csvData], {
+      const response = await axiosFetch<Blob>({
+        url: apiConfig.dumpCSV.url,
+        method: 'GET',
+        responseType: 'blob',
+      });
+
+      if (!response.data) {
+        throw new Error('No data received for CSV');
+      }
+
+      const blob = new Blob([response.data], {
         type: 'text/csv;charset=utf-8;',
       });
       const url = URL.createObjectURL(blob);
@@ -77,6 +88,18 @@ const FrontPage = () => {
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading CSV:', error);
+      const toastId = 'export-csv-error';
+      if (!toast.isActive(toastId)) {
+        toast({
+          id: toastId,
+          title: 'Å nei!',
+          description:
+            'Det kan være du ikke har tilgang til denne funksjonaliteten:',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -120,11 +143,7 @@ function TeamContexts({ teamId }: { teamId: string }) {
   const { data: contexts = [], isPending: contextsIsPending } =
     useFetchTeamContexts(teamId);
 
-  const {
-    data: tablesData,
-    error: tablesError,
-    isPending: tablesIsPending,
-  } = useFetchTables();
+  const { data: tablesData, isPending: tablesIsPending } = useFetchTables();
 
   const {
     isOpen: isDeleteOpen,
