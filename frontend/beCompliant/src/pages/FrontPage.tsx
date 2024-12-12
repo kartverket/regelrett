@@ -3,7 +3,6 @@ import {
   Heading,
   Icon,
   Link,
-  Spinner,
   StackDivider,
   VStack,
   Text,
@@ -12,6 +11,7 @@ import {
   Button,
   IconButton,
   useToast,
+  Skeleton,
 } from '@kvib/react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { Page } from '../components/layout/Page';
@@ -32,13 +32,6 @@ const FrontPage = () => {
 
   const toast = useToast();
 
-  if (isUserinfoLoading) {
-    return (
-      <Center style={{ height: '100svh' }}>
-        <Spinner size="xl" />
-      </Center>
-    );
-  }
   if (isUserinfoError) {
     return (
       <Center height="70svh" flexDirection="column" gap="4">
@@ -50,7 +43,7 @@ const FrontPage = () => {
 
   const teams = userinfo ? userinfo.groups : [];
 
-  if (!teams.length) {
+  if (!isUserinfoLoading && !teams.length) {
     return (
       <Center height="70svh" flexDirection="column" gap="4">
         <Icon icon="error" size={64} weight={600} />
@@ -106,36 +99,38 @@ const FrontPage = () => {
 
   return (
     <Page gap="4" alignItems="center">
-      <VStack>
-        <Heading textAlign="left" width="100%">
-          Dine team
-        </Heading>
-        <VStack
-          align="start"
-          divider={<StackDivider />}
-          style={{ width: '40ch' }}
-        >
-          <Button
-            padding="0"
-            variant="tertiary"
-            colorScheme="blue"
-            onClick={() => handleExportCSV()}
-            rightIcon="download"
+      <Skeleton isLoaded={!isUserinfoLoading} fitContent>
+        <VStack>
+          <Heading textAlign="left" width="100%">
+            Dine team
+          </Heading>
+          <VStack
+            align="start"
+            divider={<StackDivider />}
+            style={{ width: '40ch' }}
           >
-            Eksporter skjemautfyllinger
-          </Button>
-          {teams.map((team) => {
-            return (
-              <div key={team.id}>
-                <Heading size="md" marginBottom={2}>
-                  {team.displayName}
-                </Heading>
-                <TeamContexts teamId={team.id} />
-              </div>
-            );
-          })}
+            <Button
+              padding="0"
+              variant="tertiary"
+              colorScheme="blue"
+              onClick={() => handleExportCSV()}
+              rightIcon="download"
+            >
+              Eksporter skjemautfyllinger
+            </Button>
+            {teams.map((team) => {
+              return (
+                <div key={team.id}>
+                  <Heading size="md" marginBottom={2}>
+                    {team.displayName}
+                  </Heading>
+                  <TeamContexts teamId={team.id} />
+                </div>
+              );
+            })}
+          </VStack>
         </VStack>
-      </VStack>
+      </Skeleton>
     </Page>
   );
 };
@@ -145,16 +140,6 @@ function TeamContexts({ teamId }: { teamId: string }) {
     useFetchTeamContexts(teamId);
 
   const { data: tablesData, isPending: tablesIsPending } = useFetchTables();
-
-  const {
-    isOpen: isDeleteOpen,
-    onOpen: onDeleteOpen,
-    onClose: onDeleteClose,
-  } = useDisclosure();
-
-  if (contextsIsPending || tablesIsPending) {
-    return <Spinner size="xl" />;
-  }
 
   const uniqueTableIds = Array.from(
     new Set(contexts?.map((context) => context.tableId))
@@ -166,54 +151,64 @@ function TeamContexts({ teamId }: { teamId: string }) {
 
   return (
     <VStack alignItems="start" marginLeft={8}>
-      {contextTables?.map((table) => {
-        const contextsForTable = contexts.filter(
-          (context) => context.tableId === table.id
-        );
+      <Skeleton isLoaded={!contextsIsPending || !tablesIsPending} fitContent>
+        {contextTables?.map((table) => {
+          const contextsForTable = contexts.filter(
+            (context) => context.tableId === table.id
+          );
 
-        return (
-          <VStack alignItems="start" key={table.id}>
-            <Text>{table.name}</Text>
-            <VStack alignItems="start" pl={4}>
-              {contextsForTable.map((context) => (
-                <Flex alignItems="center" key={context.id}>
+          return (
+            <VStack alignItems="start" key={table.id}>
+              <Text>{table.name}</Text>
+              <VStack alignItems="start" pl={4}>
+                {contextsForTable.map((context) => (
                   <ContextLink key={context.id} contextId={context.id} />
-                  <IconButton
-                    aria-label="Slett utfylling"
-                    colorScheme="red"
-                    variant="tertiary"
-                    icon="delete"
-                    onClick={() => onDeleteOpen()}
-                  />
-                  <DeleteContextModal
-                    onOpen={onDeleteOpen}
-                    onClose={onDeleteClose}
-                    isOpen={isDeleteOpen}
-                    teamId={teamId}
-                    contextId={context.id}
-                  />
-                </Flex>
-              ))}
+                ))}
+              </VStack>
             </VStack>
-          </VStack>
-        );
-      })}
+          );
+        })}
+      </Skeleton>
     </VStack>
   );
 }
 
 function ContextLink({ contextId }: { contextId: string }) {
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+
   const { data: context, isPending: contextIsPending } =
     useFetchContext(contextId);
 
-  if (contextIsPending) {
-    return <Spinner size="sm" />;
-  }
-
   return (
-    <Link to={`/context/${contextId}`} as={ReactRouterLink} colorScheme="blue">
-      {context?.name}
-    </Link>
+    <Flex alignItems="center" key={contextId}>
+      <Skeleton isLoaded={!contextIsPending} fitContent>
+        <Link
+          to={`/context/${contextId}`}
+          as={ReactRouterLink}
+          colorScheme="blue"
+        >
+          {context?.name}
+        </Link>
+        <IconButton
+          aria-label="Slett utfylling"
+          colorScheme="red"
+          variant="tertiary"
+          icon="delete"
+          onClick={() => onDeleteOpen()}
+        />
+      </Skeleton>
+      <DeleteContextModal
+        onOpen={onDeleteOpen}
+        onClose={onDeleteClose}
+        isOpen={isDeleteOpen}
+        teamId={context?.teamId ?? ''}
+        contextId={contextId}
+      />
+    </Flex>
   );
 }
 
