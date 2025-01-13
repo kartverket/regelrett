@@ -1,5 +1,7 @@
 package no.bekk.configuration
 
+import io.ktor.client.*
+
 object AppConfig {
     lateinit var tables: TableConfig
     lateinit var microsoftGraph: MicrosoftGraphConfig
@@ -11,22 +13,34 @@ object AppConfig {
 
 object TableConfig {
     lateinit var airTable: AirTableConfig
-    lateinit var sikkerhetskontroller: AirTableInstanceConfig
-    lateinit var driftskontinuitet: AirTableInstanceConfig
+    lateinit var tables: List<TableInstance>
 }
 
 object AirTableConfig {
     lateinit var baseUrl: String
 }
 
+interface TableInstance {
+    val id: String
+}
+
 data class AirTableInstanceConfig (
+    override val id: String,
     val accessToken: String,
     val baseId: String,
     val tableId: String,
     var viewId: String? = null,
     var webhookId: String? = null,
     var webhookSecret: String? = null,
-)
+) : TableInstance
+
+data class YAMLInstanceConfig (
+    override val id: String,
+    val endpoint: String? = null,
+    val resourcePath: String? = null
+) : TableInstance
+
+
 
 object MicrosoftGraphConfig {
     lateinit var baseUrl: String

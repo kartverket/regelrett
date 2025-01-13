@@ -21,6 +21,23 @@ airTable:
     webhookId: "$DRIFTSKONTINUITET_WEBHOOK_ID:"
     webhookSecret: "$DRIFTSKONTINUITET_WEBHOOK_SECRET:"
 
+tables:
+- id: "570e9285-3228-4396-b82b-e9752e23cd73"
+  type : "AIRTABLE"
+  accessToken: $AIRTABLE_ACCESS_TOKEN
+  baseId: "appzJQ8Tkmm8DobrJ"
+  tableId: "tblLZbUqA0XnUgC2v"
+  viewId: "viw2XliGUJu5448Hk"
+  webhookId: "$SIKKERHETSKONTROLLER_WEBHOOK_ID:"
+  webhookSecret: "$SIKKERHETSKONTROLLER_WEBHOOK_SECRET:"
+- id: "816cc808-9188-44a9-8f4b-5642fc2932c4"
+  type: "AIRTABLE"
+  accessToken: $AIRTABLE_ACCESS_TOKEN
+  baseId: "appsIiBWlCCSsMmRB"
+  tableId: "tbl4pNqNp2wLyI6iv"
+  webhookId: "$DRIFTSKONTINUITET_WEBHOOK_ID:"
+  webhookSecret: "$DRIFTSKONTINUITET_WEBHOOK_SECRET:"
+
 microsoftGraph:
   baseUrl: "https://graph.microsoft.com"
   memberOfPath: "/v1.0/me/memberOf/microsoft.graph.group"
