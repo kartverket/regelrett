@@ -101,7 +101,7 @@ fun Route.contextRouting() {
                 call.respondText("Context and its answers and comments were successfully deleted.")
             }
 
-            patch {
+            patch("/team"){
                 try {
                     logger.info("Received PATCH /contexts with id: ${call.parameters["contextId"]}")
                     val contextId = call.parameters["contextId"] ?: throw BadRequestException("Missing contextId")
@@ -136,9 +136,35 @@ fun Route.contextRouting() {
                 }
 
             }
+            patch("/answers") {
+                try {
+                    logger.info("Received PATCH /{contextId}/answers")
+                    val contextId = call.parameters["contextId"] ?: throw BadRequestException("Missing contextId")
+
+                    val payload = call.receive<CopyContextRequest>()
+                    val copyContextId = payload.copyContextId ?: throw BadRequestException("Missing copy contextId in request body")
+
+                    if (!hasContextAccess(call, contextId)) {
+                        call.respond(HttpStatusCode.Forbidden)
+                        return@patch
+                    }
+                    AnswerRepository.copyAnswersFromOtherContext(contextId, copyContextId)
+                    call.respond(HttpStatusCode.OK)
+                    return@patch
+                } catch (e: BadRequestException) {
+                    logger.error("Bad request: ${e.message}", e)
+                    call.respond(HttpStatusCode.BadRequest, e.message ?: "Bad request")
+                } catch (e: Exception) {
+                    logger.error("Unexpected error when processing PATCH /contexts", e)
+                    call.respond(HttpStatusCode.InternalServerError, "An unexpected error occurred.")
+                }
+            }
         }
     }
 }
 
 @Serializable
 data class TeamUpdateRequest(val teamId: String?)
+
+@Serializable
+data class CopyContextRequest(val copyContextId: String?)
