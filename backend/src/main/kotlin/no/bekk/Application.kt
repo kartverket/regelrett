@@ -110,18 +110,11 @@ fun CoroutineScope.launchCleanupJob(): Job {
 
 fun cleanupAnswersHistory() {
     logger.info("Running scheduled cleanup for answers table")
-    val query = "WITH ranked_answers AS (\n" +
-            "    SELECT id, \n" +
-            "           record_id, \n" +
-            "           context_id, \n" +
-            "           created,\n" +
-            "           ROW_NUMBER() OVER (PARTITION BY record_id, context_id ORDER BY created DESC) AS rn\n" +
-            "    FROM answers\n" +
-            ")\n" +
-            "DELETE FROM answers\n" +
-            "USING ranked_answers\n" +
-            "WHERE answers.id = ranked_answers.id\n" +
-            "AND ranked_answers.rn > 1;"
+    val query = "WITH ranked_answers AS " +
+            "(SELECT id, record_id, context_id, created, ROW_NUMBER() OVER (PARTITION BY record_id, context_id ORDER BY created DESC) AS rn FROM answers) " +
+            "DELETE FROM answers " +
+            "USING ranked_answers " +
+            "WHERE answers.id = ranked_answers.id AND ranked_answers.rn > 3;"
 
     Database.getConnection().use { conn ->
         conn.prepareStatement(query).use { stmt ->
