@@ -8,6 +8,7 @@ object AppConfig {
     lateinit var frontend: FrontendConfig
     lateinit var backend: BackendConfig
     lateinit var db: DbConfig
+    lateinit var answerHistoryCleanup: AnswerHistoryCleanupConfig
 }
 
 object FormConfig {
@@ -76,4 +77,8 @@ object DbConfig {
     lateinit var url: String
     lateinit var username: String
     lateinit var password: String
+}
+
+object AnswerHistoryCleanupConfig {
+    lateinit var cleanupIntervalWeeks: String
 }
