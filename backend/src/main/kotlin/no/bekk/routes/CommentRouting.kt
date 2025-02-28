@@ -2,6 +2,7 @@ package no.bekk.routes
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -62,17 +63,15 @@ fun Route.commentRouting() {
     }
 
     delete("/comments") {
-        val commentRequestJson = call.receiveText()
-        val databaseCommentRequest = Json.decodeFromString<DatabaseComment>(commentRequestJson)
-        if (databaseCommentRequest.contextId == null) {
-            call.respond(HttpStatusCode.BadRequest)
-            return@delete
-        }
-        if (!hasContextAccess(call, databaseCommentRequest.contextId)) {
+        logger.info("Received DELETE /comments with recordId: ${call.request.queryParameters["recordId"]} and contextId: ${call.request.queryParameters["contextId"]}")
+        val contextId = call.request.queryParameters["contextId"] ?: throw BadRequestException("Missing contextId")
+        val recordId = call.request.queryParameters["recordId"] ?: throw BadRequestException("Missing recordId")
+
+        if (!hasContextAccess(call, contextId)) {
             call.respond(HttpStatusCode.Forbidden)
             return@delete
         }
-        CommentRepository.deleteCommentFromDatabase(databaseCommentRequest)
+        CommentRepository.deleteCommentFromDatabase(contextId, recordId)
         call.respondText("Comment was successfully deleted.")
     }
 }
