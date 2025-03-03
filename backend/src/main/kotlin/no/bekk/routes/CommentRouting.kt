@@ -17,7 +17,7 @@ fun Route.commentRouting() {
 
     post("/comments") {
         val commentRequestJson = call.receiveText()
-        logger.debug("Request body: $commentRequestJson")
+        logger.debug("Received POST /comments with request body: $commentRequestJson")
 
         val databaseCommentRequest = Json.decodeFromString<DatabaseCommentRequest>(commentRequestJson)
 
@@ -38,6 +38,7 @@ fun Route.commentRouting() {
     get("/comments") {
         val recordId = call.request.queryParameters["recordId"]
         val contextId = call.request.queryParameters["contextId"]
+        logger.debug("Received GET /comments with id: $contextId")
 
         if (contextId == null) {
             call.respond(HttpStatusCode.BadRequest)
@@ -63,6 +64,7 @@ fun Route.commentRouting() {
 
     delete("/comments") {
         val commentRequestJson = call.receiveText()
+        logger.debug("Received DELETE /comments with request body: $commentRequestJson")
         val databaseCommentRequest = Json.decodeFromString<DatabaseComment>(commentRequestJson)
         if (databaseCommentRequest.contextId == null) {
             call.respond(HttpStatusCode.BadRequest)

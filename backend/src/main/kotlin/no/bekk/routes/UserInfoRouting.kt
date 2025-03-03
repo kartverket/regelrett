@@ -13,6 +13,7 @@ import no.bekk.util.logger
 fun Route.userInfoRouting() {
     route("/userinfo") {
         get {
+            logger.debug("Received GET /userinfo")
             val groups = getGroupsOrEmptyList(call)
             val user = getCurrentUser(call)
             call.respond(UserInfoResponse(groups, user))
@@ -20,6 +21,7 @@ fun Route.userInfoRouting() {
 
         get("/{userId}/username") {
             val userId = call.parameters["userId"]
+            logger.debug("Received GET /userinfo/userId/username with id $userId")
             if (userId == null) {
                 logger.warn("Request missing userId")
                 call.respond(HttpStatusCode.BadRequest, "UserId is missing")

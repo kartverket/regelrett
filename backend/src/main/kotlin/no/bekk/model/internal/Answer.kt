@@ -13,16 +13,6 @@ enum class AnswerType {
 }
 
 @Serializable
-data class Answer(
-    val actor: String,
-    val questionId: String,
-    val question: String,
-    val answer: String,
-    val team: String?,
-    val updated: String,
-)
-
-@Serializable
 data class AnswerMetadata(
     val type: AnswerType,
     val options: List<String>? = null,

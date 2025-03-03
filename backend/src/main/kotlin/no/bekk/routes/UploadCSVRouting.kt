@@ -11,11 +11,13 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.Date
 import io.ktor.http.ContentType
+import no.bekk.util.logger
 
 
 fun Route.uploadCSVRouting() {
     route("/dump-csv") {
         get {
+            logger.debug("Received GET /dump-csv")
             if (!hasSuperUserAccess(call)) {
                 call.respond(HttpStatusCode.Unauthorized)
                 return@get

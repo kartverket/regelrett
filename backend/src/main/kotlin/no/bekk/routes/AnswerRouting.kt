@@ -37,7 +37,7 @@ fun Route.answerRouting() {
     get("/answers") {
         val recordId = call.request.queryParameters["recordId"]
         val contextId = call.request.queryParameters["contextId"]
-
+        logger.debug("Received GET /answers with contextId: $contextId and recordId: $recordId")
 
         if (contextId == null) {
             call.respond(HttpStatusCode.BadRequest)

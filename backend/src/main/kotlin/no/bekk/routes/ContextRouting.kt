@@ -18,7 +18,6 @@ fun Route.contextRouting() {
     route("/contexts") {
         post {
             try {
-
                 val contextRequestJson = call.receiveText()
                 logger.debug("Received POST /context request with body: $contextRequestJson")
                 lateinit var contextRequest: DatabaseContextRequest
@@ -73,6 +72,7 @@ fun Route.contextRouting() {
         get {
             val teamId = call.request.queryParameters["teamId"] ?: throw BadRequestException("Missing teamId parameter")
             val formId = call.request.queryParameters["formId"]
+            logger.debug("Received GET /contexts with teamId $teamId with formId $formId")
             if (!hasTeamAccess(call, teamId)) {
                 call.respond(HttpStatusCode.Forbidden)
                 return@get
@@ -105,7 +105,7 @@ fun Route.contextRouting() {
             }
 
             delete {
-                logger.info("Received DELETE /context with id: ${call.parameters["contextId"]}")
+                logger.debug("Received DELETE /context with id: ${call.parameters["contextId"]}")
                 val contextId = call.parameters["contextId"] ?: throw BadRequestException("Missing contextId")
                 if (!hasContextAccess(call, contextId)) {
                     call.respond(HttpStatusCode.Forbidden)
@@ -117,7 +117,7 @@ fun Route.contextRouting() {
 
             patch("/team"){
                 try {
-                    logger.info("Received PATCH /contexts with id: ${call.parameters["contextId"]}")
+                    logger.debug("Received PATCH /contexts with id: ${call.parameters["contextId"]}")
                     val contextId = call.parameters["contextId"] ?: throw BadRequestException("Missing contextId")
 
                     val payload = call.receive<TeamUpdateRequest>()
@@ -152,7 +152,7 @@ fun Route.contextRouting() {
             }
             patch("/answers") {
                 try {
-                    logger.info("Received PATCH /{contextId}/answers")
+                    logger.debug("Received PATCH /{contextId}/answers with id: ${call.parameters["contextId"]}")
                     val contextId = call.parameters["contextId"] ?: throw BadRequestException("Missing contextId")
 
                     val payload = call.receive<CopyContextRequest>()

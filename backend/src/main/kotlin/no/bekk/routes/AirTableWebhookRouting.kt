@@ -47,6 +47,7 @@ fun Route.airTableWebhookRouting() {
                 validateSignature(incomingSignature, requestBody)
                 processWebhook(payload.webhook.id)
                 call.respond(HttpStatusCode.OK)
+                logger.info("Received webhook ping from AirTable")
                 return@post
             } catch (e: AuthorizationException) {
                 call.respond(HttpStatusCode.Unauthorized, e.message ?: "Authorization error")
@@ -59,8 +60,6 @@ fun Route.airTableWebhookRouting() {
                 call.respondText("Failed to process webhook", status = HttpStatusCode.BadRequest)
                 return@post
             }
-            logger.info("Received webhook ping from AirTable")
-
         } catch (e: Exception) {
             logger.error("Error processing webhook", e)
             call.respondText("Failed to process webhook", status = HttpStatusCode.BadRequest)
