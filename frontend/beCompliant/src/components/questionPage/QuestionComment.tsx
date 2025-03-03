@@ -158,12 +158,8 @@ export function QuestionComment({
             onOpen={onDeleteOpen}
             onClose={onDeleteClose}
             isOpen={isDeleteOpen}
-            comment={latestComment ?? ''}
-            questionId={question.id}
             recordId={question.recordId}
             contextId={contextId}
-            setEditMode={setIsEditing}
-            user={user}
           />
         </>
       )}

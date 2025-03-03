@@ -50,16 +50,18 @@ export function useDeleteComment(
 
   return useMutation({
     mutationKey: apiConfig.comments.queryKey(contextId, recordId),
-    mutationFn: (body: Comment) => {
+    mutationFn: () => {
       return axiosFetch({
         url: URL,
         method: 'DELETE',
-        data: JSON.stringify(body),
       });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: apiConfig.comments.queryKey(contextId, recordId),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: apiConfig.comments.queryKey(contextId),
       });
       onSuccess();
     },

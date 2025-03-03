@@ -6,9 +6,13 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.config.*
 import io.ktor.server.plugins.defaultheaders.*
+import kotlinx.coroutines.*
 import no.bekk.authentication.initializeAuthentication
 import no.bekk.configuration.*
 import no.bekk.util.configureBackgroundTasks
+import no.bekk.util.logger
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -80,6 +84,53 @@ private fun loadAppConfig(config: ApplicationConfig) {
         username = config.propertyOrNull("db.username")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"db.username\"")
         password = config.propertyOrNull("db.password")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"db.password\"")
     }
+
+    // Answer history cleanup config
+    AppConfig.answerHistoryCleanup = AnswerHistoryCleanupConfig.apply {
+        cleanupIntervalWeeks = config.propertyOrNull("answerHistoryCleanup.cleanupIntervalWeeks")?.getString() ?: throw IllegalStateException("Unable to initialize app config \"answerHistoryCleanup.cleanupIntervalWeeks\"")
+    }
+}
+
+fun CoroutineScope.launchCleanupJob(): Job {
+    val cleanupIntervalWeeks = AppConfig.answerHistoryCleanup.cleanupIntervalWeeks.toInt()
+    val cleanupInterval: Duration = (cleanupIntervalWeeks * 7).days
+
+    return launch(Dispatchers.IO) {
+        while (isActive) {
+            try {
+                logger.info("Running scheduled cleanup every $cleanupIntervalWeeks weeks.")
+                cleanupAnswersHistory()
+            } catch (e: Exception) {
+                logger.error("Error during answers history cleanup: ${e.message}")
+            }
+            delay(cleanupInterval.inWholeMilliseconds)
+        }
+    }
+}
+
+fun cleanupAnswersHistory() {
+    logger.info("Running scheduled cleanup for answers table")
+    val query =
+        """
+            WITH ranked_answers AS 
+            (SELECT 
+                id, 
+                record_id, 
+                context_id, 
+                created, 
+                ROW_NUMBER() OVER (PARTITION BY record_id, context_id ORDER BY created DESC) AS rn 
+            FROM answers) 
+            DELETE FROM answers 
+            USING ranked_answers 
+            WHERE answers.id = ranked_answers.id AND ranked_answers.rn > 3;
+            """.trimIndent()
+
+    Database.getConnection().use { conn ->
+        conn.prepareStatement(query).use { stmt ->
+            val deletedRows = stmt.executeUpdate()
+            logger.info("Answer cleanup completed. Deleted $deletedRows rows.")
+        }
+    }
 }
 
 fun Application.module() {
@@ -99,6 +150,8 @@ fun Application.module() {
     initializeAuthentication()
     configureRouting()
     configureBackgroundTasks()
+
+    launchCleanupJob()
 
     environment.monitor.subscribe(ApplicationStopped) {
         Database.closePool()

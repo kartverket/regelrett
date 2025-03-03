@@ -186,13 +186,8 @@ export function Comment({
         onOpen={onDeleteOpen}
         onClose={onDeleteClose}
         isOpen={isDeleteOpen}
-        comment={comment}
-        questionId={questionId}
         recordId={recordId}
         contextId={contextId}
-        setEditMode={setIsEditing}
-        setCommentDeleted={setCommentDeleted}
-        user={user}
       />
     </>
   );

@@ -10,54 +10,26 @@ import {
   Stack,
   Text,
 } from '@kvib/react';
-import { User } from '../../api/types';
 import { useDeleteComment } from '../../hooks/useComments';
 
 type Props = {
   onOpen: () => void;
   onClose: () => void;
   isOpen: boolean;
-  comment: string;
-  questionId: string;
   recordId: string;
   contextId: string;
-  setEditMode: (value: boolean) => void;
-  setCommentDeleted?: (deleted: boolean) => void;
-  user: User;
 };
 export function DeleteCommentModal({
   onClose,
   isOpen,
-  comment,
-  questionId,
   recordId,
   contextId,
-  setEditMode,
-  setCommentDeleted,
-  user,
 }: Props) {
-  const handleDeleteSuccess = () => {
-    setEditMode(false);
-    setCommentDeleted?.(true);
-    onClose();
-  };
-
   const { mutate: deleteComment, isPending: isLoading } = useDeleteComment(
     contextId,
     recordId,
-    handleDeleteSuccess
+    onClose
   );
-
-  const handleCommentDelete = async () => {
-    deleteComment({
-      actor: user.id,
-      recordId: recordId,
-      questionId: questionId,
-      comment: comment,
-      contextId,
-      updated: new Date(),
-    });
-  };
 
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
@@ -79,7 +51,7 @@ export function DeleteCommentModal({
               variant="primary"
               colorScheme="red"
               leftIcon="delete"
-              onClick={handleCommentDelete}
+              onClick={() => deleteComment()}
               isLoading={isLoading}
             >
               Slett kommentar
