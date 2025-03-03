@@ -76,3 +76,10 @@ suspend fun hasSuperUserAccess(call: ApplicationCall): Boolean {
     val user = getCurrentUser(call)
     return user.mail == AppConfig.oAuth.superUserMail
 }
+
+suspend fun getTeamIdFromName(call: ApplicationCall, teamName: String): String? {
+    val microsoftGroups = getGroupsOrEmptyList(call)
+
+    return microsoftGroups.find { it.displayName == teamName }?.id
+}
+

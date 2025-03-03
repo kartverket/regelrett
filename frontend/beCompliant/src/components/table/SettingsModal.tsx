@@ -3,6 +3,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -19,7 +20,6 @@ import {
   Tabs,
   useToast,
 } from '@kvib/react';
-import { useUser } from '../../hooks/useUser';
 import {
   Context,
   useFetchAllContexts,
@@ -39,7 +39,6 @@ export function SettingsModal({ onClose, isOpen }: Props) {
   const contextId = params.contextId;
   const toast = useToast();
 
-  const { data: userinfo } = useUser();
   const currentContext = useContext(contextId);
 
   const { data: contexts, isPending: contextsIsLoading } =
@@ -49,11 +48,11 @@ export function SettingsModal({ onClose, isOpen }: Props) {
     e.preventDefault();
     if (!contextId) return;
 
-    const newTeamId = (
+    const newTeam = (
       e.currentTarget.elements.namedItem('editTeam') as HTMLSelectElement
     )?.value;
 
-    if (!newTeamId) {
+    if (!newTeam) {
       return;
     }
 
@@ -62,12 +61,21 @@ export function SettingsModal({ onClose, isOpen }: Props) {
         url: apiConfig.contexts.forIdAndTeam.url(contextId) + '/team',
         method: 'PATCH',
         data: {
-          teamId: newTeamId,
+          teamName: newTeam,
         },
       });
 
       if (response.status === 200 || response.status === 204) {
-        onClose();
+        const toastId = 'change-context-team-success';
+        if (!toast.isActive(toastId)) {
+          toast({
+            title: 'Suksess!',
+            description: 'Skjemaet har blitt flyttet',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
     } catch (error) {
       const toastId = 'change-context-team-error';
@@ -152,20 +160,16 @@ export function SettingsModal({ onClose, isOpen }: Props) {
                   <Stack gap="1rem">
                     <FormControl>
                       <FormLabel>
-                        Velg teamet dette skjemaet skal gjelde for:
+                        Skriv inn navnet til teamet dette skjemaet skal gjelde
+                        for:
                       </FormLabel>
-                      <Select
+                      <Input
                         name="editTeam"
-                        defaultValue={currentContext.data?.teamId || ''}
-                      >
-                        {userinfo?.groups.map((team) => {
-                          return (
-                            <option key={team.id} value={team.id}>
-                              {team.displayName}
-                            </option>
-                          );
-                        })}
-                      </Select>
+                        placeholder="Skriv inn team navn..."
+                        aria-label="Teameier bytte av skjemautfylling input"
+                        type="search"
+                        size="md"
+                      />
                     </FormControl>
 
                     <HStack justifyContent="end" mt={4}>

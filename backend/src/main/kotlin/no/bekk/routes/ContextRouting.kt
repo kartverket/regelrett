@@ -9,8 +9,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import no.bekk.authentication.hasContextAccess
-import no.bekk.authentication.hasTeamAccess
+import no.bekk.authentication.*
 import no.bekk.database.*
 import no.bekk.util.logger
 
@@ -121,19 +120,17 @@ fun Route.contextRouting() {
                     val contextId = call.parameters["contextId"] ?: throw BadRequestException("Missing contextId")
 
                     val payload = call.receive<TeamUpdateRequest>()
-                    val newTeamId = payload.teamId ?: throw BadRequestException("Missing teamId in request body")
+                    val newTeam = payload.teamName ?: throw BadRequestException("Missing teamName in request body")
 
-                    if (!hasTeamAccess(call, newTeamId)) {
-                        call.respond(HttpStatusCode.Forbidden)
-                        return@patch
-                    }
 
                     if (!hasContextAccess(call, contextId)) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@patch
                     }
 
-                    val success = ContextRepository.changeTeam(contextId, newTeamId)
+                    val teamId = getTeamIdFromName(call, newTeam) ?: throw BadRequestException("TeamName not valid")
+
+                    val success = ContextRepository.changeTeam(contextId, teamId)
                     if (success) {
                         call.respond(HttpStatusCode.OK)
                         return@patch
@@ -178,7 +175,7 @@ fun Route.contextRouting() {
 }
 
 @Serializable
-data class TeamUpdateRequest(val teamId: String?)
+data class TeamUpdateRequest(val teamName: String?)
 
 @Serializable
 data class CopyContextRequest(val copyContextId: String?)
