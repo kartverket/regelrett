@@ -56,7 +56,7 @@ oAuth:
   clientId: $CLIENT_ID
   clientSecret: $CLIENT_SECRET
   providerUrl: "$AUTH_PROVIDER_URL:http://localhost:8080/callback"
-  superUserMail: "$SUPER_USER_MAIL:ola.nordmann@regelrettoutlook.onmicrosoft.com"
+  superUserGroup: "$SUPER_USER_GROUP_ID:"
 
 frontend:
   host: "$FRONTEND_URL_HOST:localhost:3000"

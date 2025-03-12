@@ -23,5 +23,6 @@ data class MicrosoftGraphUser(
 @Serializable
 data class UserInfoResponse(
     val groups: List<MicrosoftGraphGroup>,
-    val user: MicrosoftGraphUser
+    val user: MicrosoftGraphUser,
+    val superuser: Boolean
 )

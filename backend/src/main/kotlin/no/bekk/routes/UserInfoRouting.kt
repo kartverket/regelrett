@@ -6,6 +6,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.bekk.authentication.getGroupsOrEmptyList
 import no.bekk.authentication.getCurrentUser
+import no.bekk.authentication.hasSuperUserAccess
 import no.bekk.domain.UserInfoResponse
 import no.bekk.services.MicrosoftGraphService
 import no.bekk.util.logger
@@ -16,7 +17,8 @@ fun Route.userInfoRouting() {
             logger.debug("Received GET /userinfo")
             val groups = getGroupsOrEmptyList(call)
             val user = getCurrentUser(call)
-            call.respond(UserInfoResponse(groups, user))
+            val superuser = hasSuperUserAccess(call)
+            call.respond(UserInfoResponse(groups, user, superuser))
         }
 
         get("/{userId}/username") {

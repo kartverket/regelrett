@@ -73,8 +73,7 @@ suspend fun hasContextAccess(call: ApplicationCall, contextId: String,): Boolean
 }
 
 suspend fun hasSuperUserAccess(call: ApplicationCall): Boolean {
-    val user = getCurrentUser(call)
-    return user.mail == AppConfig.oAuth.superUserMail
+    return hasTeamAccess(call, AppConfig.oAuth.superUserGroup)
 }
 
 suspend fun getTeamIdFromName(call: ApplicationCall, teamName: String): String? {

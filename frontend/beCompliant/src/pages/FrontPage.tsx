@@ -108,15 +108,17 @@ const FrontPage = () => {
             divider={<StackDivider />}
             style={{ width: '40ch' }}
           >
-            <Button
-              padding="0"
-              variant="tertiary"
-              colorScheme="blue"
-              onClick={() => handleExportCSV()}
-              rightIcon="download"
-            >
-              Eksporter skjemautfyllinger
-            </Button>
+            {userinfo?.superuser && (
+              <Button
+                padding="0"
+                variant="tertiary"
+                colorScheme="blue"
+                onClick={() => handleExportCSV()}
+                rightIcon="download"
+              >
+                Eksporter skjemautfyllinger
+              </Button>
+            )}
             {teams.map((team) => {
               return (
                 <div key={team.id}>
