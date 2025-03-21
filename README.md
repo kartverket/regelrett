@@ -30,7 +30,7 @@ Du kan bruker docker desktop dersom du har det. Hvis ikke kan du bruke Colima. L
 ### Steg 4
 Etter å ha installert Colima, kan du starte det opp ved å kjøre denne kommandoen:
 
-`colima start`
+`colima start --network-address`
 
 ### Steg 5
 Når du har Colima eller Docker Desktop kjørende, kjør denne kommandoen:
@@ -89,6 +89,21 @@ Du skal nå kunne kjøre backend, gå inn på http://localhost:8080
 For mer dokumentasjon om [build and deployment](./docs/build-and-deployment.md), [kodestruktur](./docs/code-structure.md) og
 [datamodell](./docs/data-model.md) se /docs mappen.
 
+## Kjøre testene
+
+For å kunne kjøre flere av testene lokalt, så må du ha en fungerende dockerinstallasjon.
+I tillegg, avhengig av oppsettet ditt, så er det noen spesifikke miljøvariabler som må settes.
+Hvis du bruker colima, sett følgende i .bashrc/.zshrc eller andre tilsvarende konfigurasjonsfiler for ditt shell;
+```shell
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
+export TESTCONTAINERS_HOST_OVERRIDE=$(colima ls -j | jq -r '.address')
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+```
+
+Merk at det er viktig at colima startes med `--network-address` flagget, da det er trengs for å hente ut adressen til `TESTCONTAINERS_HOST_OVERRIDE`.
+
+Hvis du bruker noe annet, eksempelvis Podman eller Rancher, se dokumentasjonen til testcontainers;
+https://java.testcontainers.org/supported_docker_environment/
 
 ## Kjøre frontend lokalt
 Frontend er bygget med React, Vite og TypeScript.
