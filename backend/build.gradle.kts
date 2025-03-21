@@ -82,6 +82,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("io.mockk:mockk:1.13.16")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testImplementation("org.testcontainers:testcontainers:1.20.5")
+    testImplementation("org.testcontainers:postgresql:1.20.5")
 }
 
 tasks {
