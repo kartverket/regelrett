@@ -8,41 +8,41 @@ import {
   IconButton,
 } from '@kvib/react';
 import { Link as ReactRouterLink } from 'react-router';
-import { useContext, useFetchTeamContexts } from '../hooks/useContext';
-import { useFetchForms } from '../hooks/useFetchForms';
+import { useContext, useTeamContexts } from '../hooks/useContext';
 import { DeleteContextModal } from './DeleteContextModal';
+import { useForms } from '../hooks/useForms';
 
 export default function TeamContexts({ teamId }: { teamId: string }) {
   const { data: contexts = [], isPending: contextsIsPending } =
-    useFetchTeamContexts(teamId);
+    useTeamContexts(teamId);
 
-  const { data: tablesData, isPending: tablesIsPending } = useFetchForms();
+  const { data: forms, isPending: formsPending } = useForms();
 
-  const uniqueTableIds = Array.from(
+  const uniqueFormIds = Array.from(
     new Set(contexts?.map((context) => context.formId))
   );
 
-  const contextTables = tablesData?.filter((table) =>
-    uniqueTableIds.includes(table.id)
+  const contextForms = forms?.filter((table) =>
+    uniqueFormIds.includes(table.id)
   );
 
   return (
     <VStack alignItems="start" marginLeft={8}>
       <Skeleton
-        loading={contextsIsPending || tablesIsPending}
+        loading={contextsIsPending || formsPending}
         minH="40px"
         minW="200px"
       >
-        {contextTables?.map((table) => {
-          const contextsForTable = contexts.filter(
-            (context) => context.formId === table.id
+        {contextForms?.map((form) => {
+          const contextsForForm = contexts.filter(
+            (context) => context.formId === form.id
           );
 
           return (
-            <VStack alignItems="start" key={table.id}>
-              <Text>{table.name}</Text>
+            <VStack alignItems="start" key={form.id}>
+              <Text>{form.name}</Text>
               <VStack alignItems="start" pl={4}>
-                {contextsForTable.map((context) => (
+                {contextsForForm.map((context) => (
                   <ContextLink key={context.id} contextId={context.id} />
                 ))}
               </VStack>

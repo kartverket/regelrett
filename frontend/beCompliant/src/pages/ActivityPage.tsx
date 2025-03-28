@@ -13,7 +13,7 @@ import { TableComponent } from '../components/Table';
 import { TableStatistics } from '../components/table/TableStatistics';
 import { useAnswers } from '../hooks/useAnswers';
 import { useComments } from '../hooks/useComments';
-import { useFetchForm } from '../hooks/useFetchForm';
+import { useForm } from '../hooks/useForm';
 import { ActiveFilter } from '../types/tableTypes';
 import { mapTableDataRecords } from '../utils/mapperUtil';
 import { AnswerType, Column, OptionalFieldType } from '../api/types';
@@ -73,8 +73,7 @@ export default function ActivityPage() {
     data: tableData,
     error: tableError,
     isPending: tableIsPending,
-  } = useFetchForm(context?.formId);
-
+  } = useForm(context?.formId);
   const {
     data: comments,
     error: commentError,

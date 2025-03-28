@@ -1,6 +1,9 @@
 ktor:
+  development: "$DEV_MODE:false"
   deployment:
     port: 8080
+    watch:
+     - classes
   application:
     modules:
       - no.bekk.ApplicationKt.module

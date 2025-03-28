@@ -3,9 +3,9 @@ import { axiosFetch } from '../api/Fetch';
 import { apiConfig } from '../api/apiConfig';
 import { Form } from '../api/types';
 
-export function useFetchForms() {
-  const queryKeys = apiConfig.forms.queryKey();
-  const url = apiConfig.forms.url();
+export function useForm(formId?: string) {
+  const queryKeys = apiConfig.form.queryKey(formId!);
+  const url = apiConfig.form.url(formId!);
 
   return useQuery({
     queryKey: queryKeys,
@@ -13,16 +13,13 @@ export function useFetchForms() {
     refetchOnMount: false,
     notifyOnChangeProps: ['data', 'error'],
     queryFn: () =>
-      axiosFetch<Form[]>({ url: url }).then((response) => response.data),
+      axiosFetch<Form>({ url: url }).then((response) => response.data),
     select: formatFormData,
+    enabled: !!formId,
   });
 }
 
-function formatFormData(data: Form[]) {
-  return data.map(formatFormatData);
-}
-
-function formatFormatData(data: Form) {
+function formatFormData(data: Form) {
   return {
     ...data,
     records: data.records.map((record) => {

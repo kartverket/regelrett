@@ -12,7 +12,7 @@ export type Context = {
   teamId: string;
 };
 
-export function useFetchTeamContexts(teamId?: string) {
+export function useTeamContexts(teamId?: string) {
   return useQuery({
     queryKey: apiConfig.contexts.forTeam.queryKey(teamId!),
     queryFn: () =>

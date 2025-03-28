@@ -66,6 +66,7 @@ dependencies {
     implementation("net.minidev:json-smart:2.5.2") // Kan slettes når msal ograderer json smart til 5.2.
     implementation("org.jetbrains.exposed:exposed-dao:0.36.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    implementation("io.ktor:ktor-server-forwarded-header:$ktor_version")
     implementation("org.jooq:jooq:3.19.8")
     implementation("org.jooq:jooq-meta:3.20.2")
     implementation("org.jooq:jooq-codegen:3.19.8")
@@ -75,7 +76,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("com.azure:azure-identity:1.+")
+    implementation("com.azure:azure-identity:1.14.0")
     implementation("com.microsoft.graph:microsoft-graph:6.16.0")
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.6")
     testImplementation("io.ktor:ktor-server-tests-jvm")

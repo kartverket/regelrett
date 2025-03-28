@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from 'react-router';
-import { useFetchForms } from '../hooks/useFetchForms';
+import { useForms } from '../hooks/useForms';
 import {
   Text,
   Center,
@@ -26,7 +26,6 @@ import { useSubmitContext } from '../hooks/useContext';
 import RedirectBackButton from '../components/RedirectBackButton';
 import { CopyContextDropdown } from '../components/createContextPage/CopyContextDropdown';
 import { useUser } from '../hooks/useUser';
-import { Form } from '../api/types';
 
 export default function CreateContextPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,7 +44,7 @@ export default function CreateContextPage() {
     data: formData,
     error: formError,
     isPending: formIsPending,
-  } = useFetchForms();
+  } = useForms();
 
   const {
     data: userData,
@@ -191,7 +190,7 @@ export default function CreateContextPage() {
                 </SelectIndicatorGroup>
               </SelectTrigger>
               <SelectContent>
-                {forms.items.map((form: Form) => (
+                {forms.items.map((form) => (
                   <SelectItem key={form.id} item={form}>
                     {form.name}
                   </SelectItem>
