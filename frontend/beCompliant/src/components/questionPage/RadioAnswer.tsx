@@ -1,5 +1,4 @@
 import {
-  Text,
   Flex,
   RadioGroupRoot,
   RadioGroupItem,
@@ -9,7 +8,6 @@ import {
   VStack,
 } from '@kvib/react';
 import { Question, User } from '../../api/types';
-import { LastUpdated } from '../table/LastUpdated';
 import { useSubmitAnswers } from '../../hooks/useAnswers';
 
 type Props = {
@@ -17,8 +15,6 @@ type Props = {
   latestAnswer: string;
   contextId: string;
   user: User;
-  lastUpdated?: Date;
-  answerExpiry: number | null;
 };
 
 export function RadioAnswer({
@@ -26,8 +22,6 @@ export function RadioAnswer({
   latestAnswer,
   contextId,
   user,
-  lastUpdated,
-  answerExpiry,
 }: Props) {
   const { mutate: submitAnswer } = useSubmitAnswers(
     contextId,
@@ -52,9 +46,6 @@ export function RadioAnswer({
 
   return (
     <Flex flexDirection="column" gap="2">
-      <Text fontSize="lg" fontWeight="bold">
-        Svar
-      </Text>
       <RadioGroupRoot
         orientation="vertical"
         name="select-single-answer"
@@ -75,12 +66,6 @@ export function RadioAnswer({
           ))}
         </VStack>
       </RadioGroupRoot>
-      <LastUpdated
-        updated={lastUpdated}
-        answerExpiry={answerExpiry}
-        submitAnswer={submitRadioAnswer}
-        value={latestAnswer}
-      />
     </Flex>
   );
 }

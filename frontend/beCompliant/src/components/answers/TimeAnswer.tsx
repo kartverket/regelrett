@@ -98,14 +98,15 @@ export function TimeAnswer({
           disabled={disabled}
         ></Input>
       </InputGroup>
-      <LastUpdated
-        updated={updated}
-        answerExpiry={answerExpiry}
-        submitAnswer={submitAnswer}
-        value={value}
-        unitAnswer={unit}
-        isActivityPageView={isActivityPageView}
-      />
+      {isActivityPageView && (
+        <LastUpdated
+          updated={updated}
+          answerExpiry={answerExpiry}
+          submitAnswer={submitAnswer}
+          value={value}
+          unitAnswer={unit}
+        />
+      )}
     </Stack>
   );
 }

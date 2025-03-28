@@ -54,13 +54,14 @@ export function PercentAnswer({
           />
         </InputGroup>
       </Stack>
-      <LastUpdated
-        updated={updated}
-        answerExpiry={answerExpiry}
-        submitAnswer={submitAnswer}
-        value={value}
-        isActivityPageView={isActivityPageView}
-      />
+      {isActivityPageView && (
+        <LastUpdated
+          updated={updated}
+          answerExpiry={answerExpiry}
+          submitAnswer={submitAnswer}
+          value={value}
+        />
+      )}
     </Stack>
   );
 }

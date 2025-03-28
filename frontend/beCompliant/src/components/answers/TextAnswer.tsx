@@ -52,7 +52,6 @@ export function TextAnswer({
         answerExpiry={answerExpiry}
         submitAnswer={submitAnswer}
         value={value}
-        isActivityPageView
       />
     </Stack>
   );

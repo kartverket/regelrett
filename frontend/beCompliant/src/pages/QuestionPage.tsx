@@ -1,12 +1,11 @@
 import { useLocation, useNavigate, useParams } from 'react-router';
-import { Flex, Button, useDisclosure } from '@kvib/react';
+import { Flex, Button, useDisclosure, Box, Separator } from '@kvib/react';
 import { useFetchQuestion } from '../hooks/useFetchQuestion';
 import { ErrorState } from '../components/ErrorState';
 import { LoadingState } from '../components/LoadingState';
 import { QuestionDetails } from '../components/questionPage/QuestionDetails';
 import { QuestionAnswer } from '../components/questionPage/QuestionAnswer';
 import { QuestionComment } from '../components/questionPage/QuestionComment';
-import { QuestionInfoBox } from '../components/questionPage/QuestionInfoBox';
 import { UnsavedChangesModal } from '../components/table/UnsavedChangesModal';
 import { useState } from 'react';
 import { QuestionHistory } from '../components/questionPage/QuestionHistory';
@@ -124,32 +123,33 @@ export default function QuestionPage() {
         <QuestionDetails
           question={question}
           answerUpdated={answers.at(-1)?.updated ?? new Date()}
-          marginBottom={{ base: '30', md: '20' }}
+          formId={context.formId}
         />
-        <Flex
-          justifyContent="space-between"
-          gap={{ base: '10', md: '6' }}
-          flexDirection={{ base: 'column', md: 'row' }}
-        >
-          <QuestionAnswer
-            question={question}
-            answers={answers}
-            contextId={contextId}
-            user={userinfo.user}
-            choices={question.metadata.answerMetadata.options}
-            answerExpiry={question.metadata.answerMetadata.expiry}
-          />
-          <QuestionInfoBox question={question} tableId={context.formId} />
-        </Flex>
+        <Box py="10">
+          <Separator borderColor="gray.200" />
+        </Box>
+        <QuestionAnswer
+          question={question}
+          answers={answers}
+          contextId={contextId}
+          user={userinfo.user}
+          choices={question.metadata.answerMetadata.options}
+          answerExpiry={question.metadata.answerMetadata.expiry}
+        />
+        <Box py="10">
+          <Separator borderColor="gray.200" />
+        </Box>
         <QuestionComment
           question={question}
           latestComment={comments.at(-1)?.comment ?? ''}
           contextId={contextId}
           isEditing={isCommentEditing}
           setIsEditing={setIsCommentEditing}
-          marginTop={{ base: '10', md: '24' }}
           user={userinfo.user}
         />
+        <Box py="10">
+          <Separator borderColor="gray.200" />
+        </Box>
         <QuestionHistory answers={answers} />
       </Flex>
     </Flex>

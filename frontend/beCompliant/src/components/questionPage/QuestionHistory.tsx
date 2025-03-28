@@ -22,14 +22,13 @@ export function QuestionHistory({ answers }: Props) {
   const steps = answers.slice(-3).reverse();
 
   return (
-    <Flex flexDirection="column" paddingY="5rem">
+    <Flex flexDirection="column" pb="5rem">
       <HStack marginBottom="4">
         <Icon icon="schedule" size={26} />
         <Text fontWeight="bold" fontSize="lg">
           Historikk
         </Text>
       </HStack>
-      <Separator borderColor="gray.400" marginBottom="4" />
       {steps.length === 0 ? (
         <Text>Ingen historikk finnes</Text>
       ) : (
@@ -58,7 +57,7 @@ export function QuestionHistory({ answers }: Props) {
               ))}
             </KvibSteps.List>
           </KvibSteps.Root>
-          <Separator borderColor="gray.400" marginTop="10" />
+          <Separator borderColor="gray.200" marginTop="10" />
         </Flex>
       )}
     </Flex>
@@ -93,7 +92,7 @@ function QuestionHistoryStep({
             }
             current={
               <Icon
-                color={'{colors.green.500}'}
+                color={'{colors.blue.500}'}
                 icon="circle"
                 filled
                 size={40}
@@ -110,21 +109,21 @@ function QuestionHistoryStep({
           </KvibSteps.Description>
         </Box>
         <Stack flexDirection="row" opacity={opacity}>
-          <Icon icon="trip_origin" color={'{colors.green.500}'} />
-          <Text color={'{colors.green.500}'}>
+          <Icon icon="trip_origin" color={'{colors.blue.500}'} />
+          <Text color={'{colors.blue.500}'}>
             {answer.answer ? answer.answer : '-'}{' '}
             {answer.answer &&
               (answer.answerType === 'PERCENT' ? '%' : answer.answerUnit || '')}
           </Text>
         </Stack>
         <Stack flexDirection="row" opacity={opacity}>
-          <Icon icon="person" filled color={'{colors.green.500}'} />
+          <Icon icon="person" filled color={'{colors.blue.500}'} />
           {usernameIsLoading ? (
-            <Text color={'{colors.green.500}'}>Laster...</Text>
+            <Text color={'{colors.blue.500}'}>Laster...</Text>
           ) : usernameError ? (
-            <Text color={'{colors.green.500}'}>Feil ved henting av bruker</Text>
+            <Text color={'{colors.blue.500}'}>Feil ved henting av bruker</Text>
           ) : (
-            <Text color={'{colors.green.500}'}>{username}</Text>
+            <Text color={'{colors.blue.500}'}>{username}</Text>
           )}
         </Stack>
         <KvibSteps.Separator style={{ justifySelf: 'left' }} />

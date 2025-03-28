@@ -38,3 +38,12 @@ export function formatDateTimeFull(date: Date): string {
 export function padZero(num: number): string {
   return num < 10 ? `0${num}` : `${num}`;
 }
+
+export function isOlderThan(updated: Date, weeks?: number | null): boolean {
+  const currentDate = new Date();
+  const millisecondsInAWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+  const threshold = weeks
+    ? weeks * millisecondsInAWeek
+    : 30 * 24 * 60 * 60 * 1000; // Use weeks or default to 30 days
+  return currentDate.getTime() - updated.getTime() > threshold;
+}

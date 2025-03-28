@@ -1,5 +1,5 @@
 import { Stack, Text, Tooltip, Icon, Button } from '@kvib/react';
-import { formatDateTime } from '../../utils/formatTime';
+import { formatDateTime, isOlderThan } from '../../utils/formatTime';
 
 type Props = {
   updated?: Date;
@@ -8,7 +8,6 @@ type Props = {
   unitAnswer?: string;
   answerExpiry?: number | null;
   isComment?: boolean;
-  isActivityPageView?: boolean;
 };
 
 export function LastUpdated({
@@ -18,31 +17,18 @@ export function LastUpdated({
   unitAnswer,
   answerExpiry,
   isComment,
-  isActivityPageView,
 }: Props) {
   if (!updated) return null;
-
-  const isOlderThan = (updated: Date, weeks?: number | null): boolean => {
-    const currentDate = new Date();
-    const millisecondsInAWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-    const threshold = weeks
-      ? weeks * millisecondsInAWeek
-      : 30 * 24 * 60 * 60 * 1000; // Use weeks or default to 30 days
-    return currentDate.getTime() - updated.getTime() > threshold;
-  };
 
   return (
     <Stack
       color="gray"
-      fontSize={isActivityPageView ? 'xs' : 'md'}
+      fontSize="xs"
       gap={1}
       direction="row"
       alignItems="center"
     >
-      <Text
-        fontWeight={isActivityPageView ? 'bold' : 'semibold'}
-        color={isActivityPageView ? 'gray' : 'black'}
-      >
+      <Text fontWeight="bold" color="gray">
         Sist endret:
       </Text>
       {!isComment && isOlderThan(updated, answerExpiry) && (
@@ -54,13 +40,9 @@ export function LastUpdated({
         </Tooltip>
       )}
       <Text
-        fontWeight={isActivityPageView ? 'medium' : 'semibold'}
+        fontWeight="medium"
         color={
-          isOlderThan(updated, answerExpiry) && !isComment
-            ? 'red'
-            : isActivityPageView
-              ? 'gray'
-              : 'black'
+          isOlderThan(updated, answerExpiry) && !isComment ? 'red' : 'gray'
         }
       >
         {formatDateTime(updated)}

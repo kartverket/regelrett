@@ -43,13 +43,14 @@ export function CheckboxAnswer({
             : choices[1]
           : ''}
       </Checkbox>
-      <LastUpdated
-        updated={updated}
-        answerExpiry={answerExpiry}
-        submitAnswer={submitAnswer}
-        value={value}
-        isActivityPageView={isActivityPageView}
-      />
+      {isActivityPageView && (
+        <LastUpdated
+          updated={updated}
+          answerExpiry={answerExpiry}
+          submitAnswer={submitAnswer}
+          value={value}
+        />
+      )}
     </Stack>
   );
 }

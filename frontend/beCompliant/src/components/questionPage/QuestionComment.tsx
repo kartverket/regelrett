@@ -5,7 +5,6 @@ import {
   useDisclosure,
   Button,
   FlexProps,
-  Separator,
 } from '@kvib/react';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { DeleteCommentModal } from '../table/DeleteCommentModal';
@@ -80,12 +79,11 @@ export function QuestionComment({
 
   return (
     <Flex flexDirection="column" {...rest}>
-      <Separator marginBottom="2" borderWidth="1px" borderColor="gray.300" />
-      <Text fontWeight="bold" fontSize="lg">
+      <Text fontWeight="bold" fontSize="lg" pb="4">
         Kommentar
       </Text>
-      {isEditing && (
-        <Flex gap="6" flexDirection="column">
+      {isEditing ? (
+        <Flex gap="4" flexDirection="column">
           <Textarea
             ref={textAreaRef}
             defaultValue={editedComment ?? latestComment}
@@ -96,12 +94,13 @@ export function QuestionComment({
               handleKeyDown(ev);
             }}
           />
-          <Flex justifyContent="right" gap="4">
+          <Flex gap="6">
             <Button
               aria-label="Lagre kommentar"
               colorPalette="blue"
               leftIcon="check"
               variant="secondary"
+              size="sm"
               onClick={handleCommentSubmit}
               loading={isLoading}
               disabled={editedComment === latestComment}
@@ -113,16 +112,28 @@ export function QuestionComment({
               colorPalette="red"
               leftIcon="close"
               variant="secondary"
+              size="sm"
               onClick={handleDiscardChanges}
             >
               Avbryt
             </Button>
           </Flex>
         </Flex>
-      )}
-      {!isEditing && (
+      ) : latestComment === '' ? (
+        <Button
+          aria-label="Legg til kommentar"
+          size="sm"
+          variant="secondary"
+          colorPalette="blue"
+          leftIcon="add"
+          onClick={() => setIsEditing(true)}
+          w="fit-content"
+        >
+          Ny kommentar
+        </Button>
+      ) : (
         <>
-          <Flex gap="2" flexDirection="column">
+          <Flex gap="4" flexDirection="column">
             <Text
               maxWidth="328px"
               overflow="hidden"
@@ -131,12 +142,13 @@ export function QuestionComment({
             >
               {latestComment}
             </Text>
-            <Flex justifyContent="right">
+            <Flex gap="6">
               <Button
                 aria-label="Rediger kommentar"
                 colorPalette="blue"
                 leftIcon="edit"
-                variant="tertiary"
+                variant="secondary"
+                size="sm"
                 onClick={() => {
                   setEditedComment(latestComment);
                   setIsEditing(true);
@@ -148,7 +160,8 @@ export function QuestionComment({
                 aria-label="Slett kommentar"
                 colorPalette="red"
                 leftIcon="delete"
-                variant="tertiary"
+                variant="secondary"
+                size="sm"
                 onClick={onDeleteOpen}
               >
                 Slett
@@ -164,7 +177,6 @@ export function QuestionComment({
           />
         </>
       )}
-      <Separator marginTop="6" borderWidth="1px" borderColor="gray.300" />
     </Flex>
   );
 }
