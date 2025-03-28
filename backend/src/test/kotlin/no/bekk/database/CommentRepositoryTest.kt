@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class CommentRepositoryTest {
     @Test
     fun `insert and get comment by contextId`() {
-        val (commentRepository, context) = defaultSetup()
+        val (commentRepository, contextRepository, context) = defaultSetup()
         val request = DatabaseCommentRequest(
             actor = "actor",
             recordId = "recordId",
@@ -34,7 +34,7 @@ class CommentRepositoryTest {
 
     @Test
     fun `insert and get comment by contextId and recordId`() {
-        val (commentRepository, context) = defaultSetup()
+        val (commentRepository, contextRepository, context) = defaultSetup()
 
         val request = DatabaseCommentRequest(
             actor = "actor",
@@ -57,7 +57,7 @@ class CommentRepositoryTest {
 
     @Test
     fun `insert and delete comment`() {
-        val (commentRepository, context) = defaultSetup()
+        val (commentRepository, contextRepository, context) = defaultSetup()
 
         val insertedComment = commentRepository.insertCommentOnContext(
             DatabaseCommentRequest(
@@ -72,16 +72,38 @@ class CommentRepositoryTest {
         assertTrue(commentRepository.getCommentsByContextIdFromDatabase(context.id).isEmpty())
     }
 
+    @Test
+    fun `copy comments from other context`() {
+        val (commentRepository, contextRepository, context) = defaultSetup()
+        val destinationContext = contextRepository.insertContext(DatabaseContextRequest("teamId2", "formId2", "name2"))
+        val request = DatabaseCommentRequest(
+            actor = "actor",
+            recordId = "recordId",
+            questionId = "questionId",
+            comment = "comment",
+            contextId = context.id
+        )
+        commentRepository.insertCommentOnContext(request)
+        commentRepository.copyCommentsFromOtherContext(destinationContext.id, context.id)
+        val destinationContextAnswers = commentRepository.getCommentsByContextIdFromDatabase(destinationContext.id)
+        assertEquals(1, destinationContextAnswers.size)
+        assertEquals(request.actor, destinationContextAnswers.first().actor)
+        assertEquals(request.recordId, destinationContextAnswers.first().recordId)
+        assertEquals(request.questionId, destinationContextAnswers.first().questionId)
+        assertEquals(request.comment, destinationContextAnswers.first().comment)
+        assertEquals(destinationContext.id, destinationContextAnswers.first().contextId)
+    }
+
     private fun defaultSetup(
         teamId: String = "teamId",
         formId: String = "formId",
         name: String = "name"
-    ): Pair<CommentRepositoryImpl, DatabaseContext> {
+    ): Triple<CommentRepositoryImpl, ContextRepositoryImpl, DatabaseContext> {
         val contextRepository = ContextRepositoryImpl(database)
         val commentRepository = CommentRepositoryImpl(database)
 
         val context = contextRepository.insertContext(DatabaseContextRequest(teamId, formId, name))
-        return Pair(commentRepository, context)
+        return Triple(commentRepository, contextRepository, context)
     }
 
     @AfterEach

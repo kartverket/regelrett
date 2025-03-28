@@ -30,7 +30,7 @@ fun Application.configureRouting(
         authenticate("auth-jwt") {
             answerRouting(dependencies.authService, dependencies.answerRepository)
             commentRouting(dependencies.authService, dependencies.commentRepository)
-            contextRouting(dependencies.authService, dependencies.answerRepository, dependencies.contextRepository)
+            contextRouting(dependencies.authService, dependencies.answerRepository, dependencies.contextRepository, dependencies.commentRepository)
             formRouting(dependencies.formService)
             userInfoRouting(dependencies.authService)
             uploadCSVRouting(dependencies.authService, dependencies.database)

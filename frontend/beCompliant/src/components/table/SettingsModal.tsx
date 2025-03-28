@@ -1,12 +1,18 @@
 import {
   Button,
   createListCollection,
+  Flex,
   HStack,
   Input,
   KvibDialog,
   KvibField,
   KvibTabs,
   Portal,
+  RadioGroupItem,
+  RadioGroupItemHiddenInput,
+  RadioGroupItemIndicator,
+  RadioGroupItemText,
+  RadioGroupRoot,
   SelectContent,
   SelectIndicator,
   SelectIndicatorGroup,
@@ -21,12 +27,12 @@ import {
   toaster,
   VStack,
 } from '@kvib/react';
-import { useFetchAllContexts, useContext } from '../../hooks/useContext';
+import { useContext, useFetchAllContexts } from '../../hooks/useContext';
 import { useParams } from 'react-router';
 import { apiConfig } from '../../api/apiConfig';
 import { axiosFetch } from '../../api/Fetch';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useMemo, useRef } from 'react';
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
 
 type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -34,6 +40,7 @@ type Props = {
   currentTeamName: string | undefined;
   onCopySuccess: () => void;
 };
+
 export function SettingsModal({
   open,
   setOpen,
@@ -44,6 +51,8 @@ export function SettingsModal({
   const contextId = params.contextId;
   const queryClient = useQueryClient();
   const dialogContentRef = useRef<HTMLDivElement>(null);
+  const [radioError, setRadioError] = useState(false);
+  const [selectError, setSelectError] = useState(false);
 
   const currentContext = useContext(contextId);
 
@@ -95,7 +104,15 @@ export function SettingsModal({
       e.currentTarget.elements.namedItem('copySelect') as HTMLSelectElement
     ).value;
 
-    if (!copyContextId) {
+    const copyComments = (
+      e.currentTarget.elements.namedItem(
+        'select-copy-comments'
+      ) as HTMLInputElement
+    ).value;
+
+    if (!copyContextId || !copyComments) {
+      !copyContextId && setSelectError(true);
+      !copyComments && setRadioError(true);
       return;
     }
     const copyContextName = contextsCollection.items.find((context) => {
@@ -103,7 +120,7 @@ export function SettingsModal({
     })?.name;
 
     try {
-      const response = await axiosFetch({
+      const responseAnswers = await axiosFetch({
         url: apiConfig.contexts.byId.url(contextId) + '/answers',
         method: 'PATCH',
         data: {
@@ -111,7 +128,23 @@ export function SettingsModal({
         },
       });
 
-      if (response.status === 200 || response.status === 204) {
+      let responseCommentsSuccess = true;
+
+      if (copyComments) {
+        const responseComments = await axiosFetch({
+          url: apiConfig.contexts.byId.url(contextId) + '/comments',
+          method: 'PATCH',
+          data: { copyContextId },
+        });
+
+        responseCommentsSuccess =
+          responseComments.status === 200 || responseComments.status === 204;
+      }
+
+      if (
+        (responseAnswers.status === 200 || responseAnswers.status === 204) &&
+        responseCommentsSuccess
+      ) {
         setOpen(false);
         onCopySuccess();
         const toastId = 'copy-context-success';
@@ -154,6 +187,11 @@ export function SettingsModal({
 
   const isDisabled = contextsCollection.size === 0;
 
+  const resetCopyForm = () => {
+    setRadioError(false);
+    setSelectError(false);
+  };
+
   return (
     <KvibDialog.Root
       lazyMount
@@ -163,7 +201,7 @@ export function SettingsModal({
         setOpen(e.open);
       }}
     >
-      <KvibDialog.Backdrop />
+      <KvibDialog.Backdrop onMouseEnter={resetCopyForm} />
       <Portal>
         <KvibDialog.Positioner>
           <KvibDialog.Content ref={dialogContentRef}>
@@ -226,46 +264,92 @@ export function SettingsModal({
                 <KvibTabs.Content value="copy">
                   <form onSubmit={handleCopySubmit}>
                     <Stack gap="1rem">
-                      <SelectRoot
-                        name="copySelect"
-                        collection={contextsCollection}
-                        bgColor="white"
-                        borderColor="gray.200"
-                        disabled={isDisabled}
-                      >
-                        <SelectLabel>
-                          Kopier svar fra eksisterende skjema:
-                        </SelectLabel>
-                        <SelectTrigger>
-                          <SelectValueText
-                            placeholder={
-                              isDisabled
-                                ? 'Ingen eksisterende skjema funnet'
-                                : 'Velg skjema'
-                            }
-                          />
-                          <SelectIndicatorGroup>
-                            {contextsIsLoading && (
-                              <Spinner size="xs" borderWidth="1.5px" />
-                            )}
-                            <SelectIndicator />
-                          </SelectIndicatorGroup>
-                        </SelectTrigger>
-                        <Portal container={dialogContentRef}>
-                          <SelectContent zIndex="max">
-                            {contextsCollection.items.map((context) => (
-                              <SelectItem key={context.id} item={context}>
-                                {context.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Portal>
-                      </SelectRoot>
+                      <KvibField.Root invalid={selectError}>
+                        <SelectRoot
+                          name="copySelect"
+                          collection={contextsCollection}
+                          bgColor="white"
+                          borderColor="gray.200"
+                          disabled={isDisabled}
+                          invalid={selectError}
+                          onChange={() => setSelectError(false)}
+                        >
+                          <SelectLabel>
+                            Kopier svar fra eksisterende skjema:
+                          </SelectLabel>
+                          <SelectTrigger>
+                            <SelectValueText
+                              placeholder={
+                                isDisabled
+                                  ? 'Ingen eksisterende skjema funnet'
+                                  : 'Velg skjema'
+                              }
+                            />
+                            <SelectIndicatorGroup>
+                              {contextsIsLoading && (
+                                <Spinner size="xs" borderWidth="1.5px" />
+                              )}
+                              <SelectIndicator />
+                            </SelectIndicatorGroup>
+                          </SelectTrigger>
+
+                          <Portal container={dialogContentRef}>
+                            <SelectContent zIndex="max">
+                              {contextsCollection.items.map((context) => (
+                                <SelectItem key={context.id} item={context}>
+                                  {context.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Portal>
+                          <KvibField.ErrorText>
+                            Du må velge et skjema før du går videre.
+                          </KvibField.ErrorText>
+                        </SelectRoot>
+                      </KvibField.Root>
+                      <Flex flexDirection="column" gap="2">
+                        <Text> Vil du også kopiere kommentarene?</Text>
+                        <KvibField.Root invalid={radioError}>
+                          <RadioGroupRoot
+                            orientation="vertical"
+                            name="select-copy-comments"
+                            colorPalette={'blue'}
+                          >
+                            <VStack align="start">
+                              <RadioGroupItem
+                                key="yes"
+                                value={'yes'}
+                                onChange={() => setRadioError(false)}
+                              >
+                                <RadioGroupItemHiddenInput />
+                                <RadioGroupItemIndicator />
+                                <RadioGroupItemText>Ja</RadioGroupItemText>
+                              </RadioGroupItem>
+                              <RadioGroupItem
+                                key="no"
+                                value="no"
+                                onChange={() => setRadioError(false)}
+                              >
+                                <RadioGroupItemHiddenInput />
+                                <RadioGroupItemIndicator />
+                                <RadioGroupItemText>Nei</RadioGroupItemText>
+                              </RadioGroupItem>
+                            </VStack>
+                            <KvibField.ErrorText>
+                              Du må velge om kommentarene skal kopieres.
+                            </KvibField.ErrorText>
+                          </RadioGroupRoot>
+                        </KvibField.Root>
+                      </Flex>
+
                       <HStack justifyContent="end" mt={4}>
                         <Button
                           variant="secondary"
                           colorPalette="blue"
-                          onClick={() => setOpen(false)}
+                          onClick={() => {
+                            resetCopyForm();
+                            setOpen(false);
+                          }}
                         >
                           Avbryt
                         </Button>

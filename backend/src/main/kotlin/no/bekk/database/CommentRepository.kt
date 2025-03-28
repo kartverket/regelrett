@@ -11,6 +11,7 @@ interface CommentRepository {
     fun getCommentsByContextAndRecordIdFromDatabase(contextId: String, recordId: String): List<DatabaseComment>
     fun insertCommentOnContext(comment: DatabaseCommentRequest): DatabaseComment
     fun deleteCommentFromDatabase(contextId: String, recordId: String): Boolean
+    fun copyCommentsFromOtherContext(newContextId: String, contextToCopy: String)
 }
 
 class CommentRepositoryImpl(private val database: Database) : CommentRepository {
@@ -156,6 +157,32 @@ class CommentRepositoryImpl(private val database: Database) : CommentRepository 
                 statement.setObject(1, UUID.fromString(contextId))
                 statement.setString(2, recordId)
                 return statement.executeUpdate() > 0
+            }
+        }
+    }
+
+    override fun copyCommentsFromOtherContext(newContextId: String, contextToCopy: String) {
+        logger.info("Copying most recent comments from context $contextToCopy to new context $newContextId")
+        val mostRecentComments = getCommentsByContextIdFromDatabase(contextToCopy)
+
+        mostRecentComments.forEach { comment ->
+            try {
+                insertCommentOnContext(
+                    DatabaseCommentRequest(
+                        actor = comment.actor,
+                        recordId = comment.recordId,
+                        questionId = comment.questionId,
+                        comment = comment.comment,
+                        contextId = newContextId
+                    )
+                )
+                logger.info("Comment copied to context $newContextId")
+            } catch (e: SQLException) {
+                logger.error(
+                    "Error copying comment to context $newContextId: ${e.message}",
+                    e
+                )
+                throw RuntimeException("Error copying comments to new context", e)
             }
         }
     }
