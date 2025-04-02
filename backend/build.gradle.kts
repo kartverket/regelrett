@@ -45,7 +45,7 @@ flyway {
 
 dependencies {
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
-    implementation("com.auth0:java-jwt:4.4.0")
+    implementation("com.auth0:java-jwt:4.5.0")
     implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
