@@ -21,10 +21,8 @@ export function useColumnVisibility() {
   };
 
   const unHideColumns = (names: string[]) => {
-    names.forEach((name, i) => {
-      if (!FILLMODE_COLUMN_IDXS.includes(i)) {
-        unHideColumn(name);
-      }
+    names.forEach((name) => {
+      unHideColumn(name);
     });
   };
 

@@ -31,14 +31,6 @@ export function DataTable<TData>({
 }: Props<TData>) {
   const headerNames = table.getAllColumns().map((column) => column.id);
 
-  const handleOnChange = (isDetailViewChecked: boolean) => {
-    if (!isDetailViewChecked) {
-      showOnlyFillModeColumns(headerNames);
-    } else {
-      unHideColumns(headerNames);
-    }
-  };
-
   return (
     <TableStateProvider>
       <Flex flexDirection="column" width="100%" gap="4">
@@ -98,9 +90,11 @@ export function DataTable<TData>({
               Vis alle kolonner
             </Text>
             <Switch
-              onCheckedChange={(e) => {
-                handleOnChange(e.checked);
-              }}
+              onCheckedChange={(e) =>
+                e.checked
+                  ? unHideColumns(headerNames)
+                  : showOnlyFillModeColumns(headerNames)
+              }
               colorPalette="blue"
               checked={table.getIsAllColumnsVisible()}
             />
