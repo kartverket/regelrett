@@ -1,6 +1,6 @@
 # Kartverket - Regelrett
 
-Velkommen til Regelrett!
+Et open-source vertkøy for administrasjon og monitorering av sikkerhets-compliance i komplekse organisasjoner.
 
 Denne applikasjonen er bygget for visning av data i tabellformat på en oversiktlig og brukervennlig måte. Løsningen støtter for øyeblikket
 data fra AirTable og YAML-filer. Den er utviklet med fokus på å hjelpe brukere med å oppfylle krav og standarder ved å gi
@@ -59,6 +59,8 @@ Eventuelt, om du har flyway cli innstallert:
 - Databasen heter "regelrett", og må foreløpig settes opp lokalt på utviklerens maskin utenfor Flyway.
 - Databasemigreringer kjører automatisk ved oppstart av applikasjonen, eller så kan de kjøres manuelt med `./gradlew flywayMigrate`
 
+## Konfigurasjon
+[Konfigurasjon](conf/README.md)
 
 ## Kjøre backend lokalt
 

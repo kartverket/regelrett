@@ -8,7 +8,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
-import no.bekk.configuration.AppConfig
+import no.bekk.configuration.Config
 import no.bekk.configuration.getTokenUrl
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphGroupsResponse
@@ -23,8 +23,7 @@ interface MicrosoftService {
     suspend fun fetchUserByUserId(bearerToken: String, userId: String): MicrosoftGraphUser
 }
 
-class MicrosoftServiceImpl(private val config: AppConfig, private val client: HttpClient = HttpClient(CIO)) :
-    MicrosoftService {
+class MicrosoftServiceImpl(private val config: Config, private val client: HttpClient = HttpClient(CIO)) : MicrosoftService {
     private val logger = LoggerFactory.getLogger(MicrosoftService::class.java)
     val json = Json { ignoreUnknownKeys = true }
 
@@ -41,8 +40,8 @@ class MicrosoftServiceImpl(private val config: AppConfig, private val client: Ht
                             append("assertion", it)
                             append("scope", "GroupMember.Read.All")
                             append("requested_token_use", "on_behalf_of")
-                        }
-                    )
+                        },
+                    ),
                 )
             }
         } ?: throw IllegalStateException("No stored UserSession")
@@ -67,7 +66,7 @@ class MicrosoftServiceImpl(private val config: AppConfig, private val client: Ht
         return microsoftGraphGroupsResponse.value.map {
             MicrosoftGraphGroup(
                 id = it.id,
-                displayName = it.displayName
+                displayName = it.displayName,
             )
         }
     }

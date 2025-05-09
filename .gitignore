@@ -36,6 +36,8 @@ replay_pid*
 # Ignore Gradle build output directory
 build
 
+conf/custom.yaml
+
 kls_database.db
 
 #Mac files

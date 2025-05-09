@@ -1,7 +1,7 @@
 package no.bekk.di
 
 import no.bekk.authentication.AuthServiceImpl
-import no.bekk.configuration.AppConfig
+import no.bekk.configuration.Config
 import no.bekk.configuration.JDBCDatabase
 import no.bekk.database.AnswerRepositoryImpl
 import no.bekk.database.CommentRepositoryImpl
@@ -9,9 +9,9 @@ import no.bekk.database.ContextRepositoryImpl
 import no.bekk.services.FormServiceImpl
 import no.bekk.services.MicrosoftServiceImpl
 
-fun rootComposer(config: AppConfig): Dependencies {
-    val database = JDBCDatabase.create(config.db)
-    val formService = FormServiceImpl(config.formConfig)
+fun rootComposer(config: Config): Dependencies {
+    val database = JDBCDatabase.create(config.database)
+    val formService = FormServiceImpl(config.forms)
     val answerRepository = AnswerRepositoryImpl(database)
     val commentRepository = CommentRepositoryImpl(database)
     val contextRepository = ContextRepositoryImpl(database)
@@ -23,6 +23,6 @@ fun rootComposer(config: AppConfig): Dependencies {
         answerRepository = answerRepository,
         commentRepository = commentRepository,
         contextRepository = contextRepository,
-        authService = authService
+        authService = authService,
     )
 }

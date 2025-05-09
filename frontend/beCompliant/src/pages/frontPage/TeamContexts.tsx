@@ -35,6 +35,9 @@ export default function TeamContexts({ teamId }: { teamId: string }) {
     new Set(contexts?.map((context) => context.formId))
   );
 
+  console.log(uniqueFormIds);
+  console.log(forms);
+
   const contextForms = forms?.filter((table) =>
     uniqueFormIds.includes(table.id)
   );

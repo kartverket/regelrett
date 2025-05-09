@@ -1,6 +1,6 @@
 package no.bekk
 
-import no.bekk.configuration.DbConfig
+import no.bekk.configuration.DatabaseConfig
 import org.testcontainers.containers.PostgreSQLContainer
 
 class TestDatabase {
@@ -8,15 +8,14 @@ class TestDatabase {
         start()
     }
 
-    fun getTestdatabaseConfig(): DbConfig {
-        return DbConfig(
-            url = postgresContainer.jdbcUrl,
-            username = postgresContainer.username,
-            password = postgresContainer.password,
-        )
-    }
+    fun getTestdatabaseConfig(): DatabaseConfig = DatabaseConfig(
+        url = postgresContainer.jdbcUrl,
+        username = postgresContainer.username,
+        password = postgresContainer.password,
+    )
 
     fun stopTestDatabase() {
         postgresContainer.stop()
     }
 }
+

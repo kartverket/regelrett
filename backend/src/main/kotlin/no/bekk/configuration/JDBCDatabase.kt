@@ -11,7 +11,7 @@ interface Database {
 }
 
 class JDBCDatabase(
-    private val dataSource: HikariDataSource
+    private val dataSource: HikariDataSource,
 ) : Database {
     override fun getConnection(): Connection = dataSource.connection
 
@@ -19,14 +19,14 @@ class JDBCDatabase(
         dataSource.close()
     }
 
-    private fun migrate(dbConfig: DbConfig) {
+    private fun migrate(dbConfig: DatabaseConfig) {
         val flyway = Flyway.configure()
             .createSchemas(true)
             .defaultSchema("regelrett")
             .dataSource(
                 dbConfig.url,
                 dbConfig.username,
-                dbConfig.password
+                dbConfig.password,
             )
             .validateMigrationNaming(true)
             .load()
@@ -41,7 +41,7 @@ class JDBCDatabase(
     companion object {
         private val logger = KtorSimpleLogger("Database")
 
-        fun create(dbConfig: DbConfig): JDBCDatabase {
+        fun create(dbConfig: DatabaseConfig): JDBCDatabase {
             val hikariConfig = HikariConfig().apply {
                 schema = "regelrett"
                 jdbcUrl = dbConfig.url

@@ -53,3 +53,5 @@ config.properties
 .env
 .env.gradle
 
+#Ignore local configuration
+conf/custom.yaml

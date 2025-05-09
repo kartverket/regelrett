@@ -1,27 +1,48 @@
 package no.bekk
 
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationStopped
+import io.ktor.server.application.install
+import io.ktor.server.engine.EngineConnectorBuilder
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
 import kotlinx.coroutines.*
 import no.bekk.authentication.initializeAuthentication
-import no.bekk.configuration.AppConfig
+import no.bekk.configuration.CommandLineArgs
+import no.bekk.configuration.Config
 import no.bekk.configuration.Database
 import no.bekk.configuration.JDBCDatabase
+import no.bekk.configuration.newConfigFromArgs
 import no.bekk.di.Dependencies
 import no.bekk.di.rootComposer
+import no.bekk.plugins.RequestLoggingPlugin
 import no.bekk.plugins.configureCors
 import no.bekk.plugins.configureRouting
-import no.bekk.plugins.RequestLoggingPlugin
 import no.bekk.util.configureBackgroundTasks
 import no.bekk.util.logger
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+    val cfg = newConfigFromArgs(CommandLineArgs(args))
+    val server = embeddedServer(
+        Netty,
+        configure = {
+            connectors.add(
+                EngineConnectorBuilder().apply {
+                    port = cfg.server.httpPort
+                    host = cfg.server.httpAddr
+                },
+            )
+        },
+    ) {
+        module(cfg)
+    }
+    server.start(wait = true)
 }
 
 fun CoroutineScope.launchCleanupJob(cleanupIntervalWeeks: String, database: Database): Job {
@@ -55,7 +76,7 @@ fun cleanupAnswersHistory(database: Database) {
             DELETE FROM answers
             USING ranked_answers
             WHERE answers.id = ranked_answers.id AND ranked_answers.rn > 3;
-            """.trimIndent()
+        """.trimIndent()
 
     database.getConnection().use { conn ->
         conn.prepareStatement(query).use { stmt ->
@@ -65,8 +86,7 @@ fun cleanupAnswersHistory(database: Database) {
     }
 }
 
-fun Application.module() {
-    val config = AppConfig.load(environment.config)
+fun Application.module(config: Config) {
     val dependencies = rootComposer(config)
 
     configureAPILayer(config, dependencies)
@@ -79,13 +99,13 @@ fun Application.module() {
 }
 
 fun Application.configureAPILayer(
-    config: AppConfig,
+    config: Config,
     dependencies: Dependencies,
 ) {
     install(DefaultHeaders) {
         header(
             "Content-Security-Policy",
-            "default-src 'self' '${config.backend.host}'; ",
+            "default-src 'self' '${config.server.host}'; ",
         )
     }
     install(ContentNegotiation) {
@@ -93,7 +113,9 @@ fun Application.configureAPILayer(
     }
 
     install(XForwardedHeaders)
-    install(RequestLoggingPlugin)
+    if (config.server.routerLogging) {
+        install(RequestLoggingPlugin)
+    }
 
     configureCors(config)
     initializeAuthentication(config.oAuth)
