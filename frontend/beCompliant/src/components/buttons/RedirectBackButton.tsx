@@ -1,5 +1,6 @@
 import { useStoredRedirect } from '../../hooks/useStoredRedirect';
-import { Button, Flex } from '@kvib/react';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 export default function RedirectBackButton() {
   const storedRedirect = useStoredRedirect();
@@ -7,27 +8,17 @@ export default function RedirectBackButton() {
   if (!storedRedirect) return null;
 
   return (
-    <Flex
-      flexDirection="column"
-      alignItems="start"
-      justifyContent="start"
-      p="2"
-      position="sticky"
-      top="0"
-      zIndex="1000"
-      backgroundColor="gray.50"
-    >
+    <div className="flex flex-col py-2 align-baseline justify-start sticky top-0 ">
       <Button
-        p="0"
-        variant="tertiary"
-        colorScheme="blue"
-        leftIcon="arrow_back"
+        variant="link"
         onClick={() => {
           window.location.href = storedRedirect.url;
         }}
+        className="flex justify-start text-base w-fit "
       >
-        Tilbake til {storedRedirect.title}
+        <ArrowLeft className="size-5" />
+        Tilbake til {storedRedirect?.title}
       </Button>
-    </Flex>
+    </div>
   );
 }

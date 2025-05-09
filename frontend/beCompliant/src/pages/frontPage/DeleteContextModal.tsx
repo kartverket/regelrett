@@ -1,9 +1,16 @@
-import { Button, HStack, KvibDialog, Portal, Stack, Text } from '@kvib/react';
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { useDeleteContext } from '../../hooks/useContext';
+import { Trash2 } from 'lucide-react';
 
 type Props = {
-  onOpen: () => void;
   onClose: () => void;
   isOpen: boolean;
   contextId: string;
@@ -22,54 +29,35 @@ export function DeleteContextModal({
   );
 
   return (
-    <KvibDialog.Root
-      lazyMount
-      onOpenChange={(e) => {
-        if (e.open) {
-          onClose();
-        }
-      }}
-      open={isOpen}
-      placement="center"
-    >
-      <KvibDialog.Backdrop />
-      <Portal>
-        <KvibDialog.Positioner>
-          <KvibDialog.Content>
-            <KvibDialog.Header fontSize="xl">
-              Slett skjemautfylling
-            </KvibDialog.Header>
-            <KvibDialog.Body>
-              <Stack>
-                <Text textStyle="sm">
-                  Er du sikker på at du vil slette skjemautfyllingen?
-                </Text>
-              </Stack>
-            </KvibDialog.Body>
-            <KvibDialog.Footer>
-              <HStack justifyContent="end">
-                <Button
-                  variant="tertiary"
-                  colorPalette="blue"
-                  onClick={onClose}
-                >
-                  Avbryt
-                </Button>
-                <Button
-                  aria-label="Slett utfylling"
-                  variant="primary"
-                  colorPalette="red"
-                  leftIcon="delete"
-                  onClick={() => deleteContext()}
-                  loading={isLoading}
-                >
-                  Slett skjemautfylling
-                </Button>
-              </HStack>
-            </KvibDialog.Footer>
-          </KvibDialog.Content>
-        </KvibDialog.Positioner>
-      </Portal>
-    </KvibDialog.Root>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[450px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl">Slett skjemautfylling</DialogTitle>
+        </DialogHeader>
+        <DialogDescription className="text-base">
+          Er du sikker på at du vil slette skjemautfyllingen?
+        </DialogDescription>
+
+        <DialogFooter className="flex justify-end space-x-2 pt-4">
+          <Button variant="outline" onClick={onClose}>
+            Avbryt
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => deleteContext()}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              'Sletter...'
+            ) : (
+              <>
+                <Trash2 className="size-5" />
+                Slett skjemautfylling
+              </>
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

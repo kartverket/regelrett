@@ -1,15 +1,16 @@
-import { Flex, FlexProps } from '@kvib/react';
+import { cn } from '@/lib/utils';
 
-export function Page({ children, ...rest }: FlexProps) {
+interface PageProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export function Page({ children, className, ...rest }: PageProps) {
   return (
-    <Flex
-      width="100%"
-      direction="column"
-      gap={{ base: '6', md: '8' }}
-      paddingY="10"
+    <div
+      className={cn('w-full flex flex-col py-10 gap-6 md:gap-8', className)}
       {...rest}
     >
       {children}
-    </Flex>
+    </div>
   );
 }

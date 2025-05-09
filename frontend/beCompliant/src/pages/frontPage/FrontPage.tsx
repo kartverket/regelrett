@@ -1,17 +1,14 @@
-import {
-  Center,
-  Heading,
-  Icon,
-  VStack,
-  Button,
-  Skeleton,
-  StackSeparator,
-} from '@kvib/react';
 import { Page } from '../../components/layout/Page';
 import { useUser } from '../../hooks/useUser';
 import RedirectBackButton from '../../components/buttons/RedirectBackButton';
 import TeamContexts from './TeamContexts';
 import { handleExportCSV } from '../../utils/csvExportUtils';
+import { ErrorState } from '@/components/ErrorState';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Download } from 'lucide-react';
+import { SkeletonLoader } from '@/components/SkeletonLoader';
+import React from 'react';
 
 export default function FrontPage() {
   const {
@@ -24,10 +21,7 @@ export default function FrontPage() {
     return (
       <>
         <RedirectBackButton />
-        <Center height="70svh" flexDirection="column" gap="4">
-          <Icon icon="error" size={64} weight={600} />
-          <Heading size="md">Noe gikk galt, prøv gjerne igjen</Heading>
-        </Center>
+        <ErrorState message="Noe gikk galt, prøv gjerne igjen" />
       </>
     );
   }
@@ -38,61 +32,46 @@ export default function FrontPage() {
     return (
       <>
         <RedirectBackButton />
-        <Center height="70svh" flexDirection="column" gap="4">
-          <Icon icon="error" size={64} weight={600} />
-          <Heading size="md">
-            Vi fant dessverre ingen grupper som tilhører din bruker.
-          </Heading>
-        </Center>
+        <ErrorState message="Vi fant dessverre ingen grupper som tilhører din bruker." />
       </>
     );
   }
 
   return (
-    <>
+    <div>
       <RedirectBackButton />
       <Page>
-        <VStack
-          inset="0"
-          marginInline="auto"
-          paddingInline="8"
-          alignItems="start"
-        >
-          <Heading fontSize="4xl" fontWeight="bold">
-            Dine team
-          </Heading>
-          <VStack align="start" separator={<StackSeparator />}>
+        <div className="flex flex-col mx-auto px-8 items-start ">
+          <h1 className="text-4xl font-bold">Dine team</h1>
+          <div className="flex flex-col items-start">
             {userinfo?.superuser && (
-              <Button
-                padding="0"
-                variant="tertiary"
-                colorPalette="blue"
-                onClick={() => handleExportCSV()}
-                rightIcon="download"
-              >
-                Eksporter skjemautfyllinger
-              </Button>
+              <>
+                <Button
+                  variant="link"
+                  className="w-fit font-bold has-[>svg]:px-0 my-2"
+                  onClick={() => handleExportCSV()}
+                >
+                  Eksporter skjemautfyllinger
+                  <Download className="size-5" />
+                </Button>
+                <Separator className="my-5" />
+              </>
             )}
-            <Skeleton loading={isUserinfoLoading}>
+            <SkeletonLoader loading={isUserinfoLoading}>
               {teams.map((team) => {
                 return (
                   <div key={team.id}>
-                    <Heading
-                      size="2xl"
-                      fontWeight="bold"
-                      paddingBlock="4"
-                      width="fit-content"
-                    >
+                    <h2 className="text-2xl font-bold py-4 w-fit">
                       {team.displayName}
-                    </Heading>
+                    </h2>
                     <TeamContexts teamId={team.id} />
                   </div>
                 );
               })}
-            </Skeleton>
-          </VStack>
-        </VStack>
+            </SkeletonLoader>
+          </div>
+        </div>
       </Page>
-    </>
+    </div>
   );
 }

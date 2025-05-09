@@ -30,39 +30,35 @@ export function DeleteCommentModal({
   );
 
   return (
-    <>
-      {isOpen && (
-        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-          <DialogContent className="sm:max-w-[400px]">
-            <DialogHeader>
-              <DialogTitle className="text-xl">Slett kommentar</DialogTitle>
-            </DialogHeader>
-            <DialogDescription className="text-base">
-              Er du sikker på at du vil slette kommentaren?
-            </DialogDescription>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[400px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl">Slett kommentar</DialogTitle>
+        </DialogHeader>
+        <DialogDescription className="text-base">
+          Er du sikker på at du vil slette kommentaren?
+        </DialogDescription>
 
-            <DialogFooter className="flex justify-end space-x-2 pt-4">
-              <Button variant="outline" onClick={onClose}>
-                Avbryt
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => deleteComment()}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  'Sletter...'
-                ) : (
-                  <>
-                    <Trash2 className="size-5" />
-                    Slett kommentar
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
-    </>
+        <DialogFooter className="flex justify-end space-x-2 pt-4">
+          <Button variant="outline" onClick={onClose}>
+            Avbryt
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => deleteComment()}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              'Sletter...'
+            ) : (
+              <>
+                <Trash2 className="size-5" />
+                Slett kommentar
+              </>
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

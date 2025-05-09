@@ -1,26 +1,15 @@
-import {
-  SelectLabel,
-  SelectRoot,
-  SelectValueText,
-  SelectTrigger,
-  SelectIndicatorGroup,
-  SelectIndicator,
-  Spinner,
-  createListCollection,
-  SelectContent,
-  SelectItem,
-  Flex,
-  Text,
-  RadioGroupRoot,
-  VStack,
-  RadioGroupItem,
-  RadioGroupItemHiddenInput,
-  RadioGroupItemIndicator,
-  RadioGroupItemText,
-} from '@kvib/react';
 import { useSearchParams } from 'react-router';
 import { useFetchAllContexts } from '../../hooks/useContext';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 export function CopyContextDropdown({
   setCopyContext,
@@ -39,71 +28,56 @@ export function CopyContextDropdown({
     useFetchAllContexts();
 
   const contextsCollection = useMemo(() => {
-    return createListCollection({
-      items: contexts?.filter((context) => context.formId == formId) ?? [],
-      itemToString: (context) => context.name,
-      itemToValue: (context) => context.id,
-    });
+    return contexts?.filter((context) => context.formId == formId) ?? [];
   }, [contexts, formId]);
 
-  const isDisabled = contextsCollection.size === 0;
+  const isDisabled = contextsCollection.length === 0;
 
   return (
     <>
-      <SelectRoot
-        deselectable
+      <Label className="font-bold mb-2">
+        Kopier svar fra eksisterende skjema
+      </Label>
+      <Select
         disabled={isDisabled}
-        collection={contextsCollection}
-        id="select"
-        onValueChange={(e) => setCopyContext(e.value[0])}
-        value={copyContext ? [copyContext] : []}
+        onValueChange={(value) => setCopyContext(value)}
+        value={copyContext ?? ''}
       >
-        <SelectLabel fontWeight="bold">
-          Kopier svar fra eksisterende skjema
-        </SelectLabel>
-        <SelectTrigger bgColor="white">
-          <SelectValueText
+        <SelectTrigger className="bg-input w-90">
+          <SelectValue
             placeholder={
               isDisabled ? 'Ingen eksisterende skjema funnet' : 'Velg skjema'
             }
           />
-          <SelectIndicatorGroup>
-            {contextsIsLoading && <Spinner size="xs" borderWidth="1.5px" />}
-            <SelectIndicator />
-          </SelectIndicatorGroup>
         </SelectTrigger>
         <SelectContent>
-          {contextsCollection.items.map((context) => (
-            <SelectItem key={context.id} item={context}>
+          {contextsCollection.map((context) => (
+            <SelectItem key={context.id} value={context.id}>
               {context.name}
             </SelectItem>
           ))}
         </SelectContent>
-      </SelectRoot>
+      </Select>
       {copyContext !== 'undefined' && copyContext !== null && (
-        <Flex flexDirection="column" gap="2">
-          <Text> Vil du også kopiere kommentarene?</Text>
-          <RadioGroupRoot
-            orientation="vertical"
-            name="select-copy-comments"
-            colorPalette="blue"
+        <div className="flex flex-col ">
+          <Label className="font-bold mb-2">
+            Vil du også kopiere kommentarene?
+          </Label>
+          <RadioGroup
             value={copyComments ?? undefined}
-            onValueChange={(e) => setCopyComments(e.value as 'yes' | 'no')}
+            onValueChange={(value) => setCopyComments(value as 'yes' | 'no')}
+            className="flex flex-col gap-2"
           >
-            <VStack align="start">
-              <RadioGroupItem key="yes" value={'yes'}>
-                <RadioGroupItemHiddenInput />
-                <RadioGroupItemIndicator />
-                <RadioGroupItemText>Ja</RadioGroupItemText>
-              </RadioGroupItem>
-              <RadioGroupItem key="no" value="no">
-                <RadioGroupItemHiddenInput />
-                <RadioGroupItemIndicator />
-                <RadioGroupItemText>Nei</RadioGroupItemText>
-              </RadioGroupItem>
-            </VStack>
-          </RadioGroupRoot>
-        </Flex>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="yes" id="yes" />
+              <Label htmlFor="yes">Ja</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="no" id="no" />
+              <Label htmlFor="no">Nei</Label>
+            </div>
+          </RadioGroup>
+        </div>
       )}
     </>
   );

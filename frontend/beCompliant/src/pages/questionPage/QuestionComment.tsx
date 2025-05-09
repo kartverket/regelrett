@@ -3,8 +3,9 @@ import { DeleteCommentModal } from '../../components/DeleteCommentModal';
 import { Question, User } from '../../api/types';
 import { useSubmitComment } from '../../hooks/useComments';
 import { Button } from '@/components/ui/button';
-import { Check, Edit, Loader2, Plus, Trash2, X } from 'lucide-react';
+import { Check, Edit, Plus, Trash2, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { Spinner } from '@/components/Spinner';
 
 type Props = {
   question: Question;
@@ -91,7 +92,7 @@ export function QuestionComment({
               onClick={handleCommentSubmit}
               disabled={editedComment === latestComment || isLoading}
             >
-              {isLoading && <Loader2 className="animate-spin" />}
+              {isLoading && <Spinner />}
               {!isLoading && <Check className="size-5" />}
               Lagre
             </Button>
