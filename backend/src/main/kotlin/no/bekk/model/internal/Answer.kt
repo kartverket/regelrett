@@ -17,5 +17,5 @@ data class AnswerMetadata(
     val type: AnswerType,
     val options: List<String>? = null,
     val units: List<String>? = null,
-    val expiry: Int?
+    val expiry: Int? = null,
 )

@@ -27,6 +27,9 @@ forms:
   tableId: "tbl4pNqNp2wLyI6iv"
   webhookId: "$DRIFTSKONTINUITET_WEBHOOK_ID:"
   webhookSecret: "$DRIFTSKONTINUITET_WEBHOOK_SECRET:"
+- id: "test"
+  type: "YAML"
+  resourcePath: "questions/testQuestions.yaml"
 
 tables:
 - id: "570e9285-3228-4396-b82b-e9752e23cd73"

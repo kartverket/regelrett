@@ -54,7 +54,6 @@ class FormConfig(
 
                     "YAML" -> YAMLInstanceConfig(
                         id = table.requireProperty("id"),
-                        endpoint = table.requireProperty("endpoint"),
                         resourcePath = table.requireProperty("resourcePath"),
                     )
 

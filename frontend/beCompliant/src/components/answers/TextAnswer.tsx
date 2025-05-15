@@ -43,6 +43,11 @@ export function TextAnswer({
             value={value}
             onChange={(e) => setAnswerInput(e.target.value)}
             backgroundColor="white"
+            onBlur={() => {
+              if (value != initialValue) {
+                submitAnswer(value ?? '');
+              }
+            }}
             disabled={disabled}
           />
         )}
