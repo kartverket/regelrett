@@ -39,7 +39,7 @@ export function Comment({
 
   const { mutate: submitComment, isPending: isLoading } = useSubmitComment(
     contextId,
-    recordId,
+    undefined,
     setIsEditing
   );
 
@@ -141,7 +141,7 @@ export function Comment({
       <div
         className={`min-w-[200px] flex flex-col gap-2 ${updated ? 'mb-0' : 'mb-6'}`}
       >
-        <p className="max-w-[328px] overflow-hidden whitespace-pre-wrap text-base">
+        <p className="max-w-[328px] overflow-hidden whitespace-pre-wrap text-sm">
           {comment}
         </p>
         <div className="flex flex-row gap-2 pb-1">

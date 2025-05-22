@@ -28,8 +28,7 @@ import {
 import { getSortFuncForColumn } from './TableSort';
 import { TableActions } from './TableActions';
 import { useEffect, useState } from 'react';
-import { IconButton, Tooltip } from '@kvib/react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { DataTableSearch } from './DataTableSearch';
 import { CSVDownload } from './csvDownload/CSVDownload';
 import { ColumnActions } from '@/pages/activityPage/table/ColumnActions';
@@ -60,17 +59,19 @@ export function TableComponent({
     showOnlyFillModeColumns,
   ] = useColumnVisibility();
 
-  const navigate = useNavigate();
-
   const [search] = useSearchParams();
   const filterSearchParams = search.getAll('filter');
 
-  function urlFilterParamsToColumnFilterState(param: string[]) {
-    return param.map((para) => {
-      const params = para.split('_');
+  function urlFilterParamsToColumnFilterState(params: string[]) {
+    const grouped: Record<string, string[]> = {};
 
-      return { id: params[0], value: params[1] };
-    });
+    for (const param of params) {
+      const [id, ...rest] = param.split('_');
+      const value = rest.join('_');
+      grouped[id] = [...(grouped[id] ?? []), value];
+    }
+
+    return Object.entries(grouped).map(([id, value]) => ({ id, value }));
   }
 
   const initialSorting: SortingState = JSON.parse(
@@ -143,10 +144,8 @@ export function TableComponent({
       },
       filterFn: (row: Row<Question>, columnId: string, filterValue: string) => {
         if (columnId == 'Svar') {
-          if (filterValue == 'utfylt')
-            return !!row.original.answers?.at(-1)?.answer;
           return filterValue.includes(
-            row.original.answers?.at(-1)?.answer ?? 'ikke utfylt'
+            row.original.answers?.at(-1)?.answer ?? ''
           );
         }
 
@@ -159,6 +158,24 @@ export function TableComponent({
       },
     })
   );
+
+  const statusColumn: ColumnDef<any, any> = {
+    id: 'Status',
+    accessorFn: (row) => {
+      const answer = row.answers?.at(-1)?.answer;
+      return answer ? 'utfylt' : 'ikke utfylt';
+    },
+    filterFn: (row, columnId, filterValue) => {
+      if (filterValue == 'utfylt')
+        return !!row.original.answers?.at(-1)?.answer;
+      return filterValue.includes(
+        row.original.answers?.at(-1)?.answer ?? 'ikke utfylt'
+      );
+    },
+    enableColumnFilter: true,
+    header: () => null, // don't show header
+    cell: () => null, // don't show cell
+  };
 
   const commentColumn: ColumnDef<any, any> = {
     header: ({ column }) => {
@@ -189,47 +206,14 @@ export function TableComponent({
   // Find the index of the column where field.name is "Svar"
   const svarIndex = columns.findIndex((column) => column.id === 'Svar');
 
-  // If the column is found, inject the new column right after it
+  // If the column is found, inject the new columns
   if (svarIndex !== -1) {
+    columns.splice(svarIndex + 1, 0, statusColumn);
     columns.splice(svarIndex + 1, 0, commentColumn);
   } else {
     // If not found, push it at the end (or handle it differently as needed)
-    columns.push(commentColumn);
+    columns.push(statusColumn, commentColumn);
   }
-
-  const moreInfoColumn: ColumnDef<any, any> = {
-    header: ({ column }) => {
-      return (
-        <DataTableHeader
-          column={column}
-          header={''}
-          setColumnVisibility={setColumnVisibility}
-        />
-      );
-    },
-    id: 'Se mer',
-    cell: ({ cell, row }: CellContext<any, any>) => (
-      <DataTableCell
-        cell={cell}
-        style={{
-          width: '1%', // Start as small as possible
-          whiteSpace: 'nowrap', // Prevent wrapping
-        }}
-      >
-        <Tooltip content="Se mer">
-          <IconButton
-            aria-label="se mer"
-            icon="info"
-            size="md"
-            variant="ghost"
-            colorPalette="blue"
-            onClick={() => navigate(`${row.original.recordId}`)}
-          />
-        </Tooltip>
-      </DataTableCell>
-    ),
-  };
-  columns.unshift(moreInfoColumn);
 
   const globalFilterFn: FilterFn<any> = (row, _, filterValue) => {
     const searchTerm = String(filterValue).toLowerCase();
@@ -287,7 +271,6 @@ export function TableComponent({
               .rows.map((row) => row.original) as Question[]
           }
           headerArray={headerNames}
-          alignSelf="flex-end"
         />
       </div>
       <TableActions

@@ -6,6 +6,8 @@ import Markdown from 'react-markdown';
 import { markdownComponents } from '../../../utils/markdownComponents';
 import { useIsMutating } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   contextId: string;
@@ -25,8 +27,10 @@ export const TableCell = ({
   answerable = false,
   user,
 }: Props) => {
+  const navigate = useNavigate();
   const isMutating = useIsMutating();
   const isInputDisabled = isMutating !== 0;
+
   if (answerable) {
     return (
       <AnswerCell
@@ -89,8 +93,24 @@ export const TableCell = ({
       );
     }
   }
+
+  if (column.name === 'Kortnavn') {
+    return (
+      <div className="max-w-[650px] whitespace-normal ">
+        <Button
+          aria-label="Se detaljer"
+          variant="link"
+          onClick={() => navigate(`${row.original.recordId}`)}
+          className="p-0 text-sm h-0 whitespace-normal text-left"
+        >
+          {value.value[0]}
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-[650px] whitespace-normal text-base">
+    <div className="max-w-[650px] whitespace-normal text-sm">
       <Markdown components={markdownComponents}>
         {value.value[0].split('\n\n')[0]}
       </Markdown>

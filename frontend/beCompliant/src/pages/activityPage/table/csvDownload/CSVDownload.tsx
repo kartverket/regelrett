@@ -1,7 +1,8 @@
-import { Button, ButtonProps } from '@kvib/react';
 import { OptionalFieldType, Question } from '../../../../api/types';
+import { Button } from '@/components/ui/button';
+import { Download } from 'lucide-react';
 
-interface Props extends ButtonProps {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   rows: Question[];
   headerArray: string[];
 }
@@ -42,12 +43,8 @@ export function CSVDownload({ rows, headerArray, ...rest }: Props) {
 
   return (
     <a href={url} download="table_data.csv">
-      <Button
-        colorPalette="blue"
-        leftIcon="download"
-        width="fit-content"
-        {...rest}
-      >
+      <Button variant="outline" className="w-fit" {...rest}>
+        <Download className="size-5" />
         Last ned CSV
       </Button>
     </a>

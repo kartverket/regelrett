@@ -1,8 +1,10 @@
-import { Flex, Heading, Icon } from '@kvib/react';
 import { Column } from '../../../api/types';
 import { TableFilter } from './TableFilter';
 import { useStoredRedirect } from '../../../hooks/useStoredRedirect';
 import { Table as TanstackTable } from '@tanstack/react-table';
+import { FunnelX, ListFilter } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'react-router';
 
 interface Props<TData> {
   tableMetadata: Column[];
@@ -18,28 +20,36 @@ export const TableActions = <TData,>({
   formId,
 }: Props<TData>) => {
   const storedRedirect = useStoredRedirect();
+  const [_, setSearchParams] = useSearchParams();
 
-  const statusFilterKolonne = table.getColumn('Svar');
+  const statusFilterKolonne = table.getColumn('Status');
+  const anyFiltersActive = table
+    .getAllColumns()
+    .some((col) => col.getFilterValue() != null);
+
+  const resetAllFilters = () => {
+    table.setColumnFilters([]);
+    localStorage.removeItem(`filters_${formId}`);
+    setSearchParams(
+      (current) => {
+        const newParams = new URLSearchParams(current);
+        newParams.delete('filter');
+        return newParams;
+      },
+      { replace: true }
+    );
+  };
 
   return (
-    <Flex
-      flexDirection="column"
-      gap="2"
-      paddingX="10"
-      py="5"
-      position="sticky"
-      top={storedRedirect ? '10' : '0'}
-      zIndex="1000"
-      backgroundColor="gray.50"
-      w="100%"
+    <div
+      className={`sticky bg-background w-full ${storedRedirect ? 'top-10' : 'top-0'} z-20  px-10 py-5 flex flex-col gap-2 `}
     >
-      <Flex gap="2" alignItems="center">
-        <Icon icon="filter_list" />
-        <Heading size="sm" as="h4" fontWeight="normal">
-          FILTER
-        </Heading>
-      </Flex>
-      <Flex alignItems="center" gap="4" flexWrap="wrap">
+      <div className="flex items-center gap-2">
+        <ListFilter className="size-5" />
+        <h4 className="text-sm font-normal">FILTER</h4>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4">
         {statusFilterKolonne && (
           <TableFilter
             filterOptions={[
@@ -69,7 +79,17 @@ export const TableActions = <TData,>({
               />
             );
           })}
-      </Flex>
-    </Flex>
+      </div>
+      {anyFiltersActive && (
+        <Button
+          variant="link"
+          className="flex flex-row w-fit has-[>svg]:px-0"
+          onClick={() => resetAllFilters()}
+        >
+          <FunnelX className="size-5  self-center" />
+          Fjern alle filtre
+        </Button>
+      )}
+    </div>
   );
 };

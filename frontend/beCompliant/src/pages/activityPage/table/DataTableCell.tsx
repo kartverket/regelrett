@@ -14,7 +14,7 @@ export function DataTableCell<TData, TValue>({
   return (
     <div
       key={cell.id}
-      className={`py-4 whitespace-normal ${className ?? ''}`}
+      className={`py-4 px-2 whitespace-normal ${className ?? ''}`}
       {...rest}
     >
       {children}

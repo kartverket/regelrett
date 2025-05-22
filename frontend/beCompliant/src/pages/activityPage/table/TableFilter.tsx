@@ -1,16 +1,14 @@
-import {
-  createListCollection,
-  Flex,
-  SelectContent,
-  SelectItem,
-  SelectRoot,
-  SelectTrigger,
-  SelectValueText,
-  Text,
-} from '@kvib/react';
 import { useSearchParams } from 'react-router';
 import { Column } from '@tanstack/react-table';
 import { ActiveFilter } from '../../../types/tableTypes';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+} from '@/components/ui/dropdown-menu';
+import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type TableFilters<TData> = {
   filterName: string;
@@ -28,14 +26,20 @@ export const TableFilter = <TData,>({
   const placeholder = 'Alle';
   const [_, setSearchParams] = useSearchParams();
 
-  const handleFilterChange = (filterValue?: {
-    name: string;
-    value: string;
-  }): void => {
-    column.setFilterValue(filterValue?.value);
+  const selectedValues = (column.getFilterValue() ?? []) as string[];
+
+  const handleFilterChange = (toggledValue: string): void => {
+    const isSelected = selectedValues.includes(toggledValue);
+    const updatedSelection = isSelected
+      ? selectedValues.filter((val) => val !== toggledValue)
+      : [...selectedValues, toggledValue];
+
+    column.setFilterValue(
+      updatedSelection.length ? updatedSelection : undefined
+    );
 
     const updatedLocalStorageFilters = JSON.parse(
-      localStorage.getItem(`filters_${formId}`) || `[]`
+      localStorage.getItem(`filters_${formId}`) || '[]'
     ).filter((filter: ActiveFilter) => filter.id !== column.id);
 
     setSearchParams(
@@ -45,8 +49,9 @@ export const TableFilter = <TData,>({
             current.delete('filter', value);
           }
         });
-        if (filterValue)
-          current.append('filter', `${column.id}_${filterValue?.value}`);
+        updatedSelection.forEach((val) => {
+          current.append('filter', `${column.id}_${val}`);
+        });
         return current;
       },
       { replace: true }
@@ -55,55 +60,61 @@ export const TableFilter = <TData,>({
     localStorage.setItem(
       `filters_${formId}`,
       JSON.stringify(
-        !filterValue
+        !updatedSelection.length
           ? updatedLocalStorageFilters
           : [
               ...updatedLocalStorageFilters,
-              {
+              ...updatedSelection.map((val) => ({
                 id: column.id,
-                value: filterValue?.value,
-              },
+                value: val,
+              })),
             ]
       )
     );
   };
 
-  const optionsCollection = createListCollection({
-    items: filterOptions ?? [],
-    itemToString: (option) => option.name,
-    itemToValue: (option) => option.value,
-  });
-  const value = column.getFilterValue();
+  const selectedNames = filterOptions
+    .filter((opt) => selectedValues.includes(opt.value))
+    .map((opt) => opt.name)
+    .join(', ');
 
   return (
-    <Flex flexDirection="column" gap="1">
-      <Text textStyle="md" fontWeight="bold" color="blue.500">
-        {filterName}
-      </Text>
-      <SelectRoot
-        aria-label="select"
-        collection={optionsCollection}
-        colorPalette="blue"
-        onValueChange={(event) => handleFilterChange(event.items[0])}
-        backgroundColor="white"
-        value={typeof value == 'string' ? [value] : []}
-        width="210px"
-        maxWidth="210px"
-        textOverflow="ellipsis"
-        whiteSpace="nowrap"
-        deselectable
-      >
-        <SelectTrigger>
-          <SelectValueText placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {optionsCollection.items.map((option) => (
-            <SelectItem item={option} key={option.value}>
-              {option.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </SelectRoot>
-    </Flex>
+    <div className="flex flex-col gap-1">
+      <p className="font-bold text-primary">{filterName}</p>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div
+            role="button"
+            className="flex items-center justify-between w-[210px] rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          >
+            <span
+              className={cn(
+                'truncate text-left',
+                selectedNames === '' && 'text-muted-foreground'
+              )}
+            >
+              {selectedNames !== '' ? selectedNames : placeholder}
+            </span>
+            <ChevronDown className="ml-2 size-4 text-muted-foreground" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-[210px] max-w-[210px]">
+          {filterOptions.map((option) => {
+            const checked = selectedValues.includes(option.value);
+            return (
+              <DropdownMenuCheckboxItem
+                key={option.value}
+                checked={checked}
+                onCheckedChange={() => handleFilterChange(option.value)}
+                className="cursor-pointer"
+              >
+                {option.name}
+              </DropdownMenuCheckboxItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };

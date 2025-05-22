@@ -39,7 +39,7 @@ export function DataTableHeader<TData, TValue>({
   const isSortedDescending = isSorted && !isAscending;
 
   return (
-    <div className={`py-2 relative bg-muted ${className ?? ''}`}>
+    <div className={`p-2 relative bg-muted ${className ?? ''}`}>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Button
@@ -72,11 +72,16 @@ export function DataTableHeader<TData, TValue>({
               Fjern sortering
             </DropdownMenuItem>
           )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => hideColumn(header)}>
-            <EyeOffIcon className="mr-2 h-4 w-4" />
-            Skjul kolonne
-          </DropdownMenuItem>
+
+          {column.id !== 'Kortnavn' && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => hideColumn(header)}>
+                <EyeOffIcon className="mr-2 h-4 w-4" />
+                Skjul kolonne
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

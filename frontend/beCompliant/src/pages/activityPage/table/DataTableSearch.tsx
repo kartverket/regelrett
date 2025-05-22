@@ -1,16 +1,14 @@
-import { Icon, Input, InputGroup, InputGroupProps } from '@kvib/react';
 import { Table } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import { HTMLAttributes, useEffect, useState } from 'react';
 import { useDebounce } from '../../../hooks/useDebounce';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
-interface Props<TData> extends InputGroupProps {
+interface Props<TData> extends HTMLAttributes<HTMLDivElement> {
   table: Table<TData>;
 }
 
-export function DataTableSearch<TData>({
-  table,
-  ...rest
-}: Omit<Props<TData>, 'children'>) {
+export function DataTableSearch<TData>({ table, ...rest }: Props<TData>) {
   const globalFilter = table.getState().globalFilter;
   const [value, setValue] = useState<string | undefined>(globalFilter);
 
@@ -20,20 +18,16 @@ export function DataTableSearch<TData>({
   }, [debouncedValue, table]);
 
   return (
-    <InputGroup
-      startElement={<Icon icon="search" size={16} />}
-      maxWidth="26rem"
-      background="white"
-      {...rest}
-    >
+    <div className="relative max-w-[26rem]" {...rest}>
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
-        value={value ?? ''}
+        type="search"
         placeholder="Søk i tabellen"
         aria-label="Søk i tabell"
-        type="search"
-        onChange={(event) => setValue(event.target.value)}
-        size="sm"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="pl-10 text-sm bg-card "
       />
-    </InputGroup>
+    </div>
   );
 }
