@@ -80,8 +80,8 @@ export function TimeAnswer({
   };
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="relative w-[170px]">
+    <div className="flex flex-col w-[170px]">
+      <div className="relative">
         <Input
           value={value}
           onChange={handleTimeAnswerValue}

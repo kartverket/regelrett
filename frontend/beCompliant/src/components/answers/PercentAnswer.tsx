@@ -37,9 +37,9 @@ export function PercentAnswer({
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col w-[170px] max-w-[250px]">
       <div className="flex flex-row gap-2">
-        <div className="relative w-[170px] max-w-[250px]">
+        <div className="relative ">
           <Input
             value={value}
             onChange={handlePercentAnswer}

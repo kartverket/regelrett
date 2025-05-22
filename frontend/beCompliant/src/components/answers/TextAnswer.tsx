@@ -25,8 +25,8 @@ export function TextAnswer({
   const initialValue = useRef(value).current;
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex flex-row items-center gap-2 min-w-[200px]">
+    <div className="flex flex-col min-w-[200px]">
+      <div className="flex flex-row items-center gap-2">
         {multipleLines ? (
           <Textarea
             value={value}

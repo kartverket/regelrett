@@ -1,5 +1,11 @@
-import { Stack, Text, Tooltip, Icon, Button } from '@kvib/react';
 import { formatDateTime, isOlderThan } from '../utils/formatTime';
+import { Button } from './ui/button';
+import { RotateCw, TriangleAlert } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 type Props = {
   updated?: Date;
@@ -21,46 +27,38 @@ export function LastUpdated({
   if (!updated) return null;
 
   return (
-    <Stack
-      color="gray"
-      fontSize="xs"
-      gap={1}
-      direction="row"
-      alignItems="center"
-    >
-      <Text fontWeight="bold" color="gray">
-        Sist endret:
-      </Text>
-      {!isComment && isOlderThan(updated, answerExpiry) && (
-        <Tooltip
-          content="Svaret må oppdateres"
-          aria-label="Svaret må oppdateres"
-        >
-          <Icon icon="warning" color="red" size={24} />
-        </Tooltip>
-      )}
-      <Text
-        fontWeight="medium"
-        color={
-          isOlderThan(updated, answerExpiry) && !isComment ? 'red' : 'gray'
-        }
-      >
-        {formatDateTime(updated)}
-      </Text>
+    <div className="flex flex-row gap-1.5 content-center justify-between">
+      <div className="flex flex-row gap-1">
+        {!isComment && isOlderThan(updated, answerExpiry) && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TriangleAlert className="self-center" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Svaret er utløpt, og bør oppdateres</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+        <div className="flex flex-col">
+          <p className="text-muted-foreground text-[0.625rem]">Sist endret</p>
+          <p className="text-wrap text-xs">{formatDateTime(updated)}</p>
+        </div>
+      </div>
       {!isComment && submitAnswer && (
         <Button
           aria-label="Forny svaret"
-          rightIcon="autorenew"
           color="black"
-          variant={'tertiary'}
-          size="xs"
+          variant="link"
+          size="sm"
           onClick={() => {
             submitAnswer(value ?? '', unitAnswer);
           }}
+          className="self-center has-[>svg]:px-0"
         >
+          <RotateCw />
           Forny svar
         </Button>
       )}
-    </Stack>
+    </div>
   );
 }

@@ -40,7 +40,7 @@ export function SingleSelectAnswer({
     : 'white';
 
   return (
-    <div className="flex flex-col gap-1 mb-6 last:mb-0 ">
+    <div className="flex flex-col mb-6 last:mb-0 w-[170px] max-w-[250px]">
       <Select
         disabled={disabled}
         value={value}
@@ -50,7 +50,7 @@ export function SingleSelectAnswer({
         }}
       >
         <SelectTrigger
-          className=" w-[170px] max-w-[250px]"
+          className="w-[100%]"
           style={{ backgroundColor: selectedAnswerBackgroundColor }}
         >
           <SelectValue placeholder="Velg alternativ" />
