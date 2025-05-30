@@ -89,6 +89,7 @@ fun cleanupAnswersHistory(database: Database) {
 fun Application.module(config: Config) {
     val dependencies = rootComposer(config)
 
+    dependencies.provisioningService.runInitialProvisioners()
     configureAPILayer(config, dependencies)
     configureBackgroundTasks(dependencies.formService)
     launchCleanupJob(config.answerHistoryCleanup.cleanupIntervalWeeks, dependencies.database)

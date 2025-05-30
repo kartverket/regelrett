@@ -20,7 +20,7 @@ class ConfigBuilder {
     private val configFiles = mutableListOf<String>()
     private val appliedEnvOverrides = mutableListOf<String>()
 
-    private lateinit var formConfig: FormConfig
+    private lateinit var pathsConfig: PathsConfig
     private lateinit var microsoftGraphConfig: MicrosoftGraphConfig
     private lateinit var oAuthConfig: OAuthConfig
     private lateinit var serverConfig: ServerConfig
@@ -190,38 +190,6 @@ class ConfigBuilder {
         logger.info("App mode ${configYaml.getStringOrNull("base", "environment")}")
     }
 
-    fun buildFormConfig(yaml: YamlConfig): FormConfig = FormConfig(
-        airtableBaseUrl = yaml.getString("airtable", "base_url"),
-        forms = listOf("sikkerhetskontroller", "driftskontinuitet").map { schemaName ->
-            val sectionName = "schema_$schemaName"
-            val type = yaml.getStringOrNull(sectionName, "type")
-            try {
-                when (type) {
-                    "AIRTABLE" -> AirTableInstanceConfig(
-                        id = yaml.getString(sectionName, "id"),
-                        accessToken = yaml.getString(sectionName, "airtable_access_token"),
-                        baseId = yaml.getString(sectionName, "base_id"),
-                        tableId = yaml.getString(sectionName, "table_id"),
-                        viewId = yaml.getStringOrNull(sectionName, "view_id"),
-                        webhookId = yaml.getStringOrNull(sectionName, "webhook_id"),
-                        webhookSecret = yaml.getStringOrNull(sectionName, "webhook_secret"),
-                    )
-
-                    "YAML" -> YAMLInstanceConfig(
-                        id = yaml.getString(sectionName, "id"),
-                        endpoint = yaml.getStringOrNull(sectionName, "endpoint"),
-                        resourcePath = yaml.getStringOrNull(sectionName, "resource_path"),
-                    )
-
-                    else -> throw IllegalStateException("Illegal type \"$type\"")
-                }
-            } catch (e: Exception) {
-                logger.error("The following exception happened while building config element schema_sources", e)
-                null
-            }
-        }.filterNotNull(),
-    )
-
     fun buildMicrosoftGraphConfig(yaml: YamlConfig) = MicrosoftGraphConfig(
         baseUrl = yaml.getStringOrNull("microsoft_graph", "base_url") ?: "https://graph.microsoft.com",
         memberOfPath = yaml.getStringOrNull("microsoft_graph", "member_of_path") ?: "/v1.0/me/memberOf/microsoft.graph.group",
@@ -261,17 +229,26 @@ class ConfigBuilder {
         cleanupIntervalWeeks = yaml.getStringOrNull("answer_history_cleanup", "cleanup_interval_weeks") ?: "4",
     )
 
+    fun buildPathsConfig(yaml: YamlConfig): PathsConfig {
+        val path = Path(yaml.getStringOrNull("paths", "provisioning") ?: "conf/provisioning")
+        return if (path.isAbsolute()) {
+            PathsConfig(path.absolutePathString())
+        } else {
+            PathsConfig(Path(homePath, path.pathString).absolutePathString())
+        }
+    }
+
     fun build(): Config {
-        formConfig = buildFormConfig(configYaml)
         microsoftGraphConfig = buildMicrosoftGraphConfig(configYaml)
         oAuthConfig = buildOAuthConfig(configYaml)
+        pathsConfig = buildPathsConfig(configYaml)
         serverConfig = buildServerConfig(configYaml)
         databaseConfig = buildDatabaseConfig(configYaml)
         answerHistoryConfig = buildAnswerHistoryConfig(configYaml)
 
         return Config(
             environment = configYaml.getStringOrNull("base", "environment") ?: "development",
-            forms = formConfig,
+            paths = pathsConfig,
             microsoftGraph = microsoftGraphConfig,
             oAuth = oAuthConfig,
             server = serverConfig,

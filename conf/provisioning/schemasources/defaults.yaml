@@ -1,0 +1,66 @@
+# List of schem sources to apply
+schemasources:
+  # <string, required> Sets the name you use to refer to
+  # the schema source in panels and queries.
+  - name: Sikkerhetskontroller
+    # <AIRTABLE | YAML, required> Sets the schema source type.
+    type: AIRTABLE
+    # <string> Sets a custom UID to reference this
+    # schema source in other parts of the configuration.
+    # If not specified, Regelrett generates one.
+    uid: 570e9285-3228-4396-b82b-e9752e23cd73
+    # <string> Sets the schema source's URL, including the
+    # port.
+    url: "https://api.airtable.com"
+    ##### Additional parameters for specifying Airtable schema #####
+    ##### sources.                                             #####
+    # <string, required, for airtable schema sources>
+    access_token: $RR_AIRTABLE_ACCESS_TOKEN
+    # <string, required, for Airtable schema sources> Specifies
+    # the base to which the specified table belongs.
+    base_id: appzJQ8Tkmm8DobrJ
+    # <string, required, for Airtable schema sources> Specifies
+    # the id to identify the relevant table in requests to the
+    # Airtable api.
+    table_id: tblLZbUqA0XnUgC2v
+    # <string, optional, for Airtable schema sources> The name
+    # or ID of a view in the table. If set, only the records
+    # in that view will be returned.
+    view_id: viw2XliGUJu5448Hk
+    # <string, optional, for Airtable schema sources> Specify
+    # a webhook id and secret to allow Airtable to notify
+    # Regelrett of changes to the data.
+    webhook_id: $RR_SCHEMA_SIKKERHETSKONTROLLER_WEBHOOK_ID
+    # <string, optional, for Airtable schema sources>
+    webhook_secret: $RR_SCHEMA_SIKKERHETSKONTROLLER_WEBHOOK_SECRET
+  - name: Driftskontinuitet
+    # <AIRTABLE | YAML, required> Sets the schema source type.
+    type: AIRTABLE
+    # <string> Sets a custom UID to reference this
+    # schema source in other parts of the configuration.
+    # If not specified, Regelrett generates one.
+    uid: 816cc808-9188-44a9-8f4b-5642fc2932c4
+    # <string> Sets the schema source's URL, including the
+    # port.
+    url: "https://api.airtable.com"
+    ##### Additional parameters for specifying Airtable schema #####
+    ##### sources.                                             #####
+    # <string, required, for airtable schema sources>
+    access_token: $RR_AIRTABLE_ACCESS_TOKEN
+    # <string, required, for Airtable schema sources> Specifies
+    # the base to which the specified table belongs.
+    base_id: appsIiBWlCCSsMmRB
+    # <string, required, for Airtable schema sources> Specifies
+    # the id to identify the relevant table in requests to the
+    # Airtable api.
+    table_id: tbl4pNqNp2wLyI6iv
+    # <string, optional, for Airtable schema sources> The name
+    # or ID of a view in the table. If set, only the records
+    # in that view will be returned.
+    view_id: null
+    # <string, optional, for Airtable schema sources> Specify
+    # a webhook id and secret to allow Airtable to notify
+    # Regelrett of changes to the data.
+    webhook_id: $RR_SCHEMA_DRIFTSKONTINUITET_WEBHOOK_ID
+    # <string, optional, for Airtable schema sources>
+    webhook_secret: $RR_SCHEMA_DRIFTSKONTINUITET_WEBHOOK_SECRET

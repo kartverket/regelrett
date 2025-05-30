@@ -12,6 +12,7 @@ import no.bekk.database.ContextRepositoryImpl
 import no.bekk.di.Dependencies
 import no.bekk.plugins.configureRouting
 import no.bekk.services.FormServiceImpl
+import no.bekk.services.provisioning.provideProvisioningService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -22,7 +23,7 @@ import kotlin.collections.emptyList
 class ApplicationTest {
     private val exampleConfig = Config(
         environment = "development",
-        forms = FormConfig("", emptyList()),
+        paths = PathsConfig(""),
         microsoftGraph = MicrosoftGraphConfig("", ""),
         oAuth = OAuthConfig("https://test.com", "test", "", "", "", "", "", "", ""),
         server = ServerConfig("", "", 0, false, emptyList()),
@@ -43,8 +44,9 @@ class ApplicationTest {
                 exampleConfig,
                 Dependencies(
                     mockDatabase,
-                    FormServiceImpl(exampleConfig.forms),
+                    FormServiceImpl(),
                     AnswerRepositoryImpl(mockDatabase),
+                    provideProvisioningService(exampleConfig, FormServiceImpl()),
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
@@ -54,8 +56,9 @@ class ApplicationTest {
             val routingRoot = configureRouting(
                 Dependencies(
                     mockDatabase,
-                    FormServiceImpl(exampleConfig.forms),
+                    FormServiceImpl(),
                     AnswerRepositoryImpl(mockDatabase),
+                    provideProvisioningService(exampleConfig, FormServiceImpl()),
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
@@ -103,12 +106,15 @@ class ApplicationTest {
     @Test
     fun `Verify that CORS is enabled`() = testApplication {
         application {
+            val formService = FormServiceImpl()
             configureAPILayer(
                 exampleConfig.copy(server = exampleConfig.server.copy(allowedOrigins = listOf("test.com"))),
+
                 Dependencies(
                     mockDatabase,
-                    FormServiceImpl(exampleConfig.forms),
+                    formService,
                     AnswerRepositoryImpl(mockDatabase),
+                    provideProvisioningService(exampleConfig, formService),
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},

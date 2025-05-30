@@ -4,7 +4,7 @@ import io.ktor.server.config.*
 
 data class Config(
     val environment: String,
-    val forms: FormConfig,
+    val paths: PathsConfig,
     val microsoftGraph: MicrosoftGraphConfig,
     val oAuth: OAuthConfig,
     val server: ServerConfig,
@@ -19,11 +19,6 @@ data class CommandLineArgs(
     var configFile: String = ""
     var homePath: String = ""
 }
-
-class FormConfig(
-    val airtableBaseUrl: String,
-    val forms: List<FormInstances>,
-)
 
 interface FormInstances {
     val id: String
@@ -44,6 +39,10 @@ data class YAMLInstanceConfig(
     val endpoint: String? = null,
     val resourcePath: String? = null,
 ) : FormInstances
+
+data class PathsConfig(
+    val provisioning: String,
+)
 
 class MicrosoftGraphConfig(
     val baseUrl: String,

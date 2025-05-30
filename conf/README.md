@@ -143,6 +143,10 @@ Set to `true` for Regelrett to log all HTTP requests (not just errors). These ar
 #### `allowed_origins`
 The `allowed_origins` option is a comma-separated list of additional origins that is accepted by the Regelrett server.
 
+### `paths`
+#### `provisioning`
+Directory that contains [provisioning](provisioning/README.md) configuration files that Regelrett applies on startup. ~~Schemas are reloaded when the JSON files change.~~
+
 ### schema_sources
 ### `airtable`
 

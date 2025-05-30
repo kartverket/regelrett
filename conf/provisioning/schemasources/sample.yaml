@@ -1,0 +1,45 @@
+# # List of schem sources to apply
+# schemasources:
+#   # <string, required> Sets the name you use to refer to
+#   # the schema source in panels and queries.
+#   - name: Sikkerhetskontrollere
+#     # <AIRTABLE | YAML, required> Sets the schema source type.
+#     type: AIRTABLE
+#     # <string> Sets a custom UID to reference this
+#     # schema source in other parts of the configuration.
+#     # If not specified, Regelrett generates one.
+#     uid: my_unique_uid
+#     # <string> Sets the schema source's URL, including the
+#     # port.
+#     url: http://localhost:8080
+#     ##### Additional parameters for specifying Airtable schema #####
+#     ##### sources.                                             #####
+#     # <string, required, for Airtable schema sources>
+#     access_token: $RR_AIRTABLE_ACCESS_TOKEN
+#     # <string, required, for Airtable schema sources> Specifies
+#     # the base to which the specified table belongs.
+#     base_id: unique_base_id
+#     # <string, required, for Airtable schema sources> Specifies
+#     # the id to identify the relevant table in requests to the
+#     # Airtable api.
+#     table_id: unique_table_id
+#     # <string, optional, for Airtable schema sources> The name
+#     # or ID of a view in the table. If set, only the records
+#     # in that view will be returned.
+#     # view_id: unique_view_id
+#     # <string, optional, for Airtable schema sources> Specify
+#     # a webhook id and secret to allow Airtable to notify
+#     # Regelrett of changes to the data.
+#     webhook_id: exampleid
+#     # <string, optional, for Airtable schema sources>
+#     webhook_secret: S3cr3t!
+#     ##### Additional parameters for specifying Yaml schema     #####
+#     ##### sources.                                             #####
+#     # Either endpoint or resourcePath must be set
+#     # <string, optional, for Yaml schema sources> Endpoint uri
+#     # that will respond to a get request with a yaml conforming
+#     # string
+#     endpoint: http://example.org/schema1
+#     # <string, optional, for Yaml schema sources> Path to a Yaml
+#     # schema source relative to project resources.
+#     resource_path: /schemas/schema1

@@ -13,12 +13,14 @@ import no.bekk.database.*
 import no.bekk.di.Dependencies
 import no.bekk.plugins.configureRouting
 import no.bekk.services.FormService
+import no.bekk.services.provisioning.ProvisioningService
 
 object TestUtils {
     fun Application.testModule(
         testDatabase: Database = object : MockDatabase {},
         formService: FormService = object : MockFormService {},
         authService: AuthService = object : MockAuthService {},
+        provisioningService: ProvisioningService = object : MockProvisioningService {},
         answerRepository: AnswerRepository = AnswerRepositoryImpl(testDatabase),
         commentRepository: CommentRepository = CommentRepositoryImpl(testDatabase),
         contextRepository: ContextRepository = ContextRepositoryImpl(testDatabase),
@@ -31,7 +33,7 @@ object TestUtils {
                         .require(Algorithm.HMAC256("test-secret"))
                         .withAudience("test-audience")
                         .withIssuer("test-issuer")
-                        .build()
+                        .build(),
                 )
                 validate { credentials -> JWTPrincipal(credentials.payload) }
             }
@@ -46,18 +48,18 @@ object TestUtils {
                 testDatabase,
                 formService,
                 answerRepository,
+                provisioningService,
                 commentRepository,
                 contextRepository,
-                authService
-            )
+                authService,
+            ),
         )
     }
 
-    fun generateTestToken(): String {
-        return JWT.create()
-            .withAudience("test-audience")
-            .withIssuer("test-issuer")
-            .withClaim("oid", "test-user-id")
-            .sign(Algorithm.HMAC256("test-secret"))
-    }
+    fun generateTestToken(): String = JWT.create()
+        .withAudience("test-audience")
+        .withIssuer("test-issuer")
+        .withClaim("oid", "test-user-id")
+        .sign(Algorithm.HMAC256("test-secret"))
 }
+

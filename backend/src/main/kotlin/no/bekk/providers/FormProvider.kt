@@ -3,6 +3,7 @@ package no.bekk.providers
 import no.bekk.model.internal.*
 
 interface FormProvider {
+    val name: String
     val id: String
     suspend fun getForm(): Form
     suspend fun getQuestion(recordId: String): Question

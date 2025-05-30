@@ -1,5 +1,7 @@
 package no.bekk.providers
 
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import kotlinx.serialization.json.*
 import no.bekk.domain.AirtableResponse
 import no.bekk.domain.MetadataResponse
@@ -8,14 +10,18 @@ import no.bekk.domain.mapToQuestion
 import no.bekk.model.airtable.AirTableFieldType
 import no.bekk.model.airtable.mapAirTableFieldTypeToAnswerType
 import no.bekk.model.airtable.mapAirTableFieldTypeToOptionalFieldType
-import no.bekk.providers.clients.AirTableClient
-import com.github.benmanes.caffeine.cache.Caffeine
-import com.github.benmanes.caffeine.cache.Cache
 import no.bekk.model.internal.*
+import no.bekk.providers.clients.AirTableClient
 import no.bekk.util.logger
 import java.net.HttpURLConnection
 
+private const val SVAR = "Svar"
+private const val SVARTYPE = "Svartype"
+private const val SVARENHET = "Svarenhet"
+private const val SVARVARIGHET = "Svarvarighet"
+
 class AirTableProvider(
+    override val name: String,
     override val id: String,
     private val airtableClient: AirTableClient,
     private val baseId: String,
@@ -23,9 +29,7 @@ class AirTableProvider(
     private val viewId: String? = null,
     val webhookSecret: String? = null,
     val webhookId: String? = null,
-
 ) : FormProvider {
-
     private fun <K : Any, V> createCache(): Cache<K, V> {
         val expirationDuration = if (webhookId != null) (24L * 6) else 1L
         return Caffeine.newBuilder()
@@ -38,11 +42,6 @@ class AirTableProvider(
     private val columnCache: Cache<String, List<Column>> = createCache()
 
     val json = Json { ignoreUnknownKeys = true }
-
-    private val SVAR = "Svar"
-    private val SVARTYPE = "Svartype"
-    private val SVARENHET = "Svarenhet"
-    private val SVARVARIGHET = "Svarvarighet"
 
     override suspend fun getForm(): Form {
         val cachedTable = tableCache.getIfPresent(id)
@@ -116,14 +115,13 @@ class AirTableProvider(
                         metaDataFields = tableMetadata.fields,
                         answerType = mapAirTableFieldTypeToAnswerType(
                             AirTableFieldType.fromString(
-                                record.fields.jsonObject[SVARTYPE]?.jsonPrimitive?.content ?: "unknown"
-                            )
+                                record.fields.jsonObject[SVARTYPE]?.jsonPrimitive?.content ?: "unknown",
+                            ),
                         ),
                         answerOptions = record.fields.jsonObject[SVAR]?.jsonArray?.map { it.jsonPrimitive.content },
                         answerUnits = record.fields.jsonObject[SVARENHET]?.jsonArray?.map { it.jsonPrimitive.content },
-                        answerExpiry = record.fields.jsonObject[SVARVARIGHET]?.jsonPrimitive?.intOrNull
+                        answerExpiry = record.fields.jsonObject[SVARVARIGHET]?.jsonPrimitive?.intOrNull,
                     )
-
                 } catch (e: IllegalArgumentException) {
                     logger.error("Answertype ${record.fields.jsonObject[SVARTYPE]?.jsonPrimitive?.content} caused an error, and is skipped")
                     null
@@ -141,7 +139,7 @@ class AirTableProvider(
                         name = field.name,
                         options = field.options?.choices?.map { choice ->
                             Option(name = choice.name, color = choice.color)
-                        }
+                        },
                     )
                 } catch (e: IllegalArgumentException) {
                     logger.error("field type ${field.type} could not be mapped, and will be skipped")
@@ -158,9 +156,8 @@ class AirTableProvider(
             id = id,
             name = airtableClient.getBases().bases.find { it.id == baseId }?.name ?: tableMetadata.name,
             columns = columns,
-            records = questions
+            records = questions,
         )
-
     }
 
     private suspend fun getSchemaFromAirTable(): Schema {
@@ -178,7 +175,7 @@ class AirTableProvider(
 
         return Schema(
             id = id,
-            name = airtableClient.getBases().bases.find { it.id == baseId }?.name ?: tableMetadata.name
+            name = airtableClient.getBases().bases.find { it.id == baseId }?.name ?: tableMetadata.name,
         )
     }
 
@@ -196,12 +193,12 @@ class AirTableProvider(
             metaDataFields = tableMetadata.fields,
             answerType = mapAirTableFieldTypeToAnswerType(
                 AirTableFieldType.fromString(
-                    record.fields.jsonObject[SVARTYPE]?.jsonPrimitive?.content ?: "unknown"
-                )
+                    record.fields.jsonObject[SVARTYPE]?.jsonPrimitive?.content ?: "unknown",
+                ),
             ),
             answerOptions = record.fields.jsonObject[SVAR]?.jsonArray?.map { it.jsonPrimitive.content },
             answerUnits = record.fields.jsonObject[SVARENHET]?.jsonArray?.map { it.jsonPrimitive.content },
-            answerExpiry = record.fields.jsonObject[SVARVARIGHET]?.jsonPrimitive?.intOrNull
+            answerExpiry = record.fields.jsonObject[SVARVARIGHET]?.jsonPrimitive?.intOrNull,
         )
 
         return question
@@ -220,12 +217,10 @@ class AirTableProvider(
                 name = field.name,
                 options = field.options?.choices?.map { choice ->
                     Option(name = choice.name, color = choice.color)
-                }
+                },
             )
         }
     }
-
-
 
     private fun filterMetadataOnStop(metadataResponse: MetadataResponse): MetadataResponse {
         val newTables = metadataResponse.tables.map { table ->
@@ -250,7 +245,6 @@ class AirTableProvider(
         val metadataResponse = airtableClient.getBaseSchema(baseId)
         val filteredMetaData = filterMetadataOnStop(metadataResponse = metadataResponse)
         return filteredMetaData
-
     }
 
     suspend fun fetchAllRecordsFromTable(): AirtableResponse {
@@ -266,13 +260,9 @@ class AirTableProvider(
         return AirtableResponse(allRecords)
     }
 
-    private suspend fun fetchRecordsFromTable(offset: String? = null): AirtableResponse {
-        return airtableClient.getRecords(baseId, tableId, viewId, offset)
-    }
+    private suspend fun fetchRecordsFromTable(offset: String? = null): AirtableResponse = airtableClient.getRecords(baseId, tableId, viewId, offset)
 
-    private suspend fun fetchRecord(recordId: String): Record {
-        return airtableClient.getRecord(baseId, tableId, recordId)
-    }
+    private suspend fun fetchRecord(recordId: String): Record = airtableClient.getRecord(baseId, tableId, recordId)
 
     suspend fun refreshWebhook(): Boolean {
         if (webhookId.isNullOrEmpty()) {
@@ -282,7 +272,7 @@ class AirTableProvider(
 
         return when (val responseStatus = airtableClient.refreshWebhook(baseId, webhookId)) {
             HttpURLConnection.HTTP_OK -> {
-                logger.info("Successfully refreshed webhook $webhookId for table $tableId" )
+                logger.info("Successfully refreshed webhook $webhookId for table $tableId")
                 true
             }
             else -> {

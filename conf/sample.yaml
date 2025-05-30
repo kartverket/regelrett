@@ -3,12 +3,14 @@
 # Everything has defaults so you only need to uncomment things you want to
 # change
 #
-#
-#
 # base:
 # # possible values : production, development
 #   environment: "production"
 #
+# #################################### Server ##############################
+#
+# paths:
+#   provisioning: conf/provisioning
 #
 # #################################### Server ##############################
 #
@@ -25,34 +27,9 @@
 #   # Log web requests
 #   router_logging: false
 #
-# # allowed_origins is a comma-separated list of origins that can establish connection with Regelrett Live.
-# # If not set then origin will be matched over root_url. Supports wildcard symbol "*".
-#   allowed_origins: "localhost:3000"
-#
-# #################################### Schema sources ##############################
-#
-# airtable:
-#   base_url: "https://api.airtable.com"
-#
-# schema_sikkerhetskontroller:
-#   id: 570e9285-3228-4396-b82b-e9752e23cd73
-#   type: AIRTABLE
-#   airtable_access_token: null
-#   base_id: appzJQ8Tkmm8DobrJ
-#   table_id: tblLZbUqA0XnUgC2v
-#   view_id: viw2XliGUJu5448Hk
-#   webhook_id: null
-#   webhook_secret: null
-#
-# schema_driftskontinuitet:
-#   id: "816cc808-9188-44a9-8f4b-5642fc2932c4"
-#   type: "AIRTABLE"
-#   airtable_access_token: null
-#   base_id: "appsIiBWlCCSsMmRB"
-#   table_id: "tbl4pNqNp2wLyI6iv"
-#   view_id: null
-#   webhook_id: null
-#   webhook_secret: null
+#   # allowed_origins is a comma-separated list of origins that can establish connection with Regelrett Live.
+#   # If not set then origin will be matched over root_url. Supports wildcard symbol "*".
+#   allowed_origins: "localhost:3000,localhost:8080"
 #
 # schema_yaml_test:
 #   id: "test"
@@ -86,7 +63,7 @@
 #   host: "127.0.0.1:5432"
 #   name: "regelrett"
 #   user: "postgres"
-#   password: null
+#   password: pwd
 #
 #   # Max idle conn setting default is 2
 #   max_idle_conn: 2

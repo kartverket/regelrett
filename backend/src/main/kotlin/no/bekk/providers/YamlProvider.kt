@@ -9,12 +9,12 @@ import net.mamoe.yamlkt.Yaml
 import no.bekk.model.internal.*
 
 class YamlProvider(
+    override val name: String,
     override val id: String,
     private val httpClient: HttpClient? = null,
     private val endpoint: String? = null,
     private val resourcePath: String? = null,
 ) : FormProvider {
-
     init {
         require((endpoint != null && httpClient != null) || resourcePath != null) {
             "endpoint and httpClient or resourcePath must be set"
