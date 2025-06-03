@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ArrowUpIcon, ArrowDownIcon, XIcon, EyeOffIcon } from 'lucide-react';
+import React from 'react';
 
 interface Props<TData, TValue>
   extends React.ThHTMLAttributes<HTMLTableCellElement> {
@@ -24,7 +25,6 @@ export function DataTableHeader<TData, TValue>({
   header,
   setColumnVisibility,
   className,
-  ...rest
 }: Props<TData, TValue>) {
   const hideColumn = (name: string) => {
     column.clearSorting();
@@ -41,7 +41,7 @@ export function DataTableHeader<TData, TValue>({
   return (
     <div className={`p-2 relative bg-muted ${className ?? ''}`}>
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
           <Button
             variant="link"
             className={`text-primary px-0 py-1 has-[>svg]:px-0 flex items-center gap-1 ${isSorted ? 'font-bold' : 'font-semibold'}`}

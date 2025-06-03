@@ -32,8 +32,8 @@
     ]
   },
   "dependencies": {
-    "@azure/msal-browser": "^3.23.0",
-    "@azure/msal-react": "^2.0.22",
+    "@azure/msal-browser": "^4.13.0",
+    "@azure/msal-react": "^3.0.12",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-checkbox": "^1.2.3",
     "@radix-ui/react-dialog": "^1.1.11",
@@ -59,8 +59,8 @@
     "lucide-react": "^0.487.0",
     "material-symbols": "^0.20.0",
     "next-themes": "^0.4.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-hook-form": "^7.56.4",
     "react-markdown": "^9.0.1",
     "react-router": "^7.5.2",
@@ -73,8 +73,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.3.4",
