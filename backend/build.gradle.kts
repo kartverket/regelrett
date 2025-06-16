@@ -71,7 +71,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:6.3.0")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.postgresql:postgresql:42.7.5")
+    implementation("org.postgresql:postgresql:42.7.7")
     implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("com.google.code.gson:gson:2.13.1")
     implementation("com.azure:azure-identity:1.16.1")
