@@ -5,7 +5,7 @@
 
 base:
 # possible values : production, development
-  environment: "production"
+  mode: "production"
 
 #################################### Server ##############################
 
@@ -29,7 +29,7 @@ server:
 
   # allowed_origins is a comma-separated list of origins that can establish connection with Regelrett Live.
   # If not set then origin will be matched over root_url. Supports wildcard symbol "*".
-  allowed_origins: "localhost:3000,localhost:8080"
+  allowed_origins: "localhost:5173,localhost:8080"
 
 #################################### Auth ##############################
 
@@ -80,3 +80,17 @@ database:
 
 answer_history_cleanup:
   cleanup_interval_weeks: "4"
+
+#################################### Frontend ##############################
+
+frontend_dev_server:
+  http_port: 5173
+  host: localhost
+  protocol: http
+
+
+white_labeling:
+  app_title: Regelrett
+
+
+

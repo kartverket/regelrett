@@ -4,8 +4,8 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.install
-import io.ktor.server.engine.EngineConnectorBuilder
-import io.ktor.server.engine.embeddedServer
+import io.ktor.server.application.serverConfig
+import io.ktor.server.engine.*
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
@@ -29,20 +29,23 @@ import kotlin.time.Duration.Companion.days
 
 fun main(args: Array<String>) {
     val cfg = newConfigFromArgs(CommandLineArgs(args))
-    val server = embeddedServer(
-        Netty,
-        configure = {
-            connectors.add(
-                EngineConnectorBuilder().apply {
-                    port = cfg.server.httpPort
-                    host = cfg.server.httpAddr
-                },
-            )
-        },
-    ) {
-        module(cfg)
+
+    val appProperties = serverConfig {
+        developmentMode = cfg.mode == "development"
+        module { module(cfg) }
     }
-    server.start(wait = true)
+
+    embeddedServer(
+        Netty,
+        appProperties,
+    ) {
+        connectors.add(
+            EngineConnectorBuilder().apply {
+                port = cfg.server.httpPort
+                host = cfg.server.httpAddr
+            },
+        )
+    }.start(wait = true)
 }
 
 fun CoroutineScope.launchCleanupJob(cleanupIntervalWeeks: String, database: Database): Job {
@@ -106,7 +109,14 @@ fun Application.configureAPILayer(
     install(DefaultHeaders) {
         header(
             "Content-Security-Policy",
-            "default-src 'self' '${config.server.host}'; ",
+            "default-src 'self' ${config.server.host} ${config.frontendDevServer.devUrl};" +
+                "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';" +
+                "font-src 'self' https://fonts.gstatic.com;" +
+                "img-src 'self' ${config.frontendDevServer.devUrl} data:;" +
+                "script-src 'self' ${config.frontendDevServer.devUrl} 'unsafe-inline';" +
+                "frame-src 'self' https://login.microsoftonline.com;" +
+                "connect-src 'self' ws://${config.frontendDevServer.host}:${config.frontendDevServer.httpPort} ${config.frontendDevServer.devUrl} https://login.microsoftonline.com",
+
         )
     }
     install(ContentNegotiation) {
@@ -120,5 +130,5 @@ fun Application.configureAPILayer(
 
     configureCors(config)
     initializeAuthentication(config.oAuth)
-    configureRouting(dependencies)
+    configureRouting(config, dependencies)
 }

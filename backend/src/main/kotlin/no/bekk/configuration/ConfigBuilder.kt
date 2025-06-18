@@ -26,6 +26,7 @@ class ConfigBuilder {
     private lateinit var serverConfig: ServerConfig
     private lateinit var databaseConfig: DatabaseConfig
     private lateinit var answerHistoryConfig: AnswerHistoryCleanupConfig
+    private lateinit var frontendDevServerConfig: FrontendDevServerConfig
 
     fun setHomePath(args: CommandLineArgs): ConfigBuilder {
         if (args.homePath != "") {
@@ -187,7 +188,7 @@ class ConfigBuilder {
         }
 
         logger.info("Path Home path: $homePath")
-        logger.info("App mode ${configYaml.getStringOrNull("base", "environment")}")
+        logger.info("App mode ${configYaml.getStringOrNull("base", "mode")}")
     }
 
     fun buildMicrosoftGraphConfig(yaml: YamlConfig) = MicrosoftGraphConfig(
@@ -238,6 +239,19 @@ class ConfigBuilder {
         }
     }
 
+    fun builFrontendDevServerConfig(yaml: YamlConfig): FrontendDevServerConfig {
+        val protocol = yaml.getStringOrNull("frontend_dev_server", "protocol") ?: "http"
+        val host = yaml.getStringOrNull("frontend_dev_server", "host") ?: "localhost"
+        val port = yaml.getIntOrNull("frontend_dev_server", "http_port") ?: 5173
+
+        return FrontendDevServerConfig(
+            httpPort = port,
+            protocol = protocol,
+            host = host,
+            devUrl = "$protocol://$host:$port",
+        )
+    }
+
     fun build(): Config {
         microsoftGraphConfig = buildMicrosoftGraphConfig(configYaml)
         oAuthConfig = buildOAuthConfig(configYaml)
@@ -245,15 +259,17 @@ class ConfigBuilder {
         serverConfig = buildServerConfig(configYaml)
         databaseConfig = buildDatabaseConfig(configYaml)
         answerHistoryConfig = buildAnswerHistoryConfig(configYaml)
+        frontendDevServerConfig = builFrontendDevServerConfig(configYaml)
 
         return Config(
-            environment = configYaml.getStringOrNull("base", "environment") ?: "development",
+            mode = configYaml.getStringOrNull("base", "mode") ?: "production",
             paths = pathsConfig,
             microsoftGraph = microsoftGraphConfig,
             oAuth = oAuthConfig,
             server = serverConfig,
             database = databaseConfig,
             answerHistoryCleanup = answerHistoryConfig,
+            frontendDevServer = frontendDevServerConfig,
             raw = configYaml,
         )
     }

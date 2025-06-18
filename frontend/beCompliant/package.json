@@ -69,6 +69,7 @@
     "tailwindcss": "^4.1.3",
     "tw-animate-css": "^1.2.5",
     "vitest": "^3.0.9",
+    "yaml": "^2.8.0",
     "zod": "^3.25.20"
   },
   "devDependencies": {

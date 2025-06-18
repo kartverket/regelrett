@@ -4,6 +4,7 @@ import { msalInstance } from '../../api/msal';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import KvLogo from '@/assets/kartverketlogo.svg';
 
 export default function ProtectedRoute() {
   const accounts = useMsal().accounts;
@@ -18,7 +19,7 @@ export default function ProtectedRoute() {
             className="ml-2 cursor-pointer font-bold text-lg"
             onClick={() => navigate('/')}
           >
-            <img src="/kartverketlogo.svg" alt="Kartverket Logo" />
+            <img src={KvLogo} alt="Kartverket logo" />
           </div>
         </header>
         <div className="flex flex-row gap-2 items-center justify-end ">

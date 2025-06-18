@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosFetch } from '../api/Fetch';
 import { Question } from '../api/types';
 
-const API_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_URL_BASE = '/api';
 
 export function useFetchQuestion(formId?: string, recordId?: string) {
   return useQuery({
