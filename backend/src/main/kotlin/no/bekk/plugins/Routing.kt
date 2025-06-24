@@ -28,7 +28,7 @@ fun Application.configureRouting(
         call.respond(schemas)
     }
 
-    webRouting(config.frontendDevServer)
+    webRouting(config.frontendDevServer, config.homePath)
 
     authenticate("auth-jwt") {
         route("/api") {

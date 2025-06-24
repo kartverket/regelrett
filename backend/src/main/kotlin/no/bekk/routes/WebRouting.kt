@@ -10,20 +10,100 @@ import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.html.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import no.bekk.configuration.FrontendDevServerConfig
 import no.bekk.routes.*
-import no.bekk.util.logger
+import java.io.File
 
-fun Route.webRouting(cfg: FrontendDevServerConfig) {
+fun Route.webRouting(cfg: FrontendDevServerConfig, homePath: String) {
     if (application.developmentMode) {
         get("/{...}") {
-            logger.info("GETTING GETTET: ${call.request.local.uri}")
             call.respondHtmlTemplate(DevTemplate(cfg)) {}
         }
 
         // Proxy static asset requests to dev server
         get("/src/{...}") {
             call.respondRedirect("${cfg.host}:${cfg.httpPort}${call.request.local.uri}")
+        }
+    } else {
+        val frontendBuild = "$homePath/frontend/beCompliant/dist"
+        val manifestFile = File("$frontendBuild/.vite/manifest.json")
+        val manifest = Manifest(Json.decodeFromString<Map<String, Chunk>>(manifestFile.readText()))
+
+        val root = RootTemplate(
+            cfg,
+            manifest,
+            manifest.getEntry()
+                ?: throw IllegalStateException("Unable to determine frontend entrypoint from: $frontendBuild/.vite/manifest.json"),
+        )
+
+        staticFiles("/assets", File("$frontendBuild/assets/"))
+
+        get("/{...}") {
+            call.respondHtmlTemplate(root) {}
+        }
+    }
+}
+
+class Manifest(
+    val chunks: Map<String, Chunk>,
+) {
+    fun getEntry(): Chunk? {
+        for (c in chunks) {
+            if (c.value.isEntry) {
+                return c.value
+            }
+        }
+        return null
+    }
+
+    fun stylesheets(chunk: Chunk): List<String> {
+        val files = chunk.css.toMutableList()
+
+        for (i in chunk.imports) {
+            val next = chunks[i]
+            if (next != null) {
+                files.addAll(stylesheets(next))
+            }
+        }
+
+        return files
+    }
+}
+
+@Serializable
+class Chunk(
+    val file: String,
+    val name: String? = null,
+    val imports: List<String> = emptyList(),
+    val src: String? = null,
+    val isDynamicEntry: Boolean = false,
+    val isEntry: Boolean = false,
+    val dynamicImports: List<String> = emptyList(),
+    val css: List<String> = emptyList(),
+    val assets: List<String> = emptyList(),
+)
+
+class RootTemplate(val cfg: FrontendDevServerConfig, val m: Manifest, val entry: Chunk) : Template<HTML> {
+    override fun HTML.apply() {
+        head {
+            meta(charset = "UTF-8")
+            title {
+                +"Regelrett"
+            }
+            script(type = "module", src = "/${entry.file}") {}
+
+            for (i in entry.imports) {
+                link(rel = "modulepreload", href = "/${m.chunks[i]?.file}") {}
+            }
+
+            for (s in m.stylesheets(entry)) {
+                link(href = "/$s", rel = "stylesheet") {}
+            }
+        }
+        body(classes = "kartverket") {
+            div { id = "root" }
         }
     }
 }

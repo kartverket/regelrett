@@ -3,6 +3,7 @@ package no.bekk.configuration
 import io.ktor.server.config.*
 
 data class Config(
+    val homePath: String,
     val mode: String,
     val paths: PathsConfig,
     val microsoftGraph: MicrosoftGraphConfig,

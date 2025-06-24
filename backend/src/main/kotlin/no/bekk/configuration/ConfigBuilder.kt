@@ -262,6 +262,7 @@ class ConfigBuilder {
         frontendDevServerConfig = builFrontendDevServerConfig(configYaml)
 
         return Config(
+            homePath = homePath,
             mode = configYaml.getStringOrNull("base", "mode") ?: "production",
             paths = pathsConfig,
             microsoftGraph = microsoftGraphConfig,

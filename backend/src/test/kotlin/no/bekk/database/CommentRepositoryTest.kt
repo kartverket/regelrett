@@ -8,10 +8,12 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class CommentRepositoryTest {
     @Test
+    @Tag("IntegrationTest")
     fun `insert and get comment by contextId`() {
         val (commentRepository, contextRepository, context) = defaultSetup()
         val request = DatabaseCommentRequest(
@@ -19,7 +21,7 @@ class CommentRepositoryTest {
             recordId = "recordId",
             questionId = "questionId",
             comment = "comment",
-            contextId = context.id
+            contextId = context.id,
         )
         commentRepository.insertCommentOnContext(request)
 
@@ -33,6 +35,7 @@ class CommentRepositoryTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `insert and get comment by contextId and recordId`() {
         val (commentRepository, contextRepository, context) = defaultSetup()
 
@@ -41,7 +44,7 @@ class CommentRepositoryTest {
             recordId = "recordId",
             questionId = "questionId",
             comment = "comment",
-            contextId = context.id
+            contextId = context.id,
         )
         commentRepository.insertCommentOnContext(request)
 
@@ -56,6 +59,7 @@ class CommentRepositoryTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `insert and delete comment`() {
         val (commentRepository, contextRepository, context) = defaultSetup()
 
@@ -65,14 +69,15 @@ class CommentRepositoryTest {
                 recordId = "recordId",
                 questionId = "questionId",
                 comment = "comment",
-                contextId = context.id
-            )
+                contextId = context.id,
+            ),
         )
         assertTrue(commentRepository.deleteCommentFromDatabase(context.id, insertedComment.recordId))
         assertTrue(commentRepository.getCommentsByContextIdFromDatabase(context.id).isEmpty())
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `copy comments from other context`() {
         val (commentRepository, contextRepository, context) = defaultSetup()
         val destinationContext = contextRepository.insertContext(DatabaseContextRequest("teamId2", "formId2", "name2"))
@@ -81,7 +86,7 @@ class CommentRepositoryTest {
             recordId = "recordId",
             questionId = "questionId",
             comment = "comment",
-            contextId = context.id
+            contextId = context.id,
         )
         commentRepository.insertCommentOnContext(request)
         commentRepository.copyCommentsFromOtherContext(destinationContext.id, context.id)
@@ -97,7 +102,7 @@ class CommentRepositoryTest {
     private fun defaultSetup(
         teamId: String = "teamId",
         formId: String = "formId",
-        name: String = "name"
+        name: String = "name",
     ): Triple<CommentRepositoryImpl, ContextRepositoryImpl, DatabaseContext> {
         val contextRepository = ContextRepositoryImpl(database)
         val commentRepository = CommentRepositoryImpl(database)

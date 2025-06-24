@@ -20,23 +20,19 @@ class AnswerRoutingTest {
         application {
             testModule(
                 answerRepository = object : MockAnswerRepository {
-                    override fun insertAnswerOnContext(answer: DatabaseAnswerRequest): DatabaseAnswer {
-                        return DatabaseAnswer(
-                            actor = "actor",
-                            recordId = "recordId",
-                            questionId = "questionId",
-                            answer = "answer",
-                            updated = "updated",
-                            answerType = "answerType",
-                            contextId = "contextId",
-                        )
-                    }
+                    override fun insertAnswerOnContext(answer: DatabaseAnswerRequest): DatabaseAnswer = DatabaseAnswer(
+                        actor = "actor",
+                        recordId = "recordId",
+                        questionId = "questionId",
+                        answer = "answer",
+                        updated = "updated",
+                        answerType = "answerType",
+                        contextId = "contextId",
+                    )
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
         val request = DatabaseAnswerRequest(
@@ -48,7 +44,7 @@ class AnswerRoutingTest {
             contextId = "contextId",
         )
 
-        val response = client.post("/answer") {
+        val response = client.post("/api/answer") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -74,10 +70,10 @@ class AnswerRoutingTest {
             questionId = "questionId",
             answer = "answer",
             answerType = "answerType",
-            contextId = null
+            contextId = null,
         )
 
-        val response = client.post("/answer") {
+        val response = client.post("/api/answer") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -91,10 +87,8 @@ class AnswerRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
         val request = DatabaseAnswerRequest(
@@ -106,7 +100,7 @@ class AnswerRoutingTest {
             contextId = "contextId",
         )
 
-        val response = client.post("/answer") {
+        val response = client.post("/api/answer") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -132,20 +126,16 @@ class AnswerRoutingTest {
                 answerRepository = object : MockAnswerRepository {
                     override fun getAnswersByContextAndRecordIdFromDatabase(
                         contextId: String,
-                        recordId: String
-                    ): List<DatabaseAnswer> {
-                        return listOf(mockedAnswer)
-                    }
+                        recordId: String,
+                    ): List<DatabaseAnswer> = listOf(mockedAnswer)
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/answers?recordId=${mockedAnswer.recordId}&contextId=${mockedAnswer.contextId}") {
+        val response = client.get("/api/answers?recordId=${mockedAnswer.recordId}&contextId=${mockedAnswer.contextId}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -171,19 +161,15 @@ class AnswerRoutingTest {
                 answerRepository = object : MockAnswerRepository {
                     override fun getLatestAnswersByContextIdFromDatabase(
                         contextId: String,
-                    ): List<DatabaseAnswer> {
-                        return listOf(mockedAnswer)
-                    }
+                    ): List<DatabaseAnswer> = listOf(mockedAnswer)
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/answers?contextId=${mockedAnswer.contextId}") {
+        val response = client.get("/api/answers?contextId=${mockedAnswer.contextId}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -199,7 +185,7 @@ class AnswerRoutingTest {
             testModule()
         }
 
-        val response = client.get("/answers") {
+        val response = client.get("/api/answers") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
@@ -210,14 +196,12 @@ class AnswerRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.get("/answers?contextId=contextId") {
+        val response = client.get("/api/answers?contextId=contextId") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.Forbidden, response.status)

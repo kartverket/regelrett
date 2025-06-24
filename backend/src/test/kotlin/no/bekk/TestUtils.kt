@@ -7,8 +7,11 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.contentnegotiation.*
+import net.mamoe.yamlkt.Yaml
 import no.bekk.authentication.AuthService
+import no.bekk.configuration.*
 import no.bekk.configuration.Database
+import no.bekk.configuration.ServerConfig
 import no.bekk.database.*
 import no.bekk.di.Dependencies
 import no.bekk.plugins.configureRouting
@@ -25,6 +28,18 @@ object TestUtils {
         commentRepository: CommentRepository = CommentRepositoryImpl(testDatabase),
         contextRepository: ContextRepository = ContextRepositoryImpl(testDatabase),
     ) {
+        val exampleConfig = Config(
+            mode = "development",
+            paths = PathsConfig(""),
+            microsoftGraph = MicrosoftGraphConfig("", ""),
+            oAuth = OAuthConfig("https://test.com", "test", "", "", "", "", "", "", ""),
+            server = ServerConfig("", "", 0, false, emptyList()),
+            database = DatabaseConfig("", "", ""),
+            answerHistoryCleanup = AnswerHistoryCleanupConfig(""),
+            frontendDevServer = FrontendDevServerConfig("", 0, "", ""),
+            raw = YamlConfig(Yaml.decodeYamlMapFromString("value: null")),
+        )
+
         install(Authentication) {
             jwt("auth-jwt") {
                 realm = "test"
@@ -44,6 +59,7 @@ object TestUtils {
         }
 
         configureRouting(
+            exampleConfig,
             Dependencies(
                 testDatabase,
                 formService,
@@ -62,4 +78,3 @@ object TestUtils {
         .withClaim("oid", "test-user-id")
         .sign(Algorithm.HMAC256("test-secret"))
 }
-

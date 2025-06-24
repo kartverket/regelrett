@@ -21,14 +21,15 @@ import java.sql.Connection
 import kotlin.collections.emptyList
 
 class ApplicationTest {
-    private val exampleConfig = Config(
-        environment = "development",
+    val exampleConfig = Config(
+        mode = "development",
         paths = PathsConfig(""),
         microsoftGraph = MicrosoftGraphConfig("", ""),
         oAuth = OAuthConfig("https://test.com", "test", "", "", "", "", "", "", ""),
         server = ServerConfig("", "", 0, false, emptyList()),
         database = DatabaseConfig("", "", ""),
         answerHistoryCleanup = AnswerHistoryCleanupConfig(""),
+        frontendDevServer = FrontendDevServerConfig("", 0, "", ""),
         raw = YamlConfig(Yaml.decodeYamlMapFromString("value: null")),
     )
     private val mockDatabase = object : Database {
@@ -54,6 +55,7 @@ class ApplicationTest {
             )
 
             val routingRoot = configureRouting(
+                exampleConfig,
                 Dependencies(
                     mockDatabase,
                     FormServiceImpl(),
@@ -64,19 +66,11 @@ class ApplicationTest {
                     object : MockAuthService {},
                 ),
             )
-            val publicEndpointsRegexList = listOf(
-                Regex("^/schemas"),
-                Regex("^/health"),
-                Regex("^/webhook"),
-                Regex("^/\\(method:GET\\)$"),
-            )
 
             // Get all registered routes and filter out those that match any of the public endpoint regex patterns
 
             val nonPublicRoutes = routingRoot.getAllRoutes().filter { route ->
-                publicEndpointsRegexList.none { regex ->
-                    regex.containsMatchIn(route.toString())
-                }
+                route.toString().startsWith("/api")
             }
 
             assertAll(
