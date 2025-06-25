@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosFetch } from '../api/Fetch';
 
-const API_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_URL_BASE = '/api';
 
 export function useForms() {
   return useQuery({

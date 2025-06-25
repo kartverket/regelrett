@@ -22,20 +22,16 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext {
-                        return DatabaseContext(
-                            id = "id",
-                            teamId = "teamId",
-                            formId = "formId",
-                            name = "name",
-                        )
-                    }
+                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext = DatabaseContext(
+                        id = "id",
+                        teamId = "teamId",
+                        formId = "formId",
+                        name = "name",
+                    )
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true
+                },
             )
         }
         val request = DatabaseContextRequest(
@@ -44,7 +40,7 @@ class ContextRoutingTest {
             name = "name",
         )
 
-        val response = client.post("/contexts") {
+        val response = client.post("/api/contexts") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -62,10 +58,8 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = false
+                },
             )
         }
         val request = DatabaseContextRequest(
@@ -74,7 +68,7 @@ class ContextRoutingTest {
             name = "name",
         )
 
-        val response = client.post("/contexts") {
+        val response = client.post("/api/contexts") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -88,15 +82,11 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext {
-                        throw UniqueConstraintViolationException("A context with the same team_id, table_id and name already exists.")
-                    }
+                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext = throw UniqueConstraintViolationException("A context with the same team_id, table_id and name already exists.")
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true
+                },
             )
         }
         val request = DatabaseContextRequest(
@@ -105,7 +95,7 @@ class ContextRoutingTest {
             name = "name",
         )
 
-        val response = client.post("/contexts") {
+        val response = client.post("/api/contexts") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -119,27 +109,21 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext {
-                        return DatabaseContext(
-                            id = "id",
-                            teamId = "teamId",
-                            formId = "formId",
-                            name = "name",
-                        )
-                    }
+                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext = DatabaseContext(
+                        id = "id",
+                        teamId = "teamId",
+                        formId = "formId",
+                        name = "name",
+                    )
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return true
-                    }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true
 
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
                 },
                 answerRepository = object : MockAnswerRepository {
                     override fun copyAnswersFromOtherContext(newContextId: String, contextToCopy: String) {}
-                }
+                },
             )
         }
         val request = DatabaseContextRequest(
@@ -149,7 +133,7 @@ class ContextRoutingTest {
             copyContext = "copyContext",
         )
 
-        val response = client.post("/contexts") {
+        val response = client.post("/api/contexts") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -174,19 +158,15 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun getContextByTeamIdAndFormId(teamId: String, formId: String): List<DatabaseContext> {
-                        return listOf(mockedContext)
-                    }
+                    override fun getContextByTeamIdAndFormId(teamId: String, formId: String): List<DatabaseContext> = listOf(mockedContext)
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/contexts?teamId=${mockedContext.teamId}&formId=${mockedContext.formId}") {
+        val response = client.get("/api/contexts?teamId=${mockedContext.teamId}&formId=${mockedContext.formId}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -208,19 +188,15 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun getContextsByTeamId(teamId: String): List<DatabaseContext> {
-                        return listOf(mockedContext)
-                    }
+                    override fun getContextsByTeamId(teamId: String): List<DatabaseContext> = listOf(mockedContext)
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/contexts?teamId=${mockedContext.teamId}") {
+        val response = client.get("/api/contexts?teamId=${mockedContext.teamId}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -236,7 +212,7 @@ class ContextRoutingTest {
             testModule()
         }
 
-        val response = client.get("/contexts") {
+        val response = client.get("/api/contexts") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
@@ -247,14 +223,12 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = false
+                },
             )
         }
 
-        val response = client.get("/contexts?teamId=teamId") {
+        val response = client.get("/api/contexts?teamId=teamId") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.Forbidden, response.status)
@@ -272,19 +246,15 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun getContext(id: String): DatabaseContext {
-                        return mockedContext
-                    }
+                    override fun getContext(id: String): DatabaseContext = mockedContext
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/contexts/${mockedContext.id}") {
+        val response = client.get("/api/contexts/${mockedContext.id}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -298,14 +268,12 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.get("/contexts/contextId") {
+        val response = client.get("/api/contexts/contextId") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.Forbidden, response.status)
@@ -323,14 +291,12 @@ class ContextRoutingTest {
                     }
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.delete("/contexts/1") {
+        val response = client.delete("/api/contexts/1") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -344,14 +310,12 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.delete("/contexts/1") {
+        val response = client.delete("/api/contexts/1") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.Forbidden, response.status)
@@ -363,24 +327,18 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun changeTeam(contextId: String, newTeamId: String): Boolean {
-                        return true
-                    }
+                    override fun changeTeam(contextId: String, newTeamId: String): Boolean = true
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
 
-                    override suspend fun getTeamIdFromName(call: ApplicationCall, teamName: String): String? {
-                        return newTeamName
-                    }
-                }
+                    override suspend fun getTeamIdFromName(call: ApplicationCall, teamName: String): String? = newTeamName
+                },
             )
         }
         val request = TeamUpdateRequest(newTeamName)
 
-        val response = client.patch("/contexts/id/team") {
+        val response = client.patch("/api/contexts/id/team") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -393,14 +351,12 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.patch("/contexts/id/team") {
+        val response = client.patch("/api/contexts/id/team") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(TeamUpdateRequest(null)))
@@ -414,14 +370,12 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.patch("/contexts/id/team") {
+        val response = client.patch("/api/contexts/id/team") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(TeamUpdateRequest(newTeamName)))
@@ -434,18 +388,14 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
 
-                    override suspend fun getTeamIdFromName(call: ApplicationCall, teamName: String): String? {
-                        return null
-                    }
-                }
+                    override suspend fun getTeamIdFromName(call: ApplicationCall, teamName: String): String? = null
+                },
             )
         }
 
-        val response = client.patch("/contexts/id/team") {
+        val response = client.patch("/api/contexts/id/team") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(TeamUpdateRequest("newTeamName")))
@@ -461,14 +411,12 @@ class ContextRoutingTest {
                     override fun copyAnswersFromOtherContext(newContextId: String, contextToCopy: String) {}
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.patch("/contexts/id/answers") {
+        val response = client.patch("/api/contexts/id/answers") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(CopyContextRequest("contextToCopyFrom")))
@@ -482,7 +430,7 @@ class ContextRoutingTest {
             testModule()
         }
 
-        val response = client.patch("/contexts/id/answers") {
+        val response = client.patch("/api/contexts/id/answers") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(CopyContextRequest(null)))
@@ -495,14 +443,12 @@ class ContextRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.patch("/contexts/id/answers") {
+        val response = client.patch("/api/contexts/id/answers") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(CopyContextRequest("contextToCopyFrom")))

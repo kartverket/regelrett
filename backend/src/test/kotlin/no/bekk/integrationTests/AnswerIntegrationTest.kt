@@ -17,69 +17,67 @@ import no.bekk.model.internal.AnswerType
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class AnswerIntegrationTest {
 
     @Test
+    @Tag("IntegrationTest")
     fun `Add and get answer`() = testApplication {
         val database = JDBCDatabase.create(testDatabase.getTestdatabaseConfig())
         val answerRepository = AnswerRepositoryImpl(database)
         val authService = object : MockAuthService {
-            override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-                return true
-            }
+            override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true
 
-            override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                return true
-            }
+            override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
         }
         application {
             testModule(
                 database,
                 answerRepository = answerRepository,
-                authService = authService
+                authService = authService,
             )
         }
 
-        //Create and get context to obtain contextId
-        var response = client.post("/contexts") {
+        // Create and get context to obtain contextId
+        var response = client.post("/api/contexts") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(
                 Json.encodeToString(
-                    DatabaseContextRequest("teamId", "formId", "name")
-                )
+                    DatabaseContextRequest("teamId", "formId", "name"),
+                ),
             )
         }
 
         assertEquals(HttpStatusCode.Created, response.status)
 
-        response = client.get("/contexts?formId=formId&teamId=teamId") {
+        response = client.get("/api/contexts?formId=formId&teamId=teamId") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         val contextList: List<DatabaseContext> = Json.decodeFromString(response.bodyAsText())
         assertEquals(1, contextList.size)
         val contextId = contextList.first().id
 
-        //Add answer
+        // Add answer
         val request = DatabaseAnswerRequest(
             contextId = contextId,
             actor = "actor",
             recordId = "recordId",
             questionId = "questionId",
             answerType = AnswerType.PERCENT.toString(),
-            answer = "1"
+            answer = "1",
         )
-        response = client.post("/answer") {
+        response = client.post("/api/answer") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
         }
         assertEquals(HttpStatusCode.OK, response.status)
 
-        //Get answer
-        response = client.get("/answers?contextId=$contextId") {
+        // Get answer
+        response = client.get("/api/answers?contextId=$contextId") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -112,3 +110,4 @@ class AnswerIntegrationTest {
         }
     }
 }
+

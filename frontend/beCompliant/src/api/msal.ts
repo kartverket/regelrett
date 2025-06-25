@@ -6,10 +6,9 @@ import {
   type SsoSilentRequest,
 } from '@azure/msal-browser';
 
-export const clientId = import.meta.env.VITE_CLIENT_ID;
-const authority = import.meta.env.VITE_AUTHORITY;
-const redirectUri = import.meta.env.VITE_FRONTEND_URL;
-
+export const clientId = __CLIENT_ID__;
+const authority = __AUTHORITY__;
+const redirectUri = new URL(document.URL).origin;
 if (!clientId) {
   throw new Error('Client ID is not set');
 }
@@ -37,9 +36,7 @@ const configuration: Configuration = {
 
 export const msalInstance = new PublicClientApplication(configuration);
 
-export const scopes = import.meta.env.VITE_AUTH_SCOPES?.split(',') ?? [
-  `${clientId}/.default`,
-];
+export const scopes = [`${clientId}/.default`];
 
 export const authenticationRequest:
   | PopupRequest

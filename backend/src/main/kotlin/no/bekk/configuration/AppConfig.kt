@@ -3,13 +3,15 @@ package no.bekk.configuration
 import io.ktor.server.config.*
 
 data class Config(
-    val environment: String,
+    val homePath: String,
+    val mode: String,
     val paths: PathsConfig,
     val microsoftGraph: MicrosoftGraphConfig,
     val oAuth: OAuthConfig,
     val server: ServerConfig,
     val database: DatabaseConfig,
     val answerHistoryCleanup: AnswerHistoryCleanupConfig,
+    val frontendDevServer: FrontendDevServerConfig,
     val raw: YamlConfig,
 )
 
@@ -42,6 +44,13 @@ data class YAMLInstanceConfig(
 
 data class PathsConfig(
     val provisioning: String,
+)
+
+data class FrontendDevServerConfig(
+    val devUrl: String,
+    val httpPort: Int,
+    val host: String,
+    val protocol: String,
 )
 
 class MicrosoftGraphConfig(

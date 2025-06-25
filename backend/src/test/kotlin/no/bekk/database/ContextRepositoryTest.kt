@@ -11,6 +11,7 @@ import java.util.*
 
 class ContextRepositoryTest {
     @Test
+    @Tag("IntegrationTest")
     fun `get context by id`() {
         val (contextRepository, context) = defaultSetup(teamId = "team", formId = "form", name = "name")
         val fetched = contextRepository.getContext(context.id)
@@ -21,6 +22,7 @@ class ContextRepositoryTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `get context by teamId`() {
         val (contextRepository, context) = defaultSetup()
         val fetchedList = contextRepository.getContextsByTeamId(context.teamId)
@@ -32,6 +34,7 @@ class ContextRepositoryTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `get context by teamId and formId`() {
         val (contextRepository, context) = defaultSetup()
         val fetchedList = contextRepository.getContextByTeamIdAndFormId(context.teamId, context.formId)
@@ -43,6 +46,7 @@ class ContextRepositoryTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `delete context`() {
         val (contextRepository, context) = defaultSetup()
         assertTrue(contextRepository.deleteContext(context.id))
@@ -50,6 +54,7 @@ class ContextRepositoryTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     fun `change context team`() {
         val (contextRepository, context) = defaultSetup()
         val newTeamId = UUID.randomUUID().toString()
@@ -62,7 +67,7 @@ class ContextRepositoryTest {
     private fun defaultSetup(
         teamId: String = "teamId",
         formId: String = "formId",
-        name: String = "name"
+        name: String = "name",
     ): Pair<ContextRepositoryImpl, DatabaseContext> {
         val contextRepository = ContextRepositoryImpl(database)
         val context = contextRepository.insertContext(DatabaseContextRequest(teamId, formId, name))
@@ -98,3 +103,4 @@ class ContextRepositoryTest {
         }
     }
 }
+

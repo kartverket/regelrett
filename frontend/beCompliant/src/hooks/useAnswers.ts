@@ -3,7 +3,7 @@ import { Answer } from '../api/types';
 import { axiosFetch } from '../api/Fetch';
 import { toast } from 'sonner';
 
-const API_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_URL_BASE = '/api';
 
 const url = (contextId: string, recordId?: string) =>
   `${API_URL_BASE}/answers?contextId=${contextId}${recordId ? `&recordId=${recordId}` : ''}`;

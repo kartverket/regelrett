@@ -18,8 +18,6 @@ version = "0.0.1"
 
 application {
     mainClass.set("no.bekk.ApplicationKt")
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 repositories {
@@ -50,6 +48,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-default-headers:$ktor_version")
+    implementation("io.ktor:ktor-server-html-builder:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-auth:$ktor_version")
@@ -84,6 +83,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:1.21.0")
 }
 
+
 tasks {
     withType<ShadowJar> {
         isZip64 = true
@@ -96,6 +96,11 @@ tasks {
             exceptionFormat = TestExceptionFormat.FULL
             events("passed", "skipped", "failed")
         }
-        useJUnitPlatform()
+        useJUnitPlatform {
+            if(!project.hasProperty("integrationTest")) {
+                excludeTags=setOf("IntegrationTest")
+            }
+        }
     }
+
 }

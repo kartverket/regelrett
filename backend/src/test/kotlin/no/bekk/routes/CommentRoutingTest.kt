@@ -21,22 +21,18 @@ class CommentRoutingTest {
         application {
             testModule(
                 commentRepository = object : MockCommentRepository {
-                    override fun insertCommentOnContext(comment: DatabaseCommentRequest): DatabaseComment {
-                        return DatabaseComment(
-                            actor = "actor",
-                            recordId = "recordId",
-                            questionId = "questionId",
-                            comment = "comment",
-                            updated = "updated",
-                            contextId = "contextId",
-                        )
-                    }
+                    override fun insertCommentOnContext(comment: DatabaseCommentRequest): DatabaseComment = DatabaseComment(
+                        actor = "actor",
+                        recordId = "recordId",
+                        questionId = "questionId",
+                        comment = "comment",
+                        updated = "updated",
+                        contextId = "contextId",
+                    )
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
         val request = DatabaseCommentRequest(
@@ -47,7 +43,7 @@ class CommentRoutingTest {
             contextId = "contextId",
         )
 
-        val response = client.post("/comments") {
+        val response = client.post("/api/comments") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -75,7 +71,7 @@ class CommentRoutingTest {
             contextId = null,
         )
 
-        val response = client.post("/comments") {
+        val response = client.post("/api/comments") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -89,10 +85,8 @@ class CommentRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
         val request = DatabaseCommentRequest(
@@ -103,7 +97,7 @@ class CommentRoutingTest {
             contextId = "contextId",
         )
 
-        val response = client.post("/comments") {
+        val response = client.post("/api/comments") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(request))
@@ -128,20 +122,16 @@ class CommentRoutingTest {
                 commentRepository = object : MockCommentRepository {
                     override fun getCommentsByContextAndRecordIdFromDatabase(
                         contextId: String,
-                        recordId: String
-                    ): List<DatabaseComment> {
-                        return listOf(mockedComment)
-                    }
+                        recordId: String,
+                    ): List<DatabaseComment> = listOf(mockedComment)
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/comments?recordId=${mockedComment.recordId}&contextId=${mockedComment.contextId}") {
+        val response = client.get("/api/comments?recordId=${mockedComment.recordId}&contextId=${mockedComment.contextId}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -167,19 +157,15 @@ class CommentRoutingTest {
                 commentRepository = object : MockCommentRepository {
                     override fun getCommentsByContextIdFromDatabase(
                         contextId: String,
-                    ): List<DatabaseComment> {
-                        return listOf(mockedComment)
-                    }
+                    ): List<DatabaseComment> = listOf(mockedComment)
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.get("/comments?contextId=${mockedComment.contextId}") {
+        val response = client.get("/api/comments?contextId=${mockedComment.contextId}") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -195,7 +181,7 @@ class CommentRoutingTest {
             testModule()
         }
 
-        val response = client.get("/comments") {
+        val response = client.get("/api/comments") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
@@ -206,14 +192,12 @@ class CommentRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.get("/comments?contextId=contextId") {
+        val response = client.get("/api/comments?contextId=contextId") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -232,14 +216,12 @@ class CommentRoutingTest {
                     }
                 },
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return true
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = true
+                },
             )
         }
 
-        val response = client.delete("/comments?contextId=1&recordId=2") {
+        val response = client.delete("/api/comments?contextId=1&recordId=2") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
 
@@ -254,7 +236,7 @@ class CommentRoutingTest {
             testModule()
         }
 
-        val response = client.delete("/comments?recordId=2") {
+        val response = client.delete("/api/comments?recordId=2") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
@@ -266,7 +248,7 @@ class CommentRoutingTest {
             testModule()
         }
 
-        val response = client.delete("/comments?contextId=2") {
+        val response = client.delete("/api/comments?contextId=2") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
@@ -277,16 +259,15 @@ class CommentRoutingTest {
         application {
             testModule(
                 authService = object : MockAuthService {
-                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean {
-                        return false
-                    }
-                }
+                    override suspend fun hasContextAccess(call: ApplicationCall, contextId: String): Boolean = false
+                },
             )
         }
 
-        val response = client.delete("/comments?contextId=1&recordId=2") {
+        val response = client.delete("/api/comments?contextId=1&recordId=2") {
             header(HttpHeaders.Authorization, "Bearer ${generateTestToken()}")
         }
         assertEquals(HttpStatusCode.Forbidden, response.status)
     }
 }
+
