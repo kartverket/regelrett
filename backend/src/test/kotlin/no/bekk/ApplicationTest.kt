@@ -22,6 +22,7 @@ import kotlin.collections.emptyList
 
 class ApplicationTest {
     val exampleConfig = Config(
+        homePath = "",
         mode = "development",
         paths = PathsConfig(""),
         microsoftGraph = MicrosoftGraphConfig("", ""),

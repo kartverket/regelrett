@@ -87,10 +87,3 @@ frontend_dev_server:
   http_port: 5173
   host: localhost
   protocol: http
-
-
-white_labeling:
-  app_title: Regelrett
-
-
-

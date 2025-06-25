@@ -29,6 +29,7 @@ object TestUtils {
         contextRepository: ContextRepository = ContextRepositoryImpl(testDatabase),
     ) {
         val exampleConfig = Config(
+            homePath = "",
             mode = "development",
             paths = PathsConfig(""),
             microsoftGraph = MicrosoftGraphConfig("", ""),

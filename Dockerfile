@@ -18,7 +18,7 @@ COPY frontend/beCompliant .
 
 RUN npm ci
 ENV NODE_ENV=production
-RUN npm run build:dev
+RUN npm run build:prod
 
 FROM ${KOTLIN_IMAGE} as kt-builder
 
