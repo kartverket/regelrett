@@ -1,5 +1,8 @@
 package no.bekk.di
 
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.serialization.kotlinx.json.*
 import no.bekk.authentication.AuthServiceImpl
 import no.bekk.configuration.Config
 import no.bekk.configuration.JDBCDatabase
@@ -9,6 +12,7 @@ import no.bekk.database.ContextRepositoryImpl
 import no.bekk.services.FormServiceImpl
 import no.bekk.services.MicrosoftServiceImpl
 import no.bekk.services.provisioning.provideProvisioningService
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 
 fun rootComposer(config: Config): Dependencies {
     val database = JDBCDatabase.create(config.database)
@@ -18,6 +22,11 @@ fun rootComposer(config: Config): Dependencies {
     val contextRepository = ContextRepositoryImpl(database)
     val provisioningService = provideProvisioningService(config, formService)
     val authService = AuthServiceImpl(MicrosoftServiceImpl(config), contextRepository, config.oAuth)
+    val httpClient = HttpClient(CIO) {
+        install(ClientContentNegotiation) {
+            json()
+        }
+    }
 
     return Dependencies(
         formService = formService,
@@ -27,5 +36,7 @@ fun rootComposer(config: Config): Dependencies {
         commentRepository = commentRepository,
         contextRepository = contextRepository,
         authService = authService,
+        httpClient = httpClient,
+        redirects = Redirects(mutableMapOf<String, String>()),
     )
 }

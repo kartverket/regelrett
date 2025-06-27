@@ -7,10 +7,13 @@ import io.ktor.server.html.*
 import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import kotlinx.html.*
+import no.bekk.authentication.UserSession
 import no.bekk.configuration.Config
 import no.bekk.di.Dependencies
 import no.bekk.routes.*
+import no.bekk.util.logger
 import java.io.*
 
 fun Application.configureRouting(
@@ -26,6 +29,28 @@ fun Application.configureRouting(
             it.getSchema()
         }
         call.respond(schemas)
+    }
+
+    authenticate("auth-oauth-azure") {
+        get("/login") {
+            // Redirects to 'authorizeUrl' automatically
+        }
+
+        get("/callback") {
+            val currentPrincipal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+            logger.info("hit")
+
+            currentPrincipal?.let { principal ->
+                principal.state?.let { state ->
+                    call.sessions.set(UserSession(state, principal.accessToken))
+                    dependencies.redirects.r[state]?.let { redirect ->
+                        call.respondRedirect(redirect)
+                        return@get
+                    }
+                }
+            }
+            call.respondRedirect("/")
+        }
     }
 
     webRouting(config.frontendDevServer, config.homePath)

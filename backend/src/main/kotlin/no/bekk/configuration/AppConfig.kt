@@ -75,6 +75,7 @@ fun getTokenUrl(oAuthConfig: OAuthConfig) = oAuthConfig.baseUrl + "/" + oAuthCon
 fun getJwksUrl(oAuthConfig: OAuthConfig) = oAuthConfig.baseUrl + "/" + oAuthConfig.tenantId + oAuthConfig.jwksPath
 
 data class ServerConfig(
+    val protocol: String,
     val host: String,
     val httpAddr: String,
     val httpPort: Int,

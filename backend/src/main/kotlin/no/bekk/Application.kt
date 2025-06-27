@@ -10,7 +10,9 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.sessions.*
 import kotlinx.coroutines.*
+import no.bekk.authentication.UserSession
 import no.bekk.authentication.initializeAuthentication
 import no.bekk.configuration.CommandLineArgs
 import no.bekk.configuration.Config
@@ -32,7 +34,7 @@ fun main(args: Array<String>) {
 
     val appProperties = serverConfig {
         developmentMode = cfg.mode == "development"
-        module { module(cfg) }
+        module { main(cfg) }
     }
 
     embeddedServer(
@@ -89,7 +91,7 @@ fun cleanupAnswersHistory(database: Database) {
     }
 }
 
-fun Application.module(config: Config) {
+fun Application.main(config: Config) {
     val dependencies = rootComposer(config)
 
     dependencies.provisioningService.runInitialProvisioners()
@@ -123,12 +125,16 @@ fun Application.configureAPILayer(
         json()
     }
 
+    install(Sessions) {
+        cookie<UserSession>("user_session")
+    }
+
     install(XForwardedHeaders)
     if (config.server.routerLogging) {
         install(RequestLoggingPlugin)
     }
 
     configureCors(config)
-    initializeAuthentication(config.oAuth)
+    initializeAuthentication(config, dependencies.httpClient, dependencies.redirects)
     configureRouting(config, dependencies)
 }

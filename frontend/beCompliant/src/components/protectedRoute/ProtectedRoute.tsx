@@ -1,14 +1,14 @@
 import { Outlet, useNavigate } from 'react-router';
-import { useMsal } from '@azure/msal-react';
-import { msalInstance } from '../../api/msal';
-import { Button } from '@/components/ui/button';
-import { LogOut, User } from 'lucide-react';
+// import { useMsal } from '@azure/msal-react';
+// import { msalInstance } from '../../api/msal';
+// import { Button } from '@/components/ui/button';
+// import { LogOut, User } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import KvLogo from '@/assets/kartverketlogo.svg';
 
 export default function ProtectedRoute() {
-  const accounts = useMsal().accounts;
-  const account = accounts[0];
+  // const accounts = useMsal().accounts;
+  // const account = accounts[0];
   const navigate = useNavigate();
 
   return (
@@ -23,16 +23,16 @@ export default function ProtectedRoute() {
           </div>
         </header>
         <div className="flex flex-row gap-2 items-center justify-end ">
-          {account && (
-            <div className="flex flex-row gap-2 items-center ">
-              <User />
-              <p>{account.name}</p>
-            </div>
-          )}
-          <Button variant="ghost" onClick={() => msalInstance.logoutRedirect()}>
-            <LogOut className="size-5" />
-            Logg ut
-          </Button>
+          {/* {account && ( */}
+          {/*   <div className="flex flex-row gap-2 items-center "> */}
+          {/*     <User /> */}
+          {/*     <p>{account.name}</p> */}
+          {/*   </div> */}
+          {/* )} */}
+          {/* <Button variant="ghost" onClick={() => msalInstance.logoutRedirect()}> */}
+          {/*   <LogOut className="size-5" /> */}
+          {/*   Logg ut */}
+          {/* </Button> */}
         </div>
       </div>
       <Separator className="border-1" />

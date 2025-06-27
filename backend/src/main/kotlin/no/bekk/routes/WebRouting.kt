@@ -5,6 +5,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.request
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.html.*
 import io.ktor.server.http.content.*
 import io.ktor.server.response.*
@@ -39,6 +40,15 @@ fun Route.webRouting(cfg: FrontendDevServerConfig, homePath: String) {
         )
 
         staticFiles("/assets", File("$frontendBuild/assets/"))
+
+        authenticate("auth-oauth-azure") {
+            get("/login") {
+                // Redirects to 'authorizeUrl' automatically
+            }
+
+            get("/callback") {
+            }
+        }
 
         get("/{...}") {
             call.respondHtmlTemplate(root) {}

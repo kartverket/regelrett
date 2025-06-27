@@ -209,6 +209,7 @@ class ConfigBuilder {
     )
 
     fun buildServerConfig(yaml: YamlConfig): ServerConfig = ServerConfig(
+        protocol = yaml.getStringOrNull("server", "protocol") ?: "http",
         host = "${yaml.getStringOrNull("server", "domain") ?: "localhost"}:${yaml.getStringOrNull("server", "http_port") ?: "8080"}",
         httpAddr = yaml.getStringOrNull("server", "http_addr") ?: "0.0.0.0",
         httpPort = yaml.getIntOrNull("server", "http_port") ?: 8080,

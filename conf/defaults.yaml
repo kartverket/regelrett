@@ -15,6 +15,8 @@ paths:
 #################################### Server ##############################
 
 server:
+  # The http protocol to use
+  protocol: http
   # The http port to use
   http_port: 8080
 
