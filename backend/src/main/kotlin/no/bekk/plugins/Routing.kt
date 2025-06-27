@@ -13,7 +13,6 @@ import no.bekk.authentication.UserSession
 import no.bekk.configuration.Config
 import no.bekk.di.Dependencies
 import no.bekk.routes.*
-import no.bekk.util.logger
 import java.io.*
 
 fun Application.configureRouting(
@@ -38,8 +37,6 @@ fun Application.configureRouting(
 
         get("/callback") {
             val currentPrincipal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-            logger.info("hit")
-
             currentPrincipal?.let { principal ->
                 principal.state?.let { state ->
                     call.sessions.set(UserSession(state, principal.accessToken))

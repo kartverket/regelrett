@@ -1,18 +1,16 @@
 package no.bekk.authentication
 
 import io.ktor.http.*
-import io.ktor.http.URLBuilder
 import io.ktor.server.application.*
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.principal
+import io.ktor.server.request.uri
 import io.ktor.server.response.*
 import io.ktor.server.sessions.*
+import io.ktor.server.util.url
 import no.bekk.configuration.OAuthConfig
 import no.bekk.database.ContextRepository
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.services.MicrosoftService
-import no.bekk.util.logger
 
 interface AuthService {
     suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup>
@@ -51,20 +49,18 @@ class AuthServiceImpl(
         val session = getSession(call)
             ?: throw IllegalStateException("Authorization cookie missing")
 
-        // val oboToken = microsoftService.requestTokenOnBehalfOf(session.token)
-
         return microsoftService.fetchUserByUserId(session.token, userId)
     }
 
     override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
         if (teamId == null || teamId == "") return false
 
-        val groupsClaim = call.principal<JWTPrincipal>()?.payload?.getClaim("groups")
-        val groups = groupsClaim?.asArray(String::class.java) ?: return false
-
+        val groups = getGroupsOrEmptyList(call)
         if (groups.isEmpty()) return false
-
-        return teamId in groups
+        for (group in groups) {
+            if (group.id == teamId) return true
+        }
+        return false
     }
 
     override suspend fun hasContextAccess(
@@ -84,19 +80,22 @@ class AuthServiceImpl(
 
         return microsoftGroups.find { it.displayName == teamName }?.id
     }
+}
+suspend fun getSession(call: ApplicationCall): UserSession? {
+    val session: UserSession? = call.sessions.get()
 
-    private suspend fun getSession(call: ApplicationCall): UserSession? {
-        val session: UserSession? = call.sessions.get()
-        logger.info("User session: ${session?.token}")
-
-        if (session == null) {
-            val redirectUrl = URLBuilder("/login").run {
-                parameters.append("redirectUrl", call.request.local.uri)
+    if (session == null) {
+        if (call.request.local.uri.startsWith("/api")) {
+            call.respond(HttpStatusCode.Forbidden)
+        } else {
+            val redirectUrl = call.url {
+                path("/login")
+                parameters.append("redirectUrl", call.request.uri)
                 build()
             }
             call.respondRedirect(redirectUrl)
-            return null
         }
-        return session
+        return null
     }
+    return session
 }

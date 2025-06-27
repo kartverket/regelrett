@@ -13,6 +13,7 @@ import io.ktor.server.routing.*
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import no.bekk.authentication.getSession
 import no.bekk.configuration.FrontendDevServerConfig
 import no.bekk.routes.*
 import java.io.File
@@ -20,6 +21,7 @@ import java.io.File
 fun Route.webRouting(cfg: FrontendDevServerConfig, homePath: String) {
     if (application.developmentMode) {
         get("/{...}") {
+            getSession(call)
             call.respondHtmlTemplate(DevTemplate(cfg)) {}
         }
 
@@ -42,6 +44,7 @@ fun Route.webRouting(cfg: FrontendDevServerConfig, homePath: String) {
         staticFiles("/assets", File("$frontendBuild/assets/"))
 
         get("/{...}") {
+            getSession(call)
             call.respondHtmlTemplate(root) {}
         }
     }
