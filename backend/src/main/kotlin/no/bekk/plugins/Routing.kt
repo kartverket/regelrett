@@ -55,15 +55,13 @@ fun Application.configureRouting(
 
     webRouting(config.frontendDevServer, config.homePath)
 
-    authenticate("auth-jwt") {
-        route("/api") {
-            answerRouting(dependencies.authService, dependencies.answerRepository)
-            commentRouting(dependencies.authService, dependencies.commentRepository)
-            contextRouting(dependencies.authService, dependencies.answerRepository, dependencies.contextRepository, dependencies.commentRepository)
-            formRouting(dependencies.formService)
-            userInfoRouting(dependencies.authService)
-            uploadCSVRouting(dependencies.authService, dependencies.database)
-        }
+    route("/api") {
+        answerRouting(dependencies.authService, dependencies.answerRepository)
+        commentRouting(dependencies.authService, dependencies.commentRepository)
+        contextRouting(dependencies.authService, dependencies.answerRepository, dependencies.contextRepository, dependencies.commentRepository)
+        formRouting(dependencies.formService)
+        userInfoRouting(dependencies.authService)
+        uploadCSVRouting(dependencies.authService, dependencies.database)
     }
 
     airTableWebhookRouting(dependencies.formService)

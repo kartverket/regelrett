@@ -21,12 +21,12 @@ fun rootComposer(config: Config): Dependencies {
     val commentRepository = CommentRepositoryImpl(database)
     val contextRepository = ContextRepositoryImpl(database)
     val provisioningService = provideProvisioningService(config, formService)
-    val authService = AuthServiceImpl(MicrosoftServiceImpl(config), contextRepository, config.oAuth)
     val httpClient = HttpClient(CIO) {
         install(ClientContentNegotiation) {
             json()
         }
     }
+    val authService = AuthServiceImpl(MicrosoftServiceImpl(config, httpClient), contextRepository, config.oAuth)
 
     return Dependencies(
         formService = formService,

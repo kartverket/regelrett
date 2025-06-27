@@ -38,18 +38,21 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                     name = "azure",
                     authorizeUrl = "${config.oAuth.baseUrl}/${config.oAuth.tenantId}${config.oAuth.authPath}",
                     accessTokenUrl = "${config.oAuth.baseUrl}/${config.oAuth.tenantId}/${config.oAuth.tokenPath}",
+                    requestMethod = HttpMethod.Post,
                     clientId = clientId,
                     clientSecret = config.oAuth.clientSecret,
-                    defaultScopes = listOf("$clientId/.default", "openid", "profile", "offline_access"),
+                    defaultScopes = listOf("user.read", "GroupMember.Read.All", "openid", "profile", "offline_access"),
                     onStateCreated = { call, state ->
                         call.request.queryParameters["redirectUrl"]?.let {
                             redirects.r[state] = it
                         }
                     },
+
                 )
             }
             client = httpClient
         }
+
         jwt("auth-jwt") {
             verifier(jwkProvider, issuer) {
                 withIssuer(issuer)

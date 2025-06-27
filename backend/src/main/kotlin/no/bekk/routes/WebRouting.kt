@@ -41,15 +41,6 @@ fun Route.webRouting(cfg: FrontendDevServerConfig, homePath: String) {
 
         staticFiles("/assets", File("$frontendBuild/assets/"))
 
-        authenticate("auth-oauth-azure") {
-            get("/login") {
-                // Redirects to 'authorizeUrl' automatically
-            }
-
-            get("/callback") {
-            }
-        }
-
         get("/{...}") {
             call.respondHtmlTemplate(root) {}
         }

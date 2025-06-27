@@ -1,13 +1,18 @@
 package no.bekk.authentication
 
+import io.ktor.http.*
+import io.ktor.http.URLBuilder
 import io.ktor.server.application.*
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
+import io.ktor.server.response.*
+import io.ktor.server.sessions.*
 import no.bekk.configuration.OAuthConfig
 import no.bekk.database.ContextRepository
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.services.MicrosoftService
+import no.bekk.util.logger
 
 interface AuthService {
     suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup>
@@ -31,32 +36,24 @@ class AuthServiceImpl(
     private val oAuthConfig: OAuthConfig,
 ) : AuthService {
     override suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup> {
-        val jwtToken =
-            call.request.headers["Authorization"]?.removePrefix("Bearer ")
-                ?: throw IllegalStateException("Authorization header missing")
-        val oboToken = microsoftService.requestTokenOnBehalfOf(jwtToken)
-
-        return microsoftService.fetchGroups(oboToken)
+        val session = getSession(call) ?: return emptyList()
+        return microsoftService.fetchGroups(session.token)
     }
 
     override suspend fun getCurrentUser(call: ApplicationCall): MicrosoftGraphUser {
-        val jwtToken =
-            call.request.headers["Authorization"]?.removePrefix("Bearer ")
-                ?: throw IllegalStateException("Authorization header missing")
+        val session = getSession(call)
+            ?: throw IllegalStateException("Authorization cookie missing")
 
-        val oboToken = microsoftService.requestTokenOnBehalfOf(jwtToken)
-
-        return microsoftService.fetchCurrentUser(oboToken)
+        return microsoftService.fetchCurrentUser(session.token)
     }
 
     override suspend fun getUserByUserId(call: ApplicationCall, userId: String): MicrosoftGraphUser {
-        val jwtToken =
-            call.request.headers["Authorization"]?.removePrefix("Bearer ")
-                ?: throw IllegalStateException("Authorization header missing")
+        val session = getSession(call)
+            ?: throw IllegalStateException("Authorization cookie missing")
 
-        val oboToken = microsoftService.requestTokenOnBehalfOf(jwtToken)
+        // val oboToken = microsoftService.requestTokenOnBehalfOf(session.token)
 
-        return microsoftService.fetchUserByUserId(oboToken, userId)
+        return microsoftService.fetchUserByUserId(session.token, userId)
     }
 
     override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
@@ -86,5 +83,20 @@ class AuthServiceImpl(
         val microsoftGroups = getGroupsOrEmptyList(call)
 
         return microsoftGroups.find { it.displayName == teamName }?.id
+    }
+
+    private suspend fun getSession(call: ApplicationCall): UserSession? {
+        val session: UserSession? = call.sessions.get()
+        logger.info("User session: ${session?.token}")
+
+        if (session == null) {
+            val redirectUrl = URLBuilder("/login").run {
+                parameters.append("redirectUrl", call.request.local.uri)
+                build()
+            }
+            call.respondRedirect(redirectUrl)
+            return null
+        }
+        return session
     }
 }
