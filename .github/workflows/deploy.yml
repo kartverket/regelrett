@@ -1,0 +1,62 @@
+name: Build and deploy
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Commit hash to deploy'
+        default: ''
+        type: string
+  pull_request:
+    branches:
+      - main
+  push:
+    paths-ignore:
+      - .sikkerhet**
+      - compose.yaml
+      - README**
+    branches:
+      - main
+
+env:
+  REGION: europe-north1
+
+
+jobs:
+  deploy-gcp:
+    name: Build and deploy to GCP
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      image_url: ${{ steps.setOutput.outputs.image_url }}
+
+    steps:
+      - name: Set repository name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d '/' -f2)" >> $GITHUB_ENV
+
+      - name: Checkout code
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
+        uses: actions/checkout@v4
+
+      - name: Checkout code
+        if: ${{ (github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout specific commit
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.commit_sha != '' }}
+        run: git checkout ${{ github.event.inputs.commit_sha }}
+
+      - name: Authenticate to Google cloud
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Docker auth
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v6
+        with:
+
