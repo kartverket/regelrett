@@ -6,7 +6,9 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.request.uri
 import io.ktor.server.response.*
+import io.ktor.server.util.url
 import kotlinx.serialization.Serializable
 import no.bekk.configuration.Config
 import no.bekk.configuration.getIssuer
@@ -41,7 +43,7 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                     requestMethod = HttpMethod.Post,
                     clientId = clientId,
                     clientSecret = config.oAuth.clientSecret,
-                    defaultScopes = listOf("user.read", "GroupMember.Read.All", "openid", "profile", "offline_access"),
+                    defaultScopes = listOf("$clientId/.default"),
                     onStateCreated = { call, state ->
                         call.request.queryParameters["redirectUrl"]?.let {
                             redirects.r[state] = it
@@ -53,6 +55,24 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
             client = httpClient
         }
 
+        session<UserSession>("auth-session") {
+            validate { session ->
+                if (session.state != "" && session.token != "") {
+                    session
+                } else {
+                    null
+                }
+            }
+            challenge {
+                val redirectUrl = call.url {
+                    path("/login")
+                    parameters.append("redirectUrl", call.request.uri)
+                    build()
+                }
+                call.respondRedirect(redirectUrl)
+            }
+        }
+
         jwt("auth-jwt") {
             verifier(jwkProvider, issuer) {
                 withIssuer(issuer)
@@ -60,7 +80,7 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                 withAudience(clientId)
             }
             validate { jwtCredential ->
-                if (jwtCredential.audience.contains(clientId)) JWTPrincipal(jwtCredential.payload) else null
+                JWTPrincipal(jwtCredential.payload)
             }
             challenge { _, _ ->
                 if (call.request.local.uri.startsWith("/api")) {

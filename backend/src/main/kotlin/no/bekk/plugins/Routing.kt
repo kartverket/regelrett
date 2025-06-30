@@ -50,15 +50,24 @@ fun Application.configureRouting(
         }
     }
 
-    webRouting(config.frontendDevServer, config.homePath)
+    authenticate("auth-session") {
+        webRouting(config.frontendDevServer, config.homePath)
+        get("/logout") {
+            call.sessions.clear<UserSession>()
+            call.respondRedirect("/")
+            // TODO: logout auth provider
+        }
+    }
 
-    route("/api") {
-        answerRouting(dependencies.authService, dependencies.answerRepository)
-        commentRouting(dependencies.authService, dependencies.commentRepository)
-        contextRouting(dependencies.authService, dependencies.answerRepository, dependencies.contextRepository, dependencies.commentRepository)
-        formRouting(dependencies.formService)
-        userInfoRouting(dependencies.authService)
-        uploadCSVRouting(dependencies.authService, dependencies.database)
+    authenticate("auth-jwt") {
+        route("/api") {
+            answerRouting(dependencies.authService, dependencies.answerRepository)
+            commentRouting(dependencies.authService, dependencies.commentRepository)
+            contextRouting(dependencies.authService, dependencies.answerRepository, dependencies.contextRepository, dependencies.commentRepository)
+            formRouting(dependencies.formService)
+            userInfoRouting(dependencies.authService)
+            uploadCSVRouting(dependencies.authService, dependencies.database)
+        }
     }
 
     airTableWebhookRouting(dependencies.formService)

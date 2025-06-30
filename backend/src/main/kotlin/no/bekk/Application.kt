@@ -126,7 +126,10 @@ fun Application.configureAPILayer(
     }
 
     install(Sessions) {
-        cookie<UserSession>("user_session")
+        cookie<UserSession>("user_session") {
+            cookie.path = "/"
+            cookie.httpOnly = false
+        }
     }
 
     install(XForwardedHeaders)
