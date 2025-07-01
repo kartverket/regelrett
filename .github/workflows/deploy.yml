@@ -22,6 +22,7 @@ permissions:
   contents: write
 
 env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: europe-north1
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -34,7 +35,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      image_url: ${{ steps.setOutput.outputs.image_url }}
+      imaget: ${{ steps.setOutput.outputs.image }}
     steps:
       - name: Checkout code
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
@@ -88,4 +89,69 @@ jobs:
       - name: Set output with build values
         id: setOutput
         run: |
-          echo "image_url=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build-docker.outputs.digest }}" >> $GITHUB_OUTPUT
+          echo "image=${{ env.IMAGE_NAME }}@${{ steps.build-docker.outputs.digest }}" >> $GITHUB_OUTPUT
+
+  pharos:
+    name: Run Pharos
+    needs: build
+    permissions:
+      actions: read
+      packages: read
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Run Pharos"
+        uses: kartverket/pharos@7cff320db83b679cce0569f1e171a039f78f72de # v0.2.1
+        with:
+          image_url: ${{ env.REGISTRY }}/${{ needs.build.outputs.image }}
+
+  deploy-gcp:
+    name: Build and deploy to GCP
+    # if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.IMAGE_NAME }} \
+            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/ghcr/${{ needs.build.outputs.image }} \
+            --port 3000 \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated
+
+  deploy-dev:
+    name: Deploy to dev
+    if: github.ref == 'refs/heads/main'
+    needs: [ build, deploy-gcp, pharos ]
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    permissions:
+      id-token: write
+    steps:
+      - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f # v1.0.0
+        id: octo-sts
+        with:
+          scope: kartverket/skvis-apps
+          identity: regelrett
+      - name: Checkout skvis-apps
+        uses: actions/checkout@v4
+        with:
+          repository: kartverket/skvis-apps
+          ref: main
+          token: ${{ steps.octo-sts.outputs.token }}
+      - name: Update version
+        run: |
+          echo "\"${{ needs.build.outputs.image_url }}\"" > "env/atgcp1-dev/regelrett-main/${{ env.ARGO_VERSION_FILE }}"
+          git config --global user.email "noreply@kartverket.no"
+          git config --global user.name "Regelrett CI"
+          git commit -am "Update ${{ env.ARGO_VERSION_FILE }}"
+          git push
