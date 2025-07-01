@@ -24,7 +24,7 @@ export default ({ mode }: { mode: string }) => {
 
   const merged = {
     ...defaults.frontend_dev_server,
-    ...custom.frontend_dev_server,
+    ...custom?.frontend_dev_server,
   };
 
   const env: Record<string, unknown> = {};
@@ -32,15 +32,6 @@ export default ({ mode }: { mode: string }) => {
   for (const [key, value] of Object.entries(merged)) {
     env[`RR_FRONTEND_DEV_${key.toUpperCase()}`] = value;
   }
-
-  env['RR_OAUTH_CLIENT_ID'] =
-    custom?.oauth?.client_id || defaults?.oauth.client_id;
-  env['RR_OAUTH_BASE_URL'] =
-    custom?.oauth?.base_url || defaults?.oauth.base_url;
-  env['RR_OAUTH_TENANT_ID'] =
-    custom?.oauth?.tenant_id || defaults?.oauth.tenant_id;
-  env['RR_OAUTH_ISSUER_PATH'] =
-    custom?.oauth?.issuer_path || defaults?.oauth.issuer_path;
 
   for (const [key, _] of Object.entries(env)) {
     const envVal = process.env[`${key}`];
@@ -55,12 +46,6 @@ export default ({ mode }: { mode: string }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
-    },
-    define: {
-      __CLIENT_ID__: JSON.stringify(env.RR_OAUTH_CLIENT_ID),
-      __AUTHORITY__: JSON.stringify(
-        `${env.RR_OAUTH_BASE_URL}/${env.RR_OAUTH_TENANT_ID}${env.RR_OAUTH_ISSUER_PATH}`
-      ),
     },
     server: {
       port: Number(env.FRONTEND_DEV_SERVER_PORT),

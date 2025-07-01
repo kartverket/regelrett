@@ -7,12 +7,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pwd
       - POSTGRES_DB=regelrett
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d regelrett"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
   regelrett:
     build: .
     ports:
       - 8080:8080
     environment:
-      - RR_AIRTABLE_ACCESS_TOKEN
-    volumes:
-      - ./conf/:/etc/regelrett/:rw
+      - RR_OAUTH_AIRTABLE_ACCESS_TOKEN
+      - RR_OAUTH_TENANT_ID
+      - RR_OAUTH_CLIENT_ID
+      - RR_OAUTH_CLIENT_SECRET
+      - RR_DATABASE_HOST=regelrett-db:5432
+    depends_on:
+      regelrett-db:
+        condition: service_healthy
+        restart: true
 

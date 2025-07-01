@@ -49,7 +49,7 @@ ENV RR_PATHS_PROVISIONING="/etc/regelrett/provisioning" \
 
 WORKDIR $RR_PATHS_HOME
 
-COPY --from=kt-src /tmp/conf ./conf
+COPY --from=kt-src /tmp/conf conf
 COPY --from=kt-src /tmp/regelrett/build/libs/*.jar ${RR_PATHS_JAR}
 
 RUN if [ ! $(getent group "$RR_GID") ]; then \
@@ -66,12 +66,12 @@ RUN if [ ! $(getent group "$RR_GID") ]; then \
     if grep -i -q alpine /etc/issue; then \
     adduser -S -u $RR_UID -G "$RR_GID_NAME" regelrett; \
     else \
-    adduser --system --uid $RR_UID --ingroup "$GF_GID_NAME" regelrett; \
+    adduser --system --uid $RR_UID --ingroup "$RR_GID_NAME" regelrett; \
     fi && \
     mkdir -p "$RR_PATHS_PROVISIONING/schemasources" && \
     cp conf/provisioning/schemasources/sample.yaml "$RR_PATHS_PROVISIONING/schemasources/" && \
     cp conf/sample.yaml "$RR_PATHS_CONFIG" && \
-    chown -R "regelrett:$RR_GID_NAME" "$RR_PATHS_HOME" "$RR_PATHS_CONFIG" "$RR_PATHS_PROVISIONING" "$RR_PATHS_JAR" && \
+    chown -R "regelrett:$RR_GID_NAME" "$RR_PATHS_HOME" "$RR_PATHS_PROVISIONING" "$RR_PATHS_JAR" && \
     chmod -R 777 "$RR_PATHS_PROVISIONING"
 
 ENV JAVA_HOME=/opt/java/openjdk
@@ -82,8 +82,6 @@ COPY --from=js-src /tmp/frontend/beCompliant/dist ./frontend/beCompliant/dist
 
 EXPOSE 3000
 
-
 USER "$RR_UID"
-ENTRYPOINT ["java", "-Duser.timezone=Europe/Oslo", "-jar", "/app/regelrett.jar"]
-
+ENTRYPOINT java -Duser.timezone=Europe/Oslo -jar /app/regelrett.jar --homepath=$RR_PATHS_HOME --config=$RR_PATHS_CONFIG
 

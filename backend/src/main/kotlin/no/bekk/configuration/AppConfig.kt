@@ -16,11 +16,10 @@ data class Config(
 )
 
 data class CommandLineArgs(
+    var homePath: String = "",
+    var configFile: String = "",
     val args: Array<String>,
-) {
-    var configFile: String = ""
-    var homePath: String = ""
-}
+)
 
 interface FormInstances {
     val id: String

@@ -60,6 +60,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     implementation("net.mamoe.yamlkt:yamlkt:0.13.0")    // This is the same library that ktor uses
+    implementation("com.github.ajalt.clikt:clikt:5.0.3")
+    implementation("com.github.ajalt.clikt:clikt-markdown:5.0.3")
     implementation("com.microsoft.azure:msal4j:1.20.1")
     implementation("net.minidev:json-smart:2.5.2") // Kan slettes når msal ograderer json smart til 5.2.
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
