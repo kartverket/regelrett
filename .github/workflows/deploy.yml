@@ -118,6 +118,9 @@ jobs:
         with:
           project_id: ${{ env.PROJECT_ID }}
 
+      - name: Set repository name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)-frontend" >> $GITHUB_ENV
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.IMAGE_NAME }} \
