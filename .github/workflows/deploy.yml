@@ -35,7 +35,7 @@ jobs:
       contents: write
       packages: write
     outputs:
-      imaget: ${{ steps.setOutput.outputs.image }}
+      image: ${{ steps.setOutput.outputs.image }}
     steps:
       - name: Checkout code
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
