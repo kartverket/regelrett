@@ -17,11 +17,14 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: write
+
 env:
   REGION: europe-north1
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
 
 jobs:
   build:
@@ -33,9 +36,6 @@ jobs:
     outputs:
       image_url: ${{ steps.setOutput.outputs.image_url }}
     steps:
-      - name: Set repository name
-        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d '/' -f2)" >> $GITHUB_ENV
-
       - name: Checkout code
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.commit_sha == '') }}
         uses: actions/checkout@v4
