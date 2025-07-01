@@ -1,8 +1,8 @@
 import { Outlet, useNavigate } from 'react-router';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import KvLogo from '@/assets/kartverketlogo.svg';
-import { Button } from '../ui/button';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, UserCircle } from 'lucide-react';
 import { useUser } from '@/hooks/useUser';
 
 export default function ProtectedRoute() {
@@ -23,7 +23,7 @@ export default function ProtectedRoute() {
         <div className="flex flex-row gap-2 items-center justify-end ">
           {isSuccess && (
             <div className="flex flex-row gap-2 items-center ">
-              <User />
+              <UserCircle />
               <p>{data.user.displayName}</p>
             </div>
           )}

@@ -1,7 +1,6 @@
 import { useParams } from 'react-router';
 import { Page } from '../../components/layout/Page';
 import { TableComponent } from './table/Table';
-import { TableStatistics } from './TableStatistics';
 import { useAnswers } from '../../hooks/useAnswers';
 import { useComments } from '../../hooks/useComments';
 import { useForm } from '../../hooks/useForm';
@@ -13,7 +12,6 @@ import { useUser } from '../../hooks/useUser';
 import { useState } from 'react';
 import { SettingsModal } from './settingsModal/SettingsModal';
 import RedirectBackButton from '../../components/buttons/RedirectBackButton';
-import { useQueryClient } from '@tanstack/react-query';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
@@ -21,7 +19,6 @@ import { Settings } from 'lucide-react';
 export default function ActivityPage() {
   const params = useParams();
   const contextId = params.contextId;
-  const queryClient = useQueryClient();
 
   const {
     data: context,
@@ -40,6 +37,7 @@ export default function ActivityPage() {
     error: tableError,
     isPending: tableIsPending,
   } = useForm(context?.formId);
+
   const {
     data: comments,
     error: commentError,
@@ -116,13 +114,6 @@ export default function ActivityPage() {
             >
               <p className="text-lg font-semibold"> Team: {teamName} </p>
             </SkeletonLoader>
-            <SkeletonLoader
-              loading={tableIsPending || answerIsPending || commentIsPending}
-              width="w-full"
-              height="h-6"
-            >
-              <TableStatistics filteredData={tableData?.records ?? []} />
-            </SkeletonLoader>
           </div>
           <SkeletonLoader
             loading={
@@ -147,6 +138,9 @@ export default function ActivityPage() {
                   data={tableData?.records ?? []}
                   tableData={tableData}
                   user={userinfo.user}
+                  isLoading={
+                    tableIsPending || answerIsPending || commentIsPending
+                  }
                 />
               )}
           </SkeletonLoader>

@@ -33,6 +33,8 @@ import { DataTableSearch } from './DataTableSearch';
 import { CSVDownload } from './csvDownload/CSVDownload';
 import { ColumnActions } from '@/pages/activityPage/table/ColumnActions';
 import { cn } from '@/lib/utils';
+import { SkeletonLoader } from '@/components/SkeletonLoader';
+import { TableStatistics } from '../TableStatistics';
 
 type Props = {
   tableMetadata: Column[];
@@ -41,6 +43,7 @@ type Props = {
   tableData: Form;
   user: User;
   contextId: string;
+  isLoading: boolean;
 };
 
 export function TableComponent({
@@ -50,6 +53,7 @@ export function TableComponent({
   user,
   tableMetadata,
   filterByAnswer,
+  isLoading,
 }: Props) {
   const [
     columnVisibility,
@@ -165,7 +169,7 @@ export function TableComponent({
       const answer = row.answers?.at(-1)?.answer;
       return answer ? 'utfylt' : 'ikke utfylt';
     },
-    filterFn: (row, columnId, filterValue: string[]) => {
+    filterFn: (row, _, filterValue: string[]) => {
       const latestAnswer = row.original.answers?.at(-1)?.answer;
       const status = latestAnswer ? 'utfylt' : 'ikke utfylt';
       return filterValue.includes(status);
@@ -260,6 +264,14 @@ export function TableComponent({
 
   return (
     <>
+      <div className="px-10">
+        <SkeletonLoader loading={isLoading} width="w-full" height="h-6">
+          <TableStatistics
+            filteredData={tableData?.records ?? []}
+            table={table}
+          />
+        </SkeletonLoader>
+      </div>
       <div className="flex justify-between items-center px-10 flex-wrap">
         <DataTableSearch table={table} />
         <CSVDownload

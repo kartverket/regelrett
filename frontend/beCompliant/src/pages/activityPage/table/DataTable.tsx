@@ -1,5 +1,4 @@
 import { Table as TanstackTable, flexRender } from '@tanstack/react-table';
-import React from 'react';
 import { PaginationButtonContainer } from './pagination/PaginationButtonContainer';
 import { TableStateProvider } from './TableState';
 import {
@@ -37,7 +36,7 @@ export function DataTable<TData>({ table }: Props<TData>) {
             </TableHeader>
 
             <TableBody>
-              {table.getRowModel().rows.map((row, rowIndex) => (
+              {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

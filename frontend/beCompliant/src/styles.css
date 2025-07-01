@@ -82,7 +82,7 @@
   font-family: 'Inter', sans-serif;
   @apply bg-background text-foreground;
   --radius: 0.3rem;
-  --background: oklch(0.963 0.003 17.214 );
+  --background: oklch(0.963 0.003 17.214);
   --foreground: oklch(0.136 0.036 259.201);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.136 0.036 259.201);
@@ -93,7 +93,7 @@
   --secondary: oklch(1 0 89.876);
   --secondary-foreground: oklch(0.208 0.04 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.578 0.111 272.865);
+  --muted-foreground: oklch(0.554 0.041 257.417);
   --accent: oklch(0.909 0.003 17.218);
   --accent-foreground: oklch(0.208 0.04 265.755);
   --destructive: oklch(0.479 0.159 37.355);
@@ -154,12 +154,16 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  button:not([disabled]),
+  [role='button']:not([disabled]) {
+    cursor: pointer;
   }
 }
