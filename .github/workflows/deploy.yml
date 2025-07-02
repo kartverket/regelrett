@@ -22,7 +22,7 @@ permissions:
   contents: write
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: spire-regelrett-0x54
   REGION: europe-north1
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
