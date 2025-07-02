@@ -128,6 +128,15 @@ jobs:
       - name: Set repository name
         run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)" >> $GITHUB_ENV
 
+      - name: Set Docker image URL
+        run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ghcr/${{ needs.build.outputs.image }}:latest" >> $GITHUB_ENV
+
+      - name: Debug env variables
+        run: |
+          echo "IMAGE_NAME is: ${{ env.IMAGE_NAME }}"
+          echo "IMAGE_URL IS: ${{ env.IMAGE_URL }}"
+
+
       - name: Authenticate to Google Cloud
         id: auth
         uses: "google-github-actions/auth@v2"
