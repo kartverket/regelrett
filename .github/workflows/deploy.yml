@@ -26,6 +26,10 @@ env:
   REGION: europe-north1
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  RR_DATABASE_HOST: regelrett-db:5432
+  RR_DATABASE_NAME: regelrett
+  RR_SCHEMA_SIKKERHETSKONTROLLER_WEBHOOK_ID: "ach2vlnWcdxY8Cl3k"
+  RR_SCHEMA_DRIFTSKONTINUITET_WEBHOOK_ID: "achCxVfK6DaWMhchX"
 
 jobs:
   build:
