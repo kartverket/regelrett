@@ -129,7 +129,7 @@ jobs:
         run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | cut -d'/' -f2)" >> $GITHUB_ENV
 
       - name: Set Docker image URL
-        run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ghcr/${{ needs.build.outputs.image }}" >> $GITHUB_ENV
+        run: echo "IMAGE_URL=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ghcr/${{ needs.build.outputs.image }}:latest" >> $GITHUB_ENV
 
       - name: Debug env variables
         run: |
@@ -166,7 +166,7 @@ jobs:
             sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
             sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
             sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 3000:3000 \
-              -e RR_SERVER_PORT=3000 \
+              -e RR_SERVER_HTTP_PORT=3000 \
               -e RR_OAUTH_CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e RR_OAUTH_TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
               -e RR_OAUTH_CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
