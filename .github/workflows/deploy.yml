@@ -162,11 +162,11 @@ jobs:
               -e POSTGRES_USER=postgres \
               -e POSTGRES_DB=regelrett \
               -p 5432:5432 -d postgres:15.4
-            sudo docker pull '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/ghcr/${{ needs.build.outputs.image }}' &&
+            sudo docker pull '${{ env.IMAGE_URL }}' &&
             sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
             sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
             sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 3000:3000 \
-              -e RR_SERVER_PORT=3000
+              -e RR_SERVER_PORT=3000 \
               -e RR_OAUTH_CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
               -e RR_OAUTH_TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
               -e RR_OAUTH_CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
@@ -182,7 +182,7 @@ jobs:
               -e RR_AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
               -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
               -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
-              '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/ghcr/${{ needs.build.outputs.image }}'
+              '${{ env.IMAGE_URL }}'
           "
 
 
