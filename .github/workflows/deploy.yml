@@ -148,44 +148,13 @@ jobs:
         with:
           project_id: ${{ env.PROJECT_ID }}
 
-      - name: SSH into VM and deploy container
+      - name: Deploy to Cloud Run
         run: |
-          gcloud compute ssh regelrett-backend-vm --zone ${{ env.REGION }}-b --project ${{ secrets.GCP_PROJECT_ID }} --command "
-            sudo gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet &&
-            sudo docker stop regelrett || true &&
-            sudo docker stop regelrett-db || true &&
-            sudo docker rm regelrett || true &&
-            sudo docker rm regelrett-db || true &&
-            sudo docker network rm container_network || true &&
-            sudo docker image prune -f || true &&
-            sudo docker network create container_network &&
-            sudo docker run --name regelrett-db --network container_network  -it \
-              -e POSTGRES_PASSWORD=pwd \
-              -e POSTGRES_USER=postgres \
-              -e POSTGRES_DB=regelrett \
-              -p 5432:5432 -d postgres:15.4
-            sudo docker pull '${{ env.IMAGE_URL }}' &&
-            sudo docker stop '${{ env.IMAGE_NAME }}' || true &&
-            sudo docker rm '${{ env.IMAGE_NAME }}' || true &&
-            sudo docker run -d --name '${{ env.IMAGE_NAME }}' --network container_network -p 8080:8080 \
-              -e RR_OAUTH_CLIENT_ID=${{ secrets.ENTRA_CLIENT_ID }} \
-              -e RR_OAUTH_TENANT_ID=${{ secrets.ENTRA_TENANT_ID }} \
-              -e RR_OAUTH_CLIENT_SECRET=${{ secrets.ENTRA_CLIENT_SECRET }}  \
-              -e RR_OAUTH_SUPER_USER_GROUP_ID=${{secrets.SUPER_USER_GROUP_ID}} \
-              -e RR_DATABASE_HOST='${{ env.RR_DATABASE_HOST }}' \
-              -e RR_DATABASE_NAME='${{ env.RR_DATABASE_NAME }}' \
-              -e RR_SCHEMA_SIKKERHETSKONTROLLER_WEBHOOK_ID=${{ env.RR_SCHEMA_SIKKERHETSKONTROLLER_WEBHOOK_ID }} \
-              -e RR_SCHEMA_DRIFTSKONTINUITET_WEBHOOK_ID=${{ env.RR_SCHEMA_DRIFTSKONTINUITET_WEBHOOK_ID }} \
-              -e RR_SCHEMA_SIKKERHETSKONTROLLER_WEBHOOK_SECRET=${{ secrets.SIKKERHETSKONTROLLER_WEBHOOK_SECRET_GCP }} \
-              -e RR_SCHEMA_DRIFTSKONTINUITET_WEBHOOK_SECRET=${{ secrets.DRIFTSKONTINUITET_WEBHOOK_SECRET_GCP }} \
-              -e RR_SCHEMA_SIKKERHETSKONTROLLER_AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
-              -e RR_SCHEMA_DRIFTSKONTINUITET_AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
-              -e RR_AIRTABLE_ACCESS_TOKEN=${{ secrets.AIRTABLE_ACCESS_TOKEN }} \
-              -e KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }} \
-              -v /etc/regelrett/keystore/keystore.jks:/etc/regelrett/keystore/keystore.jks:ro \
-              '${{ env.IMAGE_URL }}'
-          "
-
+          gcloud run deploy ${{ env.IMAGE_NAME }} \
+            --image ${{ env.IMAGE_URL }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticate
 
   deploy-dev:
     name: Deploy to dev
