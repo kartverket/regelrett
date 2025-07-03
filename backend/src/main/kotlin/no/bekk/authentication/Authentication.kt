@@ -33,7 +33,7 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
     install(Authentication) {
         oauth("auth-oauth-azure") {
             urlProvider = {
-                "${config.server.protocol}://${config.server.host}/callback"
+                "${config.server.appUrl}/callback"
             }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(

@@ -75,12 +75,11 @@ fun getJwksUrl(oAuthConfig: OAuthConfig) = oAuthConfig.baseUrl + "/" + oAuthConf
 
 data class ServerConfig(
     val protocol: String,
-    val host: String,
+    val appUrl: String,
     val httpAddr: String,
     val httpPort: Int,
     val routerLogging: Boolean,
     val allowedOrigins: List<String>,
-
 )
 
 class DatabaseConfig(

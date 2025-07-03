@@ -208,14 +208,21 @@ class ConfigBuilder {
         superUserGroup = yaml.getStringOrNull("oauth", "super_user_group") ?: "",
     )
 
-    fun buildServerConfig(yaml: YamlConfig): ServerConfig = ServerConfig(
-        protocol = yaml.getStringOrNull("server", "protocol") ?: "http",
-        host = "${yaml.getStringOrNull("server", "domain") ?: "localhost"}:${yaml.getStringOrNull("server", "http_port") ?: "8080"}",
-        httpAddr = yaml.getStringOrNull("server", "http_addr") ?: "0.0.0.0",
-        httpPort = yaml.getIntOrNull("server", "http_port") ?: 8080,
-        routerLogging = yaml.getBoolOrNull("server", "router_logging") ?: false,
-        allowedOrigins = yaml.getStringOrNull("server", "allowed_origins")?.split(",") ?: emptyList(),
-    )
+    fun buildServerConfig(yaml: YamlConfig): ServerConfig {
+        val protocol = yaml.getStringOrNull("server", "protocol") ?: "http"
+        val httpPort = yaml.getIntOrNull("server", "http_port") ?: 8080
+        val domain = yaml.getStringOrNull("server", "domain") ?: "localhost"
+        val appUrl = yaml.getStringOrNull("server", "root_url") ?: "$protocol://$domain:$httpPort"
+
+        return ServerConfig(
+            protocol = protocol,
+            appUrl = appUrl,
+            httpPort = httpPort,
+            httpAddr = yaml.getStringOrNull("server", "http_addr") ?: "0.0.0.0",
+            routerLogging = yaml.getBoolOrNull("server", "router_logging") ?: false,
+            allowedOrigins = yaml.getStringOrNull("server", "allowed_origins")?.split(",") ?: emptyList(),
+        )
+    }
 
     fun buildDatabaseConfig(yaml: YamlConfig): DatabaseConfig {
         val host = yaml.getStringOrNull("database", "host") ?: "127.0.0.1:5432"

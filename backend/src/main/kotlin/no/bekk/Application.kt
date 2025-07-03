@@ -122,7 +122,7 @@ fun Application.configureAPILayer(
     install(DefaultHeaders) {
         header(
             "Content-Security-Policy",
-            "default-src 'self' ${config.server.host} ${config.frontendDevServer.devUrl};" +
+            "default-src 'self' ${config.frontendDevServer.devUrl};" +
                 "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';" +
                 "font-src 'self' https://fonts.gstatic.com;" +
                 "img-src 'self' ${config.frontendDevServer.devUrl} data:;" +

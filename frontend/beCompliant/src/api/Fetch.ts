@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 async function getTokens() {
   const cookie = Cookies.get('user_session');
   if (cookie == undefined) return '';
-  const session = JSON.parse(cookie.split('/').slice(0, -1).join('/'));
+  const session = JSON.parse(cookie);
   if (session == undefined) return '';
   return session.token;
 }
