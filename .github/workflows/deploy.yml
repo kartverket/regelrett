@@ -154,7 +154,7 @@ jobs:
             --image ${{ env.IMAGE_URL }} \
             --region ${{ env.REGION }} \
             --platform managed \
-            --allow-unauthenticate
+            --allow-unauthenticated
 
   deploy-dev:
     name: Deploy to dev
