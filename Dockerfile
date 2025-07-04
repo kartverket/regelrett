@@ -3,7 +3,7 @@
 ARG BASE_IMAGE=eclipse-temurin:21-jre-alpine
 ARG JS_IMAGE=node:22-alpine
 ARG JS_PLATFORM=linux/amd64
-ARG KOTLIN_IMAGE=eclipse-temurin:21
+ARG GRADLE_IMAGE=gradle:8.14-jdk21-alpine
 
 ARG KOTLIN_SRC=kt-builder
 ARG JS_SRC=js-builder
@@ -20,7 +20,7 @@ RUN npm ci
 ENV NODE_ENV=production
 RUN npm run build:prod
 
-FROM ${KOTLIN_IMAGE} AS kt-builder
+FROM ${GRADLE_IMAGE} AS kt-builder
 
 WORKDIR /tmp
 COPY conf conf
@@ -29,7 +29,7 @@ WORKDIR /tmp/regelrett
 
 COPY backend/ .
 
-RUN ./gradlew shadowJar
+RUN gradle shadowJar
 
 FROM ${KOTLIN_SRC} AS kt-src
 FROM ${JS_SRC} AS js-src
