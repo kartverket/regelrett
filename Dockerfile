@@ -20,7 +20,7 @@ RUN npm ci
 ENV NODE_ENV=production
 RUN npm run build:prod
 
-FROM ${KOTLIN_IMAGE} as kt-builder
+FROM ${KOTLIN_IMAGE} AS kt-builder
 
 WORKDIR /tmp
 COPY conf conf
@@ -31,8 +31,8 @@ COPY backend/ .
 
 RUN ./gradlew shadowJar
 
-FROM ${KOTLIN_SRC} as kt-src
-FROM ${JS_SRC} as js-src
+FROM ${KOTLIN_SRC} AS kt-src
+FROM ${JS_SRC} AS js-src
 
 FROM ${BASE_IMAGE}
 
@@ -75,13 +75,15 @@ RUN if [ ! $(getent group "$RR_GID") ]; then \
     chmod -R 777 "$RR_PATHS_PROVISIONING"
 
 ENV JAVA_HOME=/opt/java/openjdk
-ENV PATH "${JAVA_HOME}/bin:${PATH}"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 COPY --from=kt-src /tmp/regelrett/build/libs/*.jar ./app/regelrett.jar
 COPY --from=js-src /tmp/frontend/beCompliant/dist ./frontend/beCompliant/dist
 
-EXPOSE 3000
+ENV RR_SERVER_HTTP_PORT=8080
+EXPOSE $RR_SERVER_HTTP_PORT
+HEALTHCHECK NONE
 
 USER "$RR_UID"
-ENTRYPOINT java -Duser.timezone=Europe/Oslo -jar /app/regelrett.jar --homepath=$RR_PATHS_HOME --config=$RR_PATHS_CONFIG
+ENTRYPOINT ["sh", "-c", "java -Duser.timezone=Europe/Oslo -jar /app/regelrett.jar --homepath=$RR_PATHS_HOME --config=$RR_PATHS_CONFIG"]
 
