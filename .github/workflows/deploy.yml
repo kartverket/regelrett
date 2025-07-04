@@ -25,8 +25,6 @@ env:
   REGION: europe-north1
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  RR_DATABASE_HOST: regelrett-db:5432
-  RR_DATABASE_NAME: regelrett
   # ARGO_VERSION_FILE: regelrett
 
 jobs:
