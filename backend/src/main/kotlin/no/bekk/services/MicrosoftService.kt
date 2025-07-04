@@ -61,6 +61,12 @@ class MicrosoftServiceImpl(private val config: Config, private val client: HttpC
             header("ConsistencyLevel", "eventual")
         }
         val responseBody = response.body<String>()
+
+        if (response.status != HttpStatusCode.OK) {
+            logger.warn("Failed to get groups: $responseBody")
+            throw IllegalStateException()
+        }
+
         val microsoftGraphGroupsResponse: MicrosoftGraphGroupsResponse =
             json.decodeFromString(responseBody)
         return microsoftGraphGroupsResponse.value.map {

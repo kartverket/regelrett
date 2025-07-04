@@ -10,6 +10,7 @@ fleksibel og tilrettelagt for videre utvidelser etter behov.
 
 Følg stegene nedenfor for å komme i gang, og bruk de tilgjengelige skriptene for å administrere prosjektet effektivt.
 
+
 ## Sette opp database lokalt
 ### Steg 1
 Start med å klone repoet fra GitHub:
@@ -42,16 +43,6 @@ Når du har Colima eller Docker Desktop kjørende, kjør denne kommandoen:
 
 Nå skal databasen være oppe og kjøre!
 
-### Steg 6
-Kjør denne kommandoen i `backend/` for å migrere databaseskjemaer som ligger i `resources/db.migration`:
-
-`./gradlew flywayMigrate`
-
-NB: Forutsetter at du har satt miljøvariablene DB_URL, DB_NAME og DB_PASSWORD.
-
-Eventuelt, om du har flyway cli innstallert:
-`flyway -user=postgres -password=pwd -url=jdbc:postgresql://localhost:5432/regelrett -locations=src/main/resources migrate`
-
 ### Info
 - Filen curl.txt inneholder curl kommandoer for å utføre spørringer mot Airtable
 - Applikasjonen bruker en PostgresQl Database, og Flyway migration for å gjøre endringer på databaseskjemaer.
@@ -65,39 +56,46 @@ Eventuelt, om du har flyway cli innstallert:
 ## Konfigurasjon
 [Konfigurasjon](conf/README.md)
 
-## Kjøre backend lokalt
+## Kjøre regelrett lokalt
+Backend er bygget med KTOR og frontend er bygget med React, Vite og TypeScript.
 
-### Steg 1
-- Gå inn på `Run -> Edit configurations`
-- Trykk på + for å legge til ny konfigurasjon og velg KTOR
-- Sett `no.bekk.ApplicationKt` som main class
+### Steg 0
+Før du begynner, sørg for at du har følgende installert:
 
-### Steg 2
+- **[Node.js](https://nodejs.org)** (versjon 14.x eller nyere)
+- **[npm](https://www.npmjs.com/get-npm)**
+
+### Steg 1: Konfigurasjon
 Du må konfigurere applikasjonen slik det beskrives i [`conf/README.md`](conf/readme.md).
 Du kan enten opprette en `conf/custom.yaml` fil, eller bruke miljøvariabler der du kjører backenden.
 
 Verdiene som _må_ overskrives er
 ```
-schema_sikkerhetskontroller:
-  airtable_access_token: <access_token>
-
-schema_driftskontinuitet:
-  airtable_access_token: <samme_som_over>
-
 oauth:
   tenant_id: <tenant_id>
   client_id: <client_id>
   client_secret: <client_secret>
 ```
+Om du setter base.mode til development skal KTOR appen kunne reloades automatisk.
+```
+base:
+  mode: development
+```
 
 Som miljøvariabler
 ```
-RR_SCHEMA_SIKKERHETSKONTROLLER_AIRTABLE_ACCESS_TOKEN=<ACCESS_TOKEN>
-RR_SCHEMA_DRIFTSKONTINUITET_AIRTABLE_ACCESS_TOKEN=<SAMME_SOM_OVER>
 RR_OAUTH_TENANT_ID=<TENANT_ID>
 RR_OAUTH_CLIENT_ID=<CLIENT_ID>
 RR_OAUTH_CLIENT_SECRET=<CLIENT_SECRET>
+RR_BASE_MODE=development
 ```
+
+I tillegg må du sette miljøvariabelen. Denne brukes i conf/provisioning/defaults.yaml og kan derfor ikke settes i conf/custom.yaml
+```
+RR_AIRTABLE_ACCESS_TOKEN=<PAT>
+```
+
+
 
 For å få tilgang til hemmelighetene, spør noen på teamet om å gi deg tilgang til 1Password vaulten.
 
@@ -106,8 +104,23 @@ og `TENANT_ID` er lagret under `EntraId`.
 
 Du kan sette miljøvariablene i IntelliJ ved å gå inn på `Run -> Edit configurations`.
 
-### Steg 3
-Du skal nå kunne kjøre backend, gå inn på http://localhost:8080
+### Steg 2: Frontend dev server
+- Naviger til frontendmappa med `cd frontend/beCompliant`
+- Installer avhengigheter med `npm i`
+- Forbered husky (hvis aktuelt) med `npm run prepare`
+- Start utviklingsserveren ved å kjøre: `npm run dev`
+
+### Steg 3: Web server
+#### Intellij
+- Gå inn på `Run -> Edit configurations`
+- Trykk på + for å legge til ny konfigurasjon og velg KTOR
+- Sett `no.bekk.ApplicationKt` som main class
+
+#### Terminal
+- ```backend/gradlew -t build -x test``` i ett shell
+- ```backend/gradlew run``` i ett annet
+
+Backenden fungerer som api og webserver for frontenden, som skal være tilgjengelig på `http://localhost:8080`
 
 ### Mer dokumentasjon
 For mer dokumentasjon om [build and deployment](./docs/build-and-deployment.md), [kodestruktur](./docs/code-structure.md) og
@@ -129,38 +142,8 @@ Merk at det er viktig at colima startes med `--network-address` flagget, da det 
 Hvis du bruker noe annet, eksempelvis Podman eller Rancher, se dokumentasjonen til testcontainers;
 https://java.testcontainers.org/supported_docker_environment/
 
-## Kjøre frontend lokalt
-Frontend er bygget med React, Vite og TypeScript.
 
-### Steg 1
-Før du begynner, sørg for at du har følgende installert:
-
-- **[Node.js](https://nodejs.org)** (versjon 14.x eller nyere)
-- **[npm](https://www.npmjs.com/get-npm)**
-
-### Steg 2
-Gå inn i frontend mappen:
-
-`cd <repository-directory>/frontend/beCompliant`
-
-### Steg 3
-Installer avhengigheter ved å kjøre:
-
-`npm install`
-
-### Steg 4
-Forbered Husky (hvis aktuelt) ved å kjøre:
-
-`npm run prepare`
-
-### Steg 5
-Start utviklingsserveren ved å kjøre:
-
-`npm run dev`
-
-Dette vil starte Vite utviklingsserveren, og du kan se appen på http://localhost:3000.
-
-### Mer informasjon
+## Mer informasjon om frontenden
 - For å sikre kodekvalitet, kjør lint-verktøyet: `npm run lint`
 - For å automatisk fikse lintingproblemer: `npm run lint-fix`
 - For å formatere kodebasen med Prettier: `npm run format`. Dette vil formatere alle filer i src-mappen

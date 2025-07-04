@@ -1,7 +1,7 @@
 import { axiosFetch } from '../api/Fetch';
 import { toast } from 'sonner';
 
-const API_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_URL_BASE = '/api';
 
 export async function handleExportCSV() {
   try {

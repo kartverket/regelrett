@@ -3,22 +3,23 @@ package no.bekk.configuration
 import io.ktor.server.config.*
 
 data class Config(
-    val environment: String,
+    val homePath: String,
+    val mode: String,
     val paths: PathsConfig,
     val microsoftGraph: MicrosoftGraphConfig,
     val oAuth: OAuthConfig,
     val server: ServerConfig,
     val database: DatabaseConfig,
     val answerHistoryCleanup: AnswerHistoryCleanupConfig,
+    val frontendDevServer: FrontendDevServerConfig,
     val raw: YamlConfig,
 )
 
 data class CommandLineArgs(
+    var homePath: String = "",
+    var configFile: String = "",
     val args: Array<String>,
-) {
-    var configFile: String = ""
-    var homePath: String = ""
-}
+)
 
 interface FormInstances {
     val id: String
@@ -44,6 +45,13 @@ data class PathsConfig(
     val provisioning: String,
 )
 
+data class FrontendDevServerConfig(
+    val devUrl: String,
+    val httpPort: Int,
+    val host: String,
+    val protocol: String,
+)
+
 class MicrosoftGraphConfig(
     val baseUrl: String,
     val memberOfPath: String,
@@ -66,12 +74,12 @@ fun getTokenUrl(oAuthConfig: OAuthConfig) = oAuthConfig.baseUrl + "/" + oAuthCon
 fun getJwksUrl(oAuthConfig: OAuthConfig) = oAuthConfig.baseUrl + "/" + oAuthConfig.tenantId + oAuthConfig.jwksPath
 
 data class ServerConfig(
-    val host: String,
+    val protocol: String,
+    val appUrl: String,
     val httpAddr: String,
     val httpPort: Int,
     val routerLogging: Boolean,
     val allowedOrigins: List<String>,
-
 )
 
 class DatabaseConfig(

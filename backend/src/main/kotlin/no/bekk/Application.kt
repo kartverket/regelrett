@@ -1,16 +1,22 @@
 package no.bekk
 
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.parameters.options.*
+import com.github.ajalt.clikt.parameters.types.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.install
-import io.ktor.server.engine.EngineConnectorBuilder
-import io.ktor.server.engine.embeddedServer
+import io.ktor.server.application.serverConfig
+import io.ktor.server.engine.*
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.sessions.*
 import kotlinx.coroutines.*
+import no.bekk.authentication.UserSession
 import no.bekk.authentication.initializeAuthentication
 import no.bekk.configuration.CommandLineArgs
 import no.bekk.configuration.Config
@@ -24,26 +30,36 @@ import no.bekk.plugins.configureCors
 import no.bekk.plugins.configureRouting
 import no.bekk.util.configureBackgroundTasks
 import no.bekk.util.logger
+import kotlin.io.path.pathString
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
-fun main(args: Array<String>) {
-    val cfg = newConfigFromArgs(CommandLineArgs(args))
-    val server = embeddedServer(
-        Netty,
-        configure = {
+class Regelrett : CliktCommand() {
+    val homepath by option(help = "The homepath of your Regelrett application").path(canBeFile = false)
+    val config by option(help = "The path to your custom configuration file").path(canBeDir = false, mustBeReadable = true)
+
+    override fun run() {
+        val cfg = newConfigFromArgs(CommandLineArgs(homepath?.pathString ?: "", config?.pathString ?: "", emptyArray()))
+
+        val appProperties = serverConfig {
+            developmentMode = cfg.mode == "development"
+            module { main(cfg) }
+        }
+
+        embeddedServer(
+            Netty,
+            appProperties,
+        ) {
             connectors.add(
                 EngineConnectorBuilder().apply {
                     port = cfg.server.httpPort
                     host = cfg.server.httpAddr
                 },
             )
-        },
-    ) {
-        module(cfg)
+        }.start(wait = true)
     }
-    server.start(wait = true)
 }
+fun main(args: Array<String>) = Regelrett().main(args)
 
 fun CoroutineScope.launchCleanupJob(cleanupIntervalWeeks: String, database: Database): Job {
     val cleanupInterval: Duration = (cleanupIntervalWeeks.toInt() * 7).days
@@ -86,7 +102,7 @@ fun cleanupAnswersHistory(database: Database) {
     }
 }
 
-fun Application.module(config: Config) {
+fun Application.main(config: Config) {
     val dependencies = rootComposer(config)
 
     dependencies.provisioningService.runInitialProvisioners()
@@ -106,11 +122,25 @@ fun Application.configureAPILayer(
     install(DefaultHeaders) {
         header(
             "Content-Security-Policy",
-            "default-src 'self' '${config.server.host}'; ",
+            "default-src 'self' ${config.frontendDevServer.devUrl};" +
+                "style-src 'self' https://fonts.googleapis.com 'unsafe-inline';" +
+                "font-src 'self' https://fonts.gstatic.com;" +
+                "img-src 'self' ${config.frontendDevServer.devUrl} data:;" +
+                "script-src 'self' ${config.frontendDevServer.devUrl} 'unsafe-inline';" +
+                "frame-src 'self' https://login.microsoftonline.com;" +
+                "connect-src 'self' ws://${config.frontendDevServer.host}:${config.frontendDevServer.httpPort} ${config.frontendDevServer.devUrl} https://login.microsoftonline.com",
+
         )
     }
     install(ContentNegotiation) {
         json()
+    }
+
+    install(Sessions) {
+        cookie<UserSession>("user_session") {
+            cookie.path = "/"
+            cookie.httpOnly = false
+        }
     }
 
     install(XForwardedHeaders)
@@ -119,6 +149,6 @@ fun Application.configureAPILayer(
     }
 
     configureCors(config)
-    initializeAuthentication(config.oAuth)
-    configureRouting(dependencies)
+    initializeAuthentication(config, dependencies.httpClient, dependencies.redirects)
+    configureRouting(config, dependencies)
 }

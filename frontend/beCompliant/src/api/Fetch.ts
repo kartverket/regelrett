@@ -5,33 +5,14 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { msalInstance, scopes } from './msal';
-import { InteractionRequiredAuthError } from '@azure/msal-browser';
+import Cookies from 'js-cookie';
 
 async function getTokens() {
-  const accounts = msalInstance.getAllAccounts();
-  const account = accounts[0];
-  if (!account) {
-    throw new Error('No active account');
-  }
-  const tokenResponse = await msalInstance
-    .acquireTokenSilent({
-      scopes: scopes,
-      account: account,
-    })
-    .catch((error) => {
-      if (error instanceof InteractionRequiredAuthError) {
-        return msalInstance.acquireTokenRedirect({
-          scopes: scopes,
-          account: account,
-        });
-      }
-    });
-
-  if (!tokenResponse) {
-    throw new Error('No tokenResponse');
-  }
-  return tokenResponse.accessToken; // Return just the access token
+  const cookie = Cookies.get('user_session');
+  if (cookie == undefined) return '';
+  const session = JSON.parse(cookie);
+  if (session == undefined) return '';
+  return session.token;
 }
 
 axios.interceptors.request.use(

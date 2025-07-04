@@ -3,7 +3,7 @@ import { Comment } from '../api/types';
 import { axiosFetch } from '../api/Fetch';
 import { toast } from 'sonner';
 
-const API_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_URL_BASE = '/api';
 
 function url(contextId: string, recordId?: string) {
   return `${API_URL_BASE}/comments?contextId=${contextId}${recordId ? `&recordId=${recordId}` : ''}`;

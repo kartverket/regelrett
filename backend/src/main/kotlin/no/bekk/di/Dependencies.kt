@@ -1,5 +1,6 @@
 package no.bekk.di
 
+import io.ktor.client.HttpClient
 import no.bekk.authentication.AuthService
 import no.bekk.configuration.Database
 import no.bekk.database.AnswerRepository
@@ -16,5 +17,8 @@ class Dependencies(
     val commentRepository: CommentRepository,
     val contextRepository: ContextRepository,
     val authService: AuthService,
+    val httpClient: HttpClient,
+    val redirects: Redirects,
 )
 
+data class Redirects(val r: MutableMap<String, String>)

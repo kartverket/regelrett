@@ -2,7 +2,7 @@ import { axiosFetch } from '../api/Fetch';
 import { useQuery } from '@tanstack/react-query';
 import { User } from '../api/types';
 
-const API_URL_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_URL_BASE = '/api';
 
 type UserGroup = {
   id: string;

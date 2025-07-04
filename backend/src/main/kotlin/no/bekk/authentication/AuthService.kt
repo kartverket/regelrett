@@ -1,8 +1,11 @@
 package no.bekk.authentication
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
+import io.ktor.server.response.*
+import io.ktor.server.sessions.*
 import no.bekk.configuration.OAuthConfig
 import no.bekk.database.ContextRepository
 import no.bekk.domain.MicrosoftGraphGroup

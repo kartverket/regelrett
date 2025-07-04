@@ -96,12 +96,18 @@ class YamlConfig(
 fun decodeYamlFromFile(path: String): YamlMap {
     val file = Path(path)
 
-    val yamlString = try {
+    var yamlString = try {
         file.readText()
     } catch (e: Exception) {
         logger.error("Failed to read: ${file.pathString}", e)
         throw e
     }
+
+    // Yamlkt crashes if it encounters a file with only commented fields.
+    // This is a workaround.
+    yamlString = yamlString.plus(
+        "\n__workaround:\n\ttrue: true",
+    )
 
     return try {
         Yaml.decodeYamlMapFromString(yamlString)

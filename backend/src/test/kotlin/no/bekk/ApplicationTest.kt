@@ -1,5 +1,7 @@
 package no.bekk
 
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.routing.*
@@ -10,6 +12,7 @@ import no.bekk.database.AnswerRepositoryImpl
 import no.bekk.database.CommentRepositoryImpl
 import no.bekk.database.ContextRepositoryImpl
 import no.bekk.di.Dependencies
+import no.bekk.di.Redirects
 import no.bekk.plugins.configureRouting
 import no.bekk.services.FormServiceImpl
 import no.bekk.services.provisioning.provideProvisioningService
@@ -21,14 +24,16 @@ import java.sql.Connection
 import kotlin.collections.emptyList
 
 class ApplicationTest {
-    private val exampleConfig = Config(
-        environment = "development",
+    val exampleConfig = Config(
+        homePath = "",
+        mode = "development",
         paths = PathsConfig(""),
         microsoftGraph = MicrosoftGraphConfig("", ""),
         oAuth = OAuthConfig("https://test.com", "test", "", "", "", "", "", "", ""),
-        server = ServerConfig("", "", 0, false, emptyList()),
+        server = ServerConfig("", "", "", 0, false, emptyList()),
         database = DatabaseConfig("", "", ""),
         answerHistoryCleanup = AnswerHistoryCleanupConfig(""),
+        frontendDevServer = FrontendDevServerConfig("", 0, "", ""),
         raw = YamlConfig(Yaml.decodeYamlMapFromString("value: null")),
     )
     private val mockDatabase = object : Database {
@@ -50,10 +55,13 @@ class ApplicationTest {
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
+                    HttpClient(CIO),
+                    Redirects(mutableMapOf()),
                 ),
             )
 
             val routingRoot = configureRouting(
+                exampleConfig,
                 Dependencies(
                     mockDatabase,
                     FormServiceImpl(),
@@ -62,21 +70,15 @@ class ApplicationTest {
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
+                    HttpClient(CIO),
+                    Redirects(mutableMapOf()),
                 ),
-            )
-            val publicEndpointsRegexList = listOf(
-                Regex("^/schemas"),
-                Regex("^/health"),
-                Regex("^/webhook"),
-                Regex("^/\\(method:GET\\)$"),
             )
 
             // Get all registered routes and filter out those that match any of the public endpoint regex patterns
 
             val nonPublicRoutes = routingRoot.getAllRoutes().filter { route ->
-                publicEndpointsRegexList.none { regex ->
-                    regex.containsMatchIn(route.toString())
-                }
+                route.toString().startsWith("/api")
             }
 
             assertAll(
@@ -118,6 +120,8 @@ class ApplicationTest {
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
+                    HttpClient(CIO),
+                    Redirects(mutableMapOf()),
                 ),
             )
         }

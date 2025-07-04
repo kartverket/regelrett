@@ -26,6 +26,7 @@ class ConfigBuilder {
     private lateinit var serverConfig: ServerConfig
     private lateinit var databaseConfig: DatabaseConfig
     private lateinit var answerHistoryConfig: AnswerHistoryCleanupConfig
+    private lateinit var frontendDevServerConfig: FrontendDevServerConfig
 
     fun setHomePath(args: CommandLineArgs): ConfigBuilder {
         if (args.homePath != "") {
@@ -187,7 +188,7 @@ class ConfigBuilder {
         }
 
         logger.info("Path Home path: $homePath")
-        logger.info("App mode ${configYaml.getStringOrNull("base", "environment")}")
+        logger.info("App mode ${configYaml.getStringOrNull("base", "mode")}")
     }
 
     fun buildMicrosoftGraphConfig(yaml: YamlConfig) = MicrosoftGraphConfig(
@@ -207,13 +208,21 @@ class ConfigBuilder {
         superUserGroup = yaml.getStringOrNull("oauth", "super_user_group") ?: "",
     )
 
-    fun buildServerConfig(yaml: YamlConfig): ServerConfig = ServerConfig(
-        host = "${yaml.getStringOrNull("server", "domain") ?: "localhost"}:${yaml.getStringOrNull("server", "http_port") ?: "8080"}",
-        httpAddr = yaml.getStringOrNull("server", "http_addr") ?: "0.0.0.0",
-        httpPort = yaml.getIntOrNull("server", "http_port") ?: 8080,
-        routerLogging = yaml.getBoolOrNull("server", "router_logging") ?: false,
-        allowedOrigins = yaml.getStringOrNull("server", "allowed_origins")?.split(",") ?: emptyList(),
-    )
+    fun buildServerConfig(yaml: YamlConfig): ServerConfig {
+        val protocol = yaml.getStringOrNull("server", "protocol") ?: "http"
+        val httpPort = yaml.getIntOrNull("server", "http_port") ?: 8080
+        val domain = yaml.getStringOrNull("server", "domain") ?: "localhost"
+        val appUrl = yaml.getStringOrNull("server", "root_url") ?: "$protocol://$domain:$httpPort"
+
+        return ServerConfig(
+            protocol = protocol,
+            appUrl = appUrl,
+            httpPort = httpPort,
+            httpAddr = yaml.getStringOrNull("server", "http_addr") ?: "0.0.0.0",
+            routerLogging = yaml.getBoolOrNull("server", "router_logging") ?: false,
+            allowedOrigins = yaml.getStringOrNull("server", "allowed_origins")?.split(",") ?: emptyList(),
+        )
+    }
 
     fun buildDatabaseConfig(yaml: YamlConfig): DatabaseConfig {
         val host = yaml.getStringOrNull("database", "host") ?: "127.0.0.1:5432"
@@ -238,6 +247,19 @@ class ConfigBuilder {
         }
     }
 
+    fun builFrontendDevServerConfig(yaml: YamlConfig): FrontendDevServerConfig {
+        val protocol = yaml.getStringOrNull("frontend_dev_server", "protocol") ?: "http"
+        val host = yaml.getStringOrNull("frontend_dev_server", "host") ?: "localhost"
+        val port = yaml.getIntOrNull("frontend_dev_server", "http_port") ?: 5173
+
+        return FrontendDevServerConfig(
+            httpPort = port,
+            protocol = protocol,
+            host = host,
+            devUrl = "$protocol://$host:$port",
+        )
+    }
+
     fun build(): Config {
         microsoftGraphConfig = buildMicrosoftGraphConfig(configYaml)
         oAuthConfig = buildOAuthConfig(configYaml)
@@ -245,15 +267,18 @@ class ConfigBuilder {
         serverConfig = buildServerConfig(configYaml)
         databaseConfig = buildDatabaseConfig(configYaml)
         answerHistoryConfig = buildAnswerHistoryConfig(configYaml)
+        frontendDevServerConfig = builFrontendDevServerConfig(configYaml)
 
         return Config(
-            environment = configYaml.getStringOrNull("base", "environment") ?: "development",
+            homePath = homePath,
+            mode = configYaml.getStringOrNull("base", "mode") ?: "production",
             paths = pathsConfig,
             microsoftGraph = microsoftGraphConfig,
             oAuth = oAuthConfig,
             server = serverConfig,
             database = databaseConfig,
             answerHistoryCleanup = answerHistoryConfig,
+            frontendDevServer = frontendDevServerConfig,
             raw = configYaml,
         )
     }

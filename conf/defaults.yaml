@@ -5,7 +5,7 @@
 
 base:
 # possible values : production, development
-  environment: "production"
+  mode: "production"
 
 #################################### Server ##############################
 
@@ -15,6 +15,8 @@ paths:
 #################################### Server ##############################
 
 server:
+  # The http protocol to use
+  protocol: http
   # The http port to use
   http_port: 8080
 
@@ -24,12 +26,16 @@ server:
   # The public facing domain name used to access regelrett from a browser
   domain: localhost
 
+  # This is the full URL used to access Grafana from a web browser. This is important if you use OAuth authentication (for the callback URL to be correct).
+  # Falls back to <protocol>://<domain>:<port>/ if not set
+  root_url: null
+
   # Log web requests
   router_logging: false
 
   # allowed_origins is a comma-separated list of origins that can establish connection with Regelrett Live.
   # If not set then origin will be matched over root_url. Supports wildcard symbol "*".
-  allowed_origins: "localhost:3000,localhost:8080"
+  allowed_origins: "localhost:5173,localhost:8080"
 
 #################################### Auth ##############################
 
@@ -80,3 +86,10 @@ database:
 
 answer_history_cleanup:
   cleanup_interval_weeks: "4"
+
+#################################### Frontend ##############################
+
+frontend_dev_server:
+  http_port: 5173
+  host: localhost
+  protocol: http

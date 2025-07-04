@@ -18,8 +18,6 @@ version = "0.0.1"
 
 application {
     mainClass.set("no.bekk.ApplicationKt")
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 repositories {
@@ -50,6 +48,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-default-headers:$ktor_version")
+    implementation("io.ktor:ktor-server-html-builder:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-auth:$ktor_version")
@@ -61,6 +60,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     implementation("net.mamoe.yamlkt:yamlkt:0.13.0")    // This is the same library that ktor uses
+    implementation("com.github.ajalt.clikt:clikt:5.0.3")
+    implementation("com.github.ajalt.clikt:clikt-markdown:5.0.3")
     implementation("com.microsoft.azure:msal4j:1.20.1")
     implementation("net.minidev:json-smart:2.5.2") // Kan slettes når msal ograderer json smart til 5.2.
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
@@ -84,6 +85,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:1.21.3")
 }
 
+
 tasks {
     withType<ShadowJar> {
         isZip64 = true
@@ -96,6 +98,11 @@ tasks {
             exceptionFormat = TestExceptionFormat.FULL
             events("passed", "skipped", "failed")
         }
-        useJUnitPlatform()
+        useJUnitPlatform {
+            if(!project.hasProperty("integrationTest")) {
+                excludeTags=setOf("IntegrationTest")
+            }
+        }
     }
+
 }

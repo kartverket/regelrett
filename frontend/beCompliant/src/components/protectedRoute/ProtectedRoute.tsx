@@ -1,13 +1,12 @@
 import { Outlet, useNavigate } from 'react-router';
-import { useMsal } from '@azure/msal-react';
-import { msalInstance } from '../../api/msal';
 import { Button } from '@/components/ui/button';
-import { LogOut, UserCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import KvLogo from '@/assets/kartverketlogo.svg';
+import { LogOut, UserCircle } from 'lucide-react';
+import { useUser } from '@/hooks/useUser';
 
 export default function ProtectedRoute() {
-  const accounts = useMsal().accounts;
-  const account = accounts[0];
+  const { data, isSuccess } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -18,19 +17,21 @@ export default function ProtectedRoute() {
             className="ml-2 cursor-pointer font-bold text-lg"
             onClick={() => navigate('/')}
           >
-            <img src="/kartverketlogo.svg" alt="Kartverket Logo" />
+            <img src={KvLogo} alt="Kartverket logo" />
           </div>
         </header>
         <div className="flex flex-row gap-2 items-center justify-end ">
-          {account && (
+          {isSuccess && (
             <div className="flex flex-row gap-2 items-center ">
               <UserCircle />
-              <p>{account.name}</p>
+              <p>{data.user.displayName}</p>
             </div>
           )}
-          <Button variant="ghost" onClick={() => msalInstance.logoutRedirect()}>
-            <LogOut className="size-5" />
-            Logg ut
+          <Button variant="ghost" asChild>
+            <a href="/logout">
+              <LogOut className="size-5" />
+              Logg ut
+            </a>
           </Button>
         </div>
       </div>

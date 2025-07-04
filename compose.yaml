@@ -1,23 +1,30 @@
+name: Regelrett
+
 services:
-  frontend:
-    build:
-      context: ./frontend/beCompliant
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-  backend:
+  regelrett-db:
+    image: postgres:15.4
     environment:
-      - TZ=Europe/Oslo
-      - DB_HOST=host.docker.internal
-      - DB_PORT=5432
-      - DB_NAME=kontrollere
-      - DB_USER=insert_username_here
-      - DB_PASSWORD=password_here
-      - AIRTABLE_ACCESS_TOKEN=insert_token_here
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      additional_contexts:
-       - conf=./conf
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pwd
+      - POSTGRES_DB=regelrett
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d regelrett"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+  regelrett:
+    build: .
     ports:
-      - "8080:8080"
+      - 8080:8080
+    environment:
+      - RR_OAUTH_AIRTABLE_ACCESS_TOKEN
+      - RR_OAUTH_TENANT_ID
+      - RR_OAUTH_CLIENT_ID
+      - RR_OAUTH_CLIENT_SECRET
+      - RR_DATABASE_HOST=regelrett-db:5432
+    depends_on:
+      regelrett-db:
+        condition: service_healthy
+        restart: true
+
