@@ -1,5 +1,7 @@
 package no.bekk
 
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.routing.*
@@ -10,6 +12,7 @@ import no.bekk.database.AnswerRepositoryImpl
 import no.bekk.database.CommentRepositoryImpl
 import no.bekk.database.ContextRepositoryImpl
 import no.bekk.di.Dependencies
+import no.bekk.di.Redirects
 import no.bekk.plugins.configureRouting
 import no.bekk.services.FormServiceImpl
 import no.bekk.services.provisioning.provideProvisioningService
@@ -27,7 +30,7 @@ class ApplicationTest {
         paths = PathsConfig(""),
         microsoftGraph = MicrosoftGraphConfig("", ""),
         oAuth = OAuthConfig("https://test.com", "test", "", "", "", "", "", "", ""),
-        server = ServerConfig("", "", 0, false, emptyList()),
+        server = ServerConfig("", "", "", 0, false, emptyList()),
         database = DatabaseConfig("", "", ""),
         answerHistoryCleanup = AnswerHistoryCleanupConfig(""),
         frontendDevServer = FrontendDevServerConfig("", 0, "", ""),
@@ -52,6 +55,8 @@ class ApplicationTest {
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
+                    HttpClient(CIO),
+                    Redirects(mutableMapOf()),
                 ),
             )
 
@@ -65,6 +70,8 @@ class ApplicationTest {
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
+                    HttpClient(CIO),
+                    Redirects(mutableMapOf()),
                 ),
             )
 
@@ -113,6 +120,8 @@ class ApplicationTest {
                     CommentRepositoryImpl(mockDatabase),
                     ContextRepositoryImpl(mockDatabase),
                     object : MockAuthService {},
+                    HttpClient(CIO),
+                    Redirects(mutableMapOf()),
                 ),
             )
         }
