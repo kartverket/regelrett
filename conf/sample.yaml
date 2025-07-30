@@ -1,0 +1,90 @@
+##################### Regelrett Configuration Example #####################
+#
+# Everything has defaults so you only need to uncomment things you want to
+# change
+#
+#
+# base:
+# # possible values : production, development
+#   mode: "production"
+#
+# #################################### Server ##############################
+#
+# paths:
+#   provisioning: conf/provisioning
+#
+# #################################### Server ##############################
+#
+# server:
+#   # The http port to use
+#   http_port: 8080
+#
+#   # The ip address to bind to, empty will bind to all interfaces
+#   http_addr: 0.0.0.0
+#
+#   # The public facing domain name used to access regelrett from a browser
+#   domain: localhost
+#
+#   # Log web requests
+#   router_logging: false
+#
+#   # allowed_origins is a comma-separated list of origins that can establish connection with Regelrett Live.
+#   # If not set then origin will be matched over root_url. Supports wildcard symbol "*".
+#   allowed_origins: "localhost:5173,localhost:8080"
+#
+# #################################### Auth ##############################
+#
+# microsoft_graph:
+#   base_url: "https://graph.microsoft.com"
+#   member_of_path: "/v1.0/me/memberof/microsoft.graph.group"
+#
+# oauth:
+#   base_url: "https://login.microsoftonline.com"
+#   tenant_id: null
+#   issuer_path: "/v2.0"
+#   auth_path: "/oauth2/v2.0/authorize"
+#   token_path: "/oauth2/v2.0/token"
+#   jwks_path: "/discovery/v2.0/keys"
+#   client_id: null
+#   client_secret: null
+#   super_user_group: null
+#
+# #################################### Database ##############################
+#
+# database:
+#   # You can configure the database connection by specifying type, host, name, user and password
+#   # as separate properties.
+#
+#   # Currently only "postgres" is supported.
+#   host: "127.0.0.1:5432"
+#   name: "regelrett"
+#   user: "postgres"
+#   password: pwd
+#
+#   # Max idle conn setting default is 2
+#   max_idle_conn: 2
+#
+#   # Max conn setting default is 0 (mean not set)
+#   max_open_conn: null
+#
+#   # Connection Max Lifetime default is 14400 (means 14400 seconds or 4 hours)
+#   conn_max_lifetime: 14400
+#
+#   # Set to true to log the sql calls and execution times.
+#   log_queries: false
+#
+#   # Lock the database for the migrations, default is true.
+#   migration_locking : true
+#
+#   # 3000Only if migrationLocking is set. How many seconds to wait before failing to lock the database for the migrations, default is 0.
+#   locking_attempt_timeout_sec : 0
+#
+# answer_history_cleanup:
+#   cleanup_interval_weeks: "4"
+#
+# #################################### Frontend ##############################
+#
+# frontend_dev_server:
+#   http_port: 5173
+#   host: localhost
+#   protocol: http

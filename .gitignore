@@ -1,6 +1,16 @@
 .DS_Store
 /node_modules/
 
-# React Router
+# Vite
 /.react-router/
-/build/
+/dist/
+
+# Custom Config
+conf/*.yaml
+!conf/defaults.yaml
+!conf/sample.yaml
+
+# Custom Schemasources
+conf/provisioning/schemasources/*
+!conf/provisioning/schemasources/sample.yaml
+
