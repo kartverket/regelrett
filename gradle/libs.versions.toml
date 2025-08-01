@@ -1,0 +1,50 @@
+
+[versions]
+kotlin-version = "2.1.10"
+kotlinx-html-version = "0.12.0"
+ktor-version = "3.2.2"
+logback-version = "1.4.14"
+flyway-version = "11.8.2"
+ajalt-clikt-version = "5.0.3"
+mamoe-yamlkt-version = "0.13.0"
+zaxxer-hikari-version = "6.3.0"
+ben-manes-caffeine-version = "3.2.0"
+testcontainers-version = "1.21.3"
+
+[libraries]
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-version" }
+ktor-server-html-builder = { module = "io.ktor:ktor-server-html-builder", version.ref = "ktor-version" }
+kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kotlinx-html-version" }
+ktor-server-call-logging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor-version" }
+ktor-server-host-common = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor-version" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor-version" }
+ktor-server-sessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor-version" }
+ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor-version" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor-version" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
+ktor-client-cio = {module = "io.ktor:ktor-client-cio", version.ref ="ktor-version" }
+ktor-client-apache = { module = "io.ktor:ktor-client-apache", version.ref = "ktor-version" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor-version" }
+ktor-server-default-headers = { module = "io.ktor:ktor-server-default-headers", version.ref = "ktor-version" }
+ktor-server-forwarded-header = { module = "io.ktor:ktor-server-forwarded-header", version.ref = "ktor-version" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor-version" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-version" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-version" }
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-version" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
+flyway-database-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway-version" }
+flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway-version" }
+ajalt-clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "ajalt-clikt-version" }
+mamoe-yamlkt = { module = "net.mamoe.yamlkt:yamlkt", version.ref = "mamoe-yamlkt-version" }
+zaxxer-hikari = { module = "com.zaxxer:HikariCP", version.ref = "zaxxer-hikari-version" }
+ben-manes-caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "ben-manes-caffeine-version" }
+testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers-version" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-version" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor-version" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
+flywaydb = { id = "org.flywaydb.flyway", version.ref = "flyway-version" }

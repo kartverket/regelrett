@@ -1,0 +1,2546 @@
+{
+  "records": [
+    {
+      "id": "recMcFXaHIAhg49V1",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Oscars liste": [
+          "rec4WB1ZlzkxVjhyL",
+          "recVpf9UupdC7HR8Y",
+          "recEDc2VHlX6lu4oA"
+        ],
+        "Kortnavn": "Tilby DB-backup",
+        "Pri": "MÅ",
+        "Løpenummer": 96,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Backup og restore av databaser, inklusive test/verifikasjon av backup, herunder ende-til-ende-integritet i transportkjeden. Støtt ulike krav til hyppighet",
+        "NSMs grunnprinsipper": [
+          "recAa0pNHMqwpnF77",
+          "recpVja4ixOGPgMty",
+          "recZUHv2LCqxi8laa",
+          "recmgErIqq0MdZQbA"
+        ],
+        "NIST CSF 2.0": [
+          "recZG8ryJsoqTdav3"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "reck85Cv45ut1VVlk",
+          "recRfPITVlEVLOd0k"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "SCF 2024.1.1": [
+          "recL8d71K3sgbhNcy",
+          "rec7s95Uah3SPsHWe",
+          "recuGhtvFZroNr8hU"
+        ],
+        "ISO 27002 (114)": [
+          "recBZXyjLXDVglxtQ"
+        ],
+        "ISO 27002 (93)": [
+          "recqTkxxjvl4ULSAJ"
+        ],
+        "Kode": "PF",
+        "ID": "PF-096"
+      }
+    },
+    {
+      "id": "recWr4pwTcyVzDxf4",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Tilby managed DB",
+        "Pri": "BØR",
+        "Løpenummer": 97,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Støtte automatisert oppsett av database (PostgresSql og Oracle) i plattform",
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "SCF 2024.1.1": [
+          "reczQ2x3nUhIhECbY",
+          "rec2WvvWcIqPdKnMv"
+        ],
+        "Kode": "PF",
+        "ID": "PF-097"
+      }
+    },
+    {
+      "id": "recQnCqVaByqfgxtu",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Tilby granulert DB-tilgang",
+        "Pri": "BØR",
+        "Løpenummer": 98,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Steg 1": true,
+        "OWASP Top 10": [
+          "recFbK9KhBtlEwAC8"
+        ],
+        "Aktivitiet": "Skille tilganger på DB-migrering og app-bruk av DB. Ikke utvikler-tilgang i prod",
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam",
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "reczQ2x3nUhIhECbY",
+          "rec2WvvWcIqPdKnMv"
+        ],
+        "Kode": "PF",
+        "ID": "PF-098"
+      }
+    },
+    {
+      "id": "recmYks6xOHCefNCy",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Oscars liste": [
+          "recIBisCLxjqVA1W7"
+        ],
+        "Kortnavn": "Tilby nedetidsfri deploy",
+        "Pri": "MÅ",
+        "Løpenummer": 99,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Støtte failover/redundans, inkl nedetidsfri deploy",
+        "Steg 0": true,
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "ISO 27002 (93)": [
+          "rec4peLPg2YqlYxhK"
+        ],
+        "Kode": "PF",
+        "ID": "PF-099"
+      }
+    },
+    {
+      "id": "recou1ZvOORr3H9H5",
+      "createdTime": "2024-02-25T14:43:32.000Z",
+      "fields": {
+        "Kortnavn": "Tilby sikret deploy",
+        "Kundeavtale": [
+          "rec993MIa0xuudMWN",
+          "recwS70f6mOtupErg"
+        ],
+        "Pri": "BØR",
+        "Løpenummer": 100,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Krev signerte image, og ende-til-ende-sikret utrulling",
+        "NSMs grunnprinsipper": [
+          "recUNygGC1vTna4RQ",
+          "recKHfNKvWJW2XdYz"
+        ],
+        "NIST CSF 2.0": [
+          "rechOXHK2eiySNJDk",
+          "recnJ6INvWsyZf2iO"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "rec8Lx554uTc8mysX",
+          "recPjy4ZJpilwj7BT",
+          "recYqtWIrbjxy7fAi",
+          "recCEAOZzF7RhILiC",
+          "recYX3eiCJp76psUk"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "Datatilsynet - innebygd personvern": [
+          "recGud0MfW0sBVWHe"
+        ],
+        "SCF 2024.1.1": [
+          "recGazHGHQHJSbieg",
+          "recWzr8MLma0k4s8y",
+          "reckhF6MckLG5iEyZ"
+        ],
+        "ISO 27002 (114)": [
+          "recDFFkIxJ4mZujxQ",
+          "recE5H9dNBgh7Ls5Z",
+          "recPgCJmzlCnSrIXC"
+        ],
+        "ISO 27002 (93)": [
+          "recMoiHqT5jZONg34",
+          "recXvCsjmnipWJGss"
+        ],
+        "Kode": "PF",
+        "ID": "PF-100"
+      }
+    },
+    {
+      "id": "recnCKI1YQ0azbx3B",
+      "createdTime": "2024-02-18T12:20:41.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Tilby automatisk skalering",
+        "Pri": "MÅ",
+        "Løpenummer": 101,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Støtte automatisk skalering for å håndtere topper og bunner i trafikk-data",
+        "Steg 0": true,
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam",
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recrU0xQ4mWWHUQyb"
+        ],
+        "Kode": "PF",
+        "ID": "PF-101"
+      }
+    },
+    {
+      "id": "rec04elrlv4FuqgI2",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Oscars liste": [
+          "recVpVb9pIQLoKu9d"
+        ],
+        "Kortnavn": "Påse Zero-trust-arkitektur",
+        "Kundeavtale": [
+          "recVqV5E5fno9C4br"
+        ],
+        "Pri": "MÅ",
+        "Løpenummer": 102,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Steg 1": true,
+        "OWASP Top 10": [
+          "recozUjN2Bafz3JH8",
+          "recuJw8PILXAudg2Y"
+        ],
+        "Aktivitiet": "Zero-trust-arkitektur, bl.a toveis mTLS og autoriserte kall mellom tjenester",
+        "OWASP Top 10 API": [
+          "rec6c5Gj7ixNiwBbl",
+          "recwpsX6K7gUVbsvr"
+        ],
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recdOhcX8zVd1sfZy",
+          "rec75Rl0v22e5B9k1",
+          "reclwf5ski7jLrv1r",
+          "recjb3gx0o18pv2Rq",
+          "recZHAkYMnFMWZ1CW"
+        ],
+        "NIST CSF 2.0": [
+          "recqCceszyrDZq4A1",
+          "recc6I9lWe08HLl2o",
+          "rec8rXjGoPxOs2v86",
+          "recKSgxypLTxvmg4Y"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "reclBIZXFeyP38Tpw",
+          "reccaV5C6yHLmN0U6",
+          "recOQiEApdvJF8rR5",
+          "recRkuO1UqxzxfSiZ",
+          "rec7DzWM1KlonjxzQ",
+          "rec72eB089GJkkqEA",
+          "reciUOa782UGWFqUK",
+          "recZMp07ciXJzJkrB",
+          "recUC2BTDX44l7g4a",
+          "recEiUkV9zWH2pbQE",
+          "rec5ndUF2VvcSW6hA",
+          "recsgHAjHQ4RUZkkV",
+          "recrMKqYBBQecwAl9",
+          "rec6HGBA3Vohu2OWe",
+          "recFyfXbNnPEE2DJl",
+          "recG1uCrIKDMkqOZK",
+          "recVn1pG0WamxuwBH"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam",
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recpV1EhuLK68CSXp",
+          "recYkkzjYCgErgbyZ",
+          "recouEI4Gv2mOoVCH",
+          "recHHg69S7jvyLLQN",
+          "reciUASjd7H3URczB",
+          "rec5nNGBKQhzE2BGl"
+        ],
+        "Kode": "PF",
+        "ID": "PF-102"
+      }
+    },
+    {
+      "id": "recOnOCTnECEvfkFk",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Oscars liste": [
+          "recR8b5z0eWWvU4ku"
+        ],
+        "Kortnavn": "Tilby DDoS-beskyttelse",
+        "Pri": "BØR",
+        "Løpenummer": 103,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "rec8obcyAhowJPZZc"
+        ],
+        "Aktivitiet": "Sørg for DDoS-beskyttelse",
+        "OWASP ASVS 4.0.3": [
+          "rec3Lxe4ddTtxl2HZ"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam",
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recL0HxEG1dJAP2zn",
+          "rec1267Th3FvF85VU"
+        ],
+        "Kode": "PF",
+        "ID": "PF-103"
+      }
+    },
+    {
+      "id": "recbEGJmaPy0Kxgga",
+      "createdTime": "2024-02-27T08:11:18.000Z",
+      "fields": {
+        "Kortnavn": "Tilby sårbarhetsscan",
+        "Kundeavtale": [
+          "recHIsaCYltYedrih",
+          "recezXy0CtvUx0Eqo"
+        ],
+        "Pri": "BØR",
+        "Løpenummer": 104,
+        "Ledetid": "Middels (1-3 mnd)",
+        "OWASP Top 10": [
+          "recFjtjKbPOHPyM8E",
+          "recB9pxeVVzCMu0Tx",
+          "recozUjN2Bafz3JH8"
+        ],
+        "Aktivitiet": "Støtte scan av statiske og dynamiske sårbarheter i kode, avhengigheter og image",
+        "OWASP Top 10 API": [
+          "rec6c5Gj7ixNiwBbl"
+        ],
+        "NIST CSF 2.0": [
+          "recg0G9aB1VeeaFRJ"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recv52LcbhXfUqQKN",
+          "rec5ary20SFY5bV92",
+          "recH713aYUgWuWDMa",
+          "recM64dJoa1aZrGmO",
+          "recGGG4lKs9DJssRm",
+          "rec1IXZJggdsJVJFT",
+          "rec2Azv0h8WDQcM0B",
+          "recYZ29UTTk2u6znZ",
+          "recb2JB7CnGH2wzzp",
+          "recLL5ExQs7HCNBeB",
+          "recSXneu4J3DoXep6",
+          "recaUtCsUjW1lKUs4",
+          "rec2lz20CR67DwNb3",
+          "recOF4wEc0yplcD5N",
+          "rec2Uxng6EemUweI2",
+          "rech1a9Cvntb477Ux",
+          "rec4xmxOgNdDVSYob",
+          "recWCbrRr2DYgKlTO",
+          "rec7GgYI0LY3VzDS0",
+          "recB57NoCCFYT2qzP",
+          "reccryQLYANWEVT1v",
+          "recx8a6WZFPv1sNhD",
+          "recx8MltQaqqTr9Gc",
+          "recKWySd2A2Uo95id",
+          "recerZyB3l4sD8mP7",
+          "recWiCbfdfxA0s8bl",
+          "rec4I8VIrHoPdwLY6",
+          "recUcYSuQFissoB7j",
+          "recaBeB4ODSTXlpL5",
+          "recUBtBgmahKXRQpJ",
+          "recvR7pmOuxs5a7TX",
+          "rec7uZaTmzrfrcu3U",
+          "rec5OY2GQvTbvaHoC",
+          "recYqtWIrbjxy7fAi",
+          "reco8ouhKLcO0VnSB",
+          "rec1NHfkSj9bmOZfE"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "SCF 2024.1.1": [
+          "recWzr8MLma0k4s8y",
+          "recrxTkUJh0N2EIUX",
+          "rec36GaJYCBF1bPOs",
+          "recZCv39gkImkX7tK"
+        ],
+        "ISO 27002 (93)": [
+          "recMoiHqT5jZONg34",
+          "recKu7fDKRNteQ5Xp"
+        ],
+        "Kode": "PF",
+        "ID": "PF-104"
+      }
+    },
+    {
+      "id": "recadiWzdydSrDrRB",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Kortnavn": "Gi image-anbefaling",
+        "Pri": "BØR",
+        "Løpenummer": 105,
+        "Ledetid": "Kort (< 1 mnd)",
+        "OWASP Top 10": [
+          "recFjtjKbPOHPyM8E"
+        ],
+        "Aktivitiet": "Tilby/anbefal base-image for viktigste bruksscenarier",
+        "NSMs grunnprinsipper": [
+          "recKHfNKvWJW2XdYz"
+        ],
+        "NIST CSF 2.0": [
+          "recFvuipX3iAq86kK",
+          "recnJ6INvWsyZf2iO"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "rec0x1WSlMXIgwNRR",
+          "reccx47HV6Rb2JXLW",
+          "recCEAOZzF7RhILiC"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "Datatilsynet - innebygd personvern": [
+          "rec999j2Zs2rfBxfV"
+        ],
+        "SCF 2024.1.1": [
+          "recWzr8MLma0k4s8y",
+          "recidHOCuFUl01nz1",
+          "recWNSrPzTCYFT0Dj",
+          "reciq2VYI9KEQBCjR"
+        ],
+        "Kode": "PF",
+        "ID": "PF-105"
+      }
+    },
+    {
+      "id": "recbDHvMIQHBvyBXB",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Oscars liste": [
+          "rectAZyiUxmnVjkxv"
+        ],
+        "Kortnavn": "Finne ubrukte ressurser/tjenester",
+        "Pri": "BØR",
+        "Løpenummer": 106,
+        "Ledetid": "Middels (1-3 mnd)",
+        "OWASP Top 10": [
+          "recFjtjKbPOHPyM8E"
+        ],
+        "Aktivitiet": "Oppdage ressurser/tjenester som (tilsynelatende) ikke er i bruk",
+        "OWASP Top 10 API": [
+          "rec5cFgRiLfYLXU3z"
+        ],
+        "NSMs grunnprinsipper": [
+          "rec3k9yZksALsyxD5"
+        ],
+        "NIST CSF 2.0": [
+          "recgNV219nbFbfbjP"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "rech5GuAskAyot9zx"
+        ],
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "SCF 2024.1.1": [
+          "reca01gi3ByyBCOWz"
+        ],
+        "Kode": "PF",
+        "ID": "PF-106"
+      }
+    },
+    {
+      "id": "rec8SX3dCvmf6R4Dp",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Kortnavn": "Tilby auto-oppsett IdP",
+        "Pri": "KAN",
+        "Løpenummer": 107,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Automatisert oppsett/config av IdPorten og Maskinporten",
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "Kode": "PF",
+        "ID": "PF-107"
+      }
+    },
+    {
+      "id": "rec6KPbn5bQOCZ0kg",
+      "createdTime": "2024-02-18T09:15:24.000Z",
+      "fields": {
+        "Kortnavn": "Tilby funksjonsbrytere",
+        "Pri": "KAN",
+        "Løpenummer": 108,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Støtte for funksjonsbrytere, type Unleash eller tilsvarende",
+        "Område": "Plattform (PF)",
+        "Hvem": [
+          "Plattformteam"
+        ],
+        "Kode": "PF",
+        "ID": "PF-108"
+      }
+    },
+    {
+      "id": "recbbLb68vrnre2nB",
+      "createdTime": "2024-02-18T09:15:59.000Z",
+      "fields": {
+        "Kortnavn": "Automatisert Entra ID-oppsett",
+        "Pri": "BØR",
+        "Løpenummer": 109,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "(Automatisert) oppsett og vedlikehold av brukere, app og roller i Entra ID",
+        "NIST CSF 2.0": [
+          "recXiu7sAlYXcmR1B"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team"
+        ],
+        "Kode": "OP",
+        "ID": "OP-109"
+      }
+    },
+    {
+      "id": "recDpW5F5FZbCqPGn",
+      "createdTime": "2024-02-20T16:03:32.000Z",
+      "fields": {
+        "Kortnavn": "Automatisert GitHub-oppsett",
+        "Kundeavtale": [
+          "recDteIafCZ30lWpt",
+          "reczCv9xTFcZqviFa",
+          "rec6e8Gcg8VD1iyRs"
+        ],
+        "Pri": "MÅ",
+        "Løpenummer": 110,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Styr tilganger til GitHub, opprett team og brukere",
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team"
+        ],
+        "Kode": "OP",
+        "ID": "OP-110"
+      }
+    },
+    {
+      "id": "recfOC8rR3y9Ccm8l",
+      "createdTime": "2024-02-18T09:16:02.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Automatisert infrastrukturoppsett",
+        "Pri": "BØR",
+        "Løpenummer": 111,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Automatisert/repeterbart oppsett av maskiner, VMer og nettverkskomponenter/-konfigurasjon",
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team"
+        ],
+        "Kode": "OP",
+        "ID": "OP-111"
+      }
+    },
+    {
+      "id": "recdFcWi9KPXbUD3g",
+      "createdTime": "2024-02-18T09:16:02.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Automatisert DB-oppsett",
+        "Pri": "BØR",
+        "Løpenummer": 112,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Automatisert oppsett/endring av databaser (PostegresSql og OracleDB), inklusive backup",
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team"
+        ],
+        "Kode": "OP",
+        "ID": "OP-112"
+      }
+    },
+    {
+      "id": "reca5SuqUGCU42giO",
+      "createdTime": "2024-02-19T15:15:36.000Z",
+      "fields": {
+        "Kortnavn": "Verifiser brukere/roller",
+        "Pri": "MÅ",
+        "Løpenummer": 113,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Sjekk regelmessig at brukere er de de utgir seg for å være (bl.a id-sjekk og 2-faktor) og bare har roller de skal ha",
+        "NSMs grunnprinsipper": [
+          "reccmmzcja4dJiSMT",
+          "recMWp04ddhpw3j7f",
+          "recpkURmT2mlLH0sB",
+          "recUflRxuNPwat3iR",
+          "recpL5WOAD9Yjs7Y4",
+          "recdabloZiOhr4Wji",
+          "recZ0lt7yLXAY24bt",
+          "recIGW1sUx9r8VJUd"
+        ],
+        "NIST CSF 2.0": [
+          "recHsyjpVrTEbNV9E"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recjesXp7PAGlagiy",
+          "reca4OI5mksIsNqMI",
+          "rec7tPAzmYe91IwLq",
+          "recMSrvNiP7esTldx"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "rec5qFS82xi9ypFoo",
+          "rec64CRcckeIxTJ0Q",
+          "recZIJN12imTcpV94",
+          "recjtYgknKxVlcyIH",
+          "recPHdsj1JbGUGrqk",
+          "reclWLjVSsvs2sr9w",
+          "recqgkSp1A8PcxuZL",
+          "recw0moIcBAXjQJZC"
+        ],
+        "ISO 27002 (114)": [
+          "recLiJwd2Y8kvDgpa"
+        ],
+        "ISO 27002 (93)": [
+          "recWKuCOQ26WCsco3",
+          "recJwX33wSSCsXOYp",
+          "recTAiIvTZXMPY3I3"
+        ],
+        "Kode": "OP",
+        "ID": "OP-113"
+      }
+    },
+    {
+      "id": "recgT0JRKKg3xSnHu",
+      "createdTime": "2024-02-18T09:16:02.000Z",
+      "fields": {
+        "Kortnavn": "Bruker/rolle-vedlikehold",
+        "Pri": "MÅ",
+        "Løpenummer": 114,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Vedlikehold av roller og tilganger i Entra ID, KeyCloak etc. Fjern inaktive brukere",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recUflRxuNPwat3iR",
+          "recpL5WOAD9Yjs7Y4",
+          "recdabloZiOhr4Wji",
+          "reccmmzcja4dJiSMT",
+          "recMWp04ddhpw3j7f",
+          "recpkURmT2mlLH0sB",
+          "recZ0lt7yLXAY24bt",
+          "recIGW1sUx9r8VJUd",
+          "recB8Jwkgr41bNhDR"
+        ],
+        "NIST CSF 2.0": [
+          "recXiu7sAlYXcmR1B"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recD60LQ3cbyOyCdj",
+          "recjesXp7PAGlagiy",
+          "recut5e17uLZOawDv",
+          "rec7tPAzmYe91IwLq",
+          "reca4OI5mksIsNqMI",
+          "recMSrvNiP7esTldx",
+          "recAP8AwJNnp0tPCh"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "recZKg4lRsBBVrycl",
+          "rec5qFS82xi9ypFoo",
+          "recSjifxaebwp5hld",
+          "reczwDJMvU3p9ta2x",
+          "reco3SkiqoPV6Lqhm",
+          "recDJoQwx4Jv6rFig",
+          "recbDSzMGn1bH1wLd",
+          "recqJf3RxClMDZ7AE",
+          "recJPb2Hy6141rile",
+          "recybPvNXPOicPS9N",
+          "rec5xv5MCqmhNKebD",
+          "receX3nVOVwXRVm7K",
+          "recWswJ4vxg8UmNIC",
+          "recc36lLnOrPsyHaZ",
+          "recezZz5tZDywUot6",
+          "recT0nXI0NaIESLJ0",
+          "recwpT6f8hBHUXThD",
+          "reclAxWcXk2Qa43Tp",
+          "rec9LXV56aWyntacE",
+          "recQL0TiPdEbL1FeT",
+          "recnQDU4CQ8rgmAba"
+        ],
+        "ISO 27002 (114)": [
+          "recLiJwd2Y8kvDgpa",
+          "reccxhPbAON0Nztbw",
+          "recpAjfekCdr1Povu",
+          "recjm9mFX0RzemVqP",
+          "recWXsmMLKm0uGVbx"
+        ],
+        "ISO 27002 (93)": [
+          "recWKuCOQ26WCsco3",
+          "recJwX33wSSCsXOYp",
+          "recTAiIvTZXMPY3I3",
+          "recfRJupt026s889W"
+        ],
+        "Kode": "OP",
+        "ID": "OP-114"
+      }
+    },
+    {
+      "id": "recFXXvOxHaKptrT0",
+      "createdTime": "2024-02-18T13:30:46.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Oppdater innlogging",
+        "Kundeavtale": [
+          "recVk0uJfEYIIX6AA"
+        ],
+        "Pri": "BØR",
+        "Løpenummer": 115,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Sørg for at passord/hemmeligheter og sertifikater skiftes ut og at nye passord er sterke. Gjelder både brukere og systemer. MFA for personbrukere (vurderes for maskinbrukere)",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recEryKOL2mPSObA9"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "rec6ciHeFoacJgPfj",
+          "recWdlcJsiOzY3yHq",
+          "recIdc8yn3cmEu6SO",
+          "recPAUdjKXy3N5X0U",
+          "recvdsoiB8tA8WPY0",
+          "recNOFoJNo1LWop6K",
+          "recD60LQ3cbyOyCdj",
+          "recOOzSEj4raPTv3n",
+          "recR6m5CuzpNL5YWl",
+          "rec4n3Ij8bYqskgNt",
+          "recoLfk5vlyM96vd6",
+          "recxVdpf6oQB49Prn",
+          "recpHSENtEHBNCdNY",
+          "reca4OI5mksIsNqMI",
+          "recMSrvNiP7esTldx",
+          "rect4tCnhXqBEqTZM",
+          "recvueuPcMIi3as0d",
+          "rec1LloKZ1es1NDAZ",
+          "recaqhDWQH4SG57jL",
+          "recexlLhLZbwsRhW0",
+          "reciUOa782UGWFqUK",
+          "recZMp07ciXJzJkrB"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "recptSeY8ZrpGKd3a",
+          "rec5g8SL6gO1cUwWT",
+          "reco9GLyyG7OiUYFy",
+          "rechZLedVpdum9oak",
+          "recYJanuDaVkM6lPP",
+          "rec0SfMr7HP52eLIa",
+          "recgUJgtNN0cbzs8b",
+          "recPOH9suGqR3yKfh",
+          "recn8gw0XmkPunNAd",
+          "recphrmS3jSl4bKNc",
+          "reco8BRmwbZ8Ih80J",
+          "recsybFTvfUEcIzRB",
+          "recThFg0Hp2BuoOL4",
+          "recVvwZZG1RBBK2SV",
+          "rec1qJnPs91KcJlDG",
+          "recUgaGtTyNXCLR7X",
+          "recQL0TiPdEbL1FeT"
+        ],
+        "ISO 27002 (93)": [
+          "recJwX33wSSCsXOYp",
+          "recTAiIvTZXMPY3I3"
+        ],
+        "Kode": "OP",
+        "ID": "OP-115"
+      }
+    },
+    {
+      "id": "rectRuhusG630FbzO",
+      "createdTime": "2024-02-18T09:16:02.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Deling av hemmeligheter",
+        "Kundeavtale": [
+          "recVk0uJfEYIIX6AA"
+        ],
+        "Pri": "MÅ",
+        "Løpenummer": 116,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Deling av nøkler og systemhemmeligheter skjer på sikker måte, f.eks via GCP Secret manager. Utviklere har ikke tilgang til miljøhemmeligheter, f.eks databaser. Ha tydelige eiere av hemmelighetene, og loggfør deling, opprettelse og sletting",
+        "OWASP ASVS 4.0.3": [
+          "reczuC8Os3gRDkRkR",
+          "recIdc8yn3cmEu6SO",
+          "recPAUdjKXy3N5X0U",
+          "recvdsoiB8tA8WPY0",
+          "recNOFoJNo1LWop6K",
+          "rect4tCnhXqBEqTZM",
+          "reciUOa782UGWFqUK",
+          "recZMp07ciXJzJkrB",
+          "recM7bDFXpELIjTZD",
+          "recs4xvKBSqQzztYy",
+          "recX8ph7XWLDEhbgi"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "rec2Yj3skEbfqpYAF",
+          "rec3b2mDWRQ0xXy8b",
+          "recEf2t6ZqxpBBkTa",
+          "recAkmw5hMlrffdWX",
+          "rec2X265nmu9P6YHA",
+          "rec7sAVFbSvEhVePt",
+          "recIkOB12DGc5MoLL",
+          "recFSLwalJRLJVGy7",
+          "recXtz3fnzbgy6iPS"
+        ],
+        "ISO 27002 (93)": [
+          "rec78PsEqE3TdrO1a"
+        ],
+        "Kode": "OP",
+        "ID": "OP-116"
+      }
+    },
+    {
+      "id": "recxvgTewfRlrOjOS",
+      "createdTime": "2024-02-18T09:16:02.000Z",
+      "fields": {
+        "Steg 2": true,
+        "Kortnavn": "Scan/patch laptop",
+        "Pri": "BØR",
+        "Løpenummer": 117,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Steg 1": true,
+        "Aktivitiet": "Sikkerhetsscan og patch'ing av OS og apper maskinene til utviklerne, eller andre team-medlemmer",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recpTKHpfwCnMeNhm",
+          "recz84G78Dk6rnKRT",
+          "reciLkMzohJYFi3ES",
+          "rec9abhVIZKYMkFz8",
+          "rec1TFK2SxNuiQSg9"
+        ],
+        "NIST CSF 2.0": [
+          "recnJ6INvWsyZf2iO"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team"
+        ],
+        "SCF 2024.1.1": [
+          "recxNzdbzCACwH57P",
+          "recoOQXn75RKCgUaR",
+          "reck70Jf8fZvMOaPY",
+          "rec5dlYTMv9WamCCG",
+          "recFouIUeYwZjTiCy",
+          "rec3AGNiHQRgNRCNu",
+          "reclaPkBEEZLsygtv",
+          "recwg0xyIRt1aTln6",
+          "recH1ZODEvZGMe5te",
+          "recgomOSvplkAOaFg",
+          "recXrPVRY4Pyosvk5",
+          "recHVlmj4zV8KaToW",
+          "reckbr6NmI2aBkJ2B",
+          "recVt1Ixs5fUBmlz2",
+          "reczylgqffYDDCyzl",
+          "recp58vRgzdlAKs8X",
+          "recAi01PwQC5kMiiD",
+          "recv7KAG2nVKNltoj",
+          "recyLgkQ0VpbpGlRW"
+        ],
+        "ISO 27002 (114)": [
+          "recE5H9dNBgh7Ls5Z",
+          "recMWvUgyHQiEWwhB"
+        ],
+        "ISO 27002 (93)": [
+          "rectk7KnGSXEADCbd",
+          "recXvCsjmnipWJGss"
+        ],
+        "Kode": "OP",
+        "ID": "OP-117"
+      }
+    },
+    {
+      "id": "recVVU0lC0vnFirfJ",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Tjenestenivå infrastruktur",
+        "Pri": "MÅ",
+        "Løpenummer": 118,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "SLA som understøtter plattform-SLA, bl.a oppetid og maks belastning",
+        "Steg 0": true,
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "ISO 27002 (114)": [
+          "rec19CYndiNw1gD9o"
+        ],
+        "Kode": "IN",
+        "ID": "IN-118"
+      }
+    },
+    {
+      "id": "recVF4fFbBkcFHaQc",
+      "createdTime": "2024-03-02T12:55:06.000Z",
+      "fields": {
+        "Kortnavn": "Benytt IaC",
+        "Pri": "BØR",
+        "Løpenummer": 119,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Ha oppsett av infrastruktur som kode/script, med backup til sikker lokasjon. Test backup. Alltid \"fire øyne\" på endringer\n",
+        "NSMs grunnprinsipper": [
+          "rectZwXdBvWZ5enh8"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recUJ9vxTMqsRdZPI",
+          "recWHASKRTguLO5T2",
+          "recP1M7E9Fwc3dpfF",
+          "reccmWaFedm2WrEUt",
+          "rec0h51h9JsLlNQ3S",
+          "recgTkGBEQreghRif"
+        ],
+        "ISO 27002 (93)": [
+          "recJfy0G5Ev1SVaOK",
+          "recP64efgZSFejqIz"
+        ],
+        "Kode": "IN",
+        "ID": "IN-119"
+      }
+    },
+    {
+      "id": "recGpKKmr08nwm5vq",
+      "createdTime": "2024-02-18T09:16:26.000Z",
+      "fields": {
+        "Kortnavn": "Tilby infrastrukturoversikt",
+        "Pri": "BØR",
+        "Løpenummer": 120,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Oversikt over (automatisert) oppsett av fysiske og virtuelle servere og nettverk (for on-prem plattform), inklusive kapasitetsgrenser, skaleringsevne, hvor komponentene kommer fra mv",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recdOhcX8zVd1sfZy",
+          "rectBZUD5Cat2XtfP",
+          "reciLkMzohJYFi3ES",
+          "recvYJ5YuaFqpU4Wt",
+          "recn2XKKwk3c1YaqN"
+        ],
+        "NIST CSF 2.0": [
+          "recqCceszyrDZq4A1",
+          "rec0rj0JvWWHfYDy3"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recPzw5k4NEHLHLxV",
+          "recI354CCtT5kRaK1",
+          "rec6grGfO78Q12gME",
+          "recPBKYMkN8iSSgus",
+          "recBAlN1Dw2lauSGq",
+          "recr16gDxG1g7RkDG",
+          "rec5mQZHMv4vczc8P",
+          "recIoXkw2qI55iIiD"
+        ],
+        "ISO 27002 (114)": [
+          "recmOtRbTE3OSkfPk"
+        ],
+        "ISO 27002 (93)": [
+          "recCGM9zZBl5Z01eu",
+          "recP64efgZSFejqIz"
+        ],
+        "Kode": "IN",
+        "ID": "IN-120"
+      }
+    },
+    {
+      "id": "recVzERPXRjex9xOZ",
+      "createdTime": "2024-02-23T11:09:39.000Z",
+      "fields": {
+        "Kortnavn": "Fjern ubrukt infrastruktur",
+        "Pri": "BØR",
+        "Løpenummer": 121,
+        "Ledetid": "Lang (> 3 mnd)",
+        "NSA CTR NISG": [
+          "recS0m7jNJf4dhIdj"
+        ],
+        "Aktivitiet": "Bygg ned/fjern ubrukt/gammel/ødelagt infrastruktur/kompoenter. Destruer disker",
+        "NIST CSF 2.0": [
+          "rec5H9Sn4naiV6lw9",
+          "reclZCShrd6iBEjhI"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "reck3aC3hpFxlVXh5",
+          "reca01gi3ByyBCOWz"
+        ],
+        "ISO 27002 (114)": [
+          "recUhrgUQowwWhWvs",
+          "recy8pK7lqggEpC4p",
+          "recpckNo9fuFf4EWc",
+          "recIzU4UZT5vmCkJZ",
+          "recdI6nYd3rS5Ao1r"
+        ],
+        "ISO 27002 (93)": [
+          "recHO5ZpCVmsYcQKr",
+          "recllZQyG3PTCUsYf"
+        ],
+        "Kode": "IN",
+        "ID": "IN-121"
+      }
+    },
+    {
+      "id": "recONADo6VHtpd3H7",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "rec3fWz1s3hFIyIxc"
+        ],
+        "Kortnavn": "Vaktordning infrastruktur",
+        "Pri": "MÅ",
+        "Løpenummer": 122,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Vaktordning ihht til SLA-krav for infrastruktur",
+        "Steg 0": true,
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Kode": "IN",
+        "ID": "IN-122"
+      }
+    },
+    {
+      "id": "recPx037UOHPuBiRD",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Etabler katastrofeinfrastruktur",
+        "Pri": "MÅ",
+        "Løpenummer": 123,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Etablere og teste katastrofeløsning for infrastruktur",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "recL5r2fhFd7RIiLe",
+          "recaHuOg09WrVI737"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "ISO 27002 (114)": [
+          "rec6KS50QZPe3SY35"
+        ],
+        "ISO 27002 (93)": [
+          "recfh0TVvkzxxaUCy"
+        ],
+        "Kode": "IN",
+        "ID": "IN-123"
+      }
+    },
+    {
+      "id": "recyDDeJBWx5HBbFA",
+      "createdTime": "2024-03-07T09:28:50.000Z",
+      "fields": {
+        "Kortnavn": "Del last på flere infrastrukturer",
+        "Pri": "(MÅ)",
+        "Løpenummer": 124,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "F.eks fordeling av trafikk mellom hovedløsning og katastrofeløsning",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam",
+          "IT"
+        ],
+        "SCF 2024.1.1": [
+          "recQUFpC2lWmxJz5h"
+        ],
+        "Kode": "IN",
+        "ID": "IN-124"
+      }
+    },
+    {
+      "id": "recjo4Y5ipDK33Tr4",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recIBisCLxjqVA1W7"
+        ],
+        "Kortnavn": "Ha komponent-redundans",
+        "Pri": "MÅ",
+        "Løpenummer": 125,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Redundans i alle kritiske komponenter i kjørende infrastruktur\n",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "reclZCShrd6iBEjhI",
+          "recaHuOg09WrVI737"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "ISO 27002 (114)": [
+          "recpckNo9fuFf4EWc",
+          "recmOtRbTE3OSkfPk"
+        ],
+        "ISO 27002 (93)": [
+          "rec4peLPg2YqlYxhK"
+        ],
+        "Kode": "IN",
+        "ID": "IN-125"
+      }
+    },
+    {
+      "id": "recvCP8EIAt8hZE29",
+      "createdTime": "2024-03-02T12:52:53.000Z",
+      "fields": {
+        "Kortnavn": "Ha reserve-komponenter",
+        "Pri": "BØR",
+        "Løpenummer": 126,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Ha komponenter nær/tilgjengelig til å erstatte feilende komponenter, i verste fall bygge opp all infrastruktur på nytt. ",
+        "NIST CSF 2.0": [
+          "recaHuOg09WrVI737",
+          "recL5r2fhFd7RIiLe"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recaH4lN8WwFYBgde"
+        ],
+        "Kode": "IN",
+        "ID": "IN-126"
+      }
+    },
+    {
+      "id": "recBkC0R61cboIK4M",
+      "createdTime": "2024-02-19T15:13:03.000Z",
+      "fields": {
+        "Kortnavn": "Sikre komponenter",
+        "Pri": "MÅ",
+        "Løpenummer": 127,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "rec4ZlEZqIY8PWhxA",
+          "recrDq1qxsb1rjbjw",
+          "receQT0kTfjtlkd2b",
+          "recJv3IwTn7HsMlG8",
+          "recIFZJShZRGUMGot",
+          "recyHdeEDd69JmqrY",
+          "recZvvBefIrqhtSzu"
+        ],
+        "Aktivitiet": "Skru på anbefalt innebygd sikkerhet i komponenter og software. Fjern standardbrukere og/eller endre passord",
+        "NSMs grunnprinsipper": [
+          "recjqCFg3sHnX5QAh",
+          "recUNygGC1vTna4RQ",
+          "recQutRT8V9UP5cus",
+          "reclNfijWzUUWg24B",
+          "recMq2sIlyAjGhbcM",
+          "recB8Jwkgr41bNhDR",
+          "recs5KBXqFu0N9yEX",
+          "recKHfNKvWJW2XdYz"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recAyiUSbc4o2yPAr",
+          "recZMp07ciXJzJkrB"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recUZQQUoHSgax4Y1"
+        ],
+        "ISO 27002 (93)": [
+          "recllZQyG3PTCUsYf",
+          "recXvCsjmnipWJGss"
+        ],
+        "Kode": "IN",
+        "ID": "IN-127"
+      }
+    },
+    {
+      "id": "recUD3O5WUabzpVXL",
+      "createdTime": "2024-03-07T14:39:48.000Z",
+      "fields": {
+        "Kortnavn": "Sikre adminbrukere",
+        "Pri": "MÅ",
+        "Løpenummer": 128,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "recDyUqNBfu65oqtb",
+          "recHM6OD5AQZPpJk9",
+          "recJciIMu9z208QTe",
+          "recx1QiMhGii4brO8",
+          "recPUiwZEkrny8rsE",
+          "recHI2K1muKYOUZcO",
+          "receQT0kTfjtlkd2b",
+          "recJv3IwTn7HsMlG8",
+          "recIFZJShZRGUMGot",
+          "recyHdeEDd69JmqrY"
+        ],
+        "Aktivitiet": "Least privilege, unike og sterke passord. Roter passord. Begrens disk-tilgang, endringsmuligheter, hvem som får admin-kontoer. Audit-logging av endringer av adminbrukere",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "rec9wPjQXlxHCq2CX",
+          "recGiDGNBVFqP4E42",
+          "recUZQQUoHSgax4Y1",
+          "rec1k8jQ7ZEZBYsR6",
+          "reci9I0udHF1YwtpT"
+        ],
+        "ISO 27002 (114)": [
+          "rec50CKFuAe4qGjYv"
+        ],
+        "ISO 27002 (93)": [
+          "recWKuCOQ26WCsco3",
+          "reciYnflWkgEvCbiL",
+          "rechdAlXXL1s7QMl2"
+        ],
+        "Kode": "IN",
+        "ID": "IN-128"
+      }
+    },
+    {
+      "id": "recqwjIxtb8wy3Jo8",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recVpVb9pIQLoKu9d"
+        ],
+        "Kortnavn": "Benytt kryptert disk",
+        "Pri": "MÅ",
+        "Løpenummer": 129,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Kryptert disk på interne, fysiske servere",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recIDeLQeDuat79RW",
+          "recsczeAS3OxDxWCT",
+          "recyTX4r2Vtvig73n"
+        ],
+        "NIST CSF 2.0": [
+          "rec8rXjGoPxOs2v86"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recUC2BTDX44l7g4a"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Datatilsynet - innebygd personvern": [
+          "recF3NZmsAUZfuf3N"
+        ],
+        "SCF 2024.1.1": [
+          "recAO5WMdL7sH0FdB",
+          "rec4gzwK7jxaqp2VC",
+          "recKpgDVCCU3YBaIo",
+          "recDt5GSFSYDw675u"
+        ],
+        "ISO 27002 (93)": [
+          "recownLZ5KjLml9Ne"
+        ],
+        "Kode": "IN",
+        "ID": "IN-129"
+      }
+    },
+    {
+      "id": "recjntMmPsa6Rbvoy",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recVpVb9pIQLoKu9d"
+        ],
+        "Kortnavn": "Krypter DB-innhold",
+        "Pri": "BØR",
+        "Løpenummer": 130,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Innhold i databaser (PostgresSql og OracleDB) er kryptert",
+        "NSMs grunnprinsipper": [
+          "recIDeLQeDuat79RW",
+          "recsczeAS3OxDxWCT"
+        ],
+        "NIST CSF 2.0": [
+          "rec8rXjGoPxOs2v86"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "receC8Nw6nLHcaQoI",
+          "receEkflWyegntDoF",
+          "recfYsiL6U999QdVY",
+          "recUC2BTDX44l7g4a"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Datatilsynet - innebygd personvern": [
+          "recF3NZmsAUZfuf3N"
+        ],
+        "SCF 2024.1.1": [
+          "recAO5WMdL7sH0FdB",
+          "rec4gzwK7jxaqp2VC",
+          "recCLMsXb4kZH7YoJ"
+        ],
+        "Kode": "IN",
+        "ID": "IN-130"
+      }
+    },
+    {
+      "id": "rec6DKYpmddo0MAX6",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Lås ned DB-tilgang",
+        "Pri": "MÅ",
+        "Løpenummer": 131,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Nedlåst tilgang til prod-database, f.eks ikke utviklere",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "recrArQ3RM9uQlpBZ"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recO6FzmkJbLSFCeM",
+          "recM7bDFXpELIjTZD"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Datatilsynet - innebygd personvern": [
+          "recOEdVxRIR0cRLQr"
+        ],
+        "SCF 2024.1.1": [
+          "recfjBR63KXnHoVLi",
+          "rec2LyVlgEo6BKkJn",
+          "rec5QSZyvWBTAWnIV"
+        ],
+        "Kode": "IN",
+        "ID": "IN-131"
+      }
+    },
+    {
+      "id": "recFh5yH5goQ6Ilwc",
+      "createdTime": "2024-02-18T15:11:54.000Z",
+      "fields": {
+        "Kortnavn": "Lås ned OS-tilgang",
+        "Pri": "MÅ",
+        "Løpenummer": 132,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Nedlåst tilgang til VM/OS, f.eks unngå admin-tilgang. Audit-log for endringer",
+        "Steg 0": true,
+        "OWASP ASVS 4.0.3": [
+          "recO6FzmkJbLSFCeM"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Kode": "IN",
+        "ID": "IN-132"
+      }
+    },
+    {
+      "id": "recIv3cuZ0Nx6E6ay",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recVpf9UupdC7HR8Y",
+          "recEDc2VHlX6lu4oA"
+        ],
+        "Kortnavn": "Tilby DB-backup/-restore",
+        "Pri": "MÅ",
+        "Løpenummer": 133,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Hyppig backup av databaser, hyppighet basert på kritikalitet (verifisert gjenoppretting). Sikker ekstern lagring av kopier, og beskyttelse mot endring i transitt",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recAa0pNHMqwpnF77",
+          "recpVja4ixOGPgMty",
+          "recZUHv2LCqxi8laa",
+          "recmgErIqq0MdZQbA"
+        ],
+        "NIST CSF 2.0": [
+          "recZG8ryJsoqTdav3",
+          "recVXqLbvFFenwemo"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "reck85Cv45ut1VVlk",
+          "recRfPITVlEVLOd0k"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recL8d71K3sgbhNcy",
+          "rec7s95Uah3SPsHWe",
+          "recuGhtvFZroNr8hU",
+          "recyivxAhZ3nyxEMJ",
+          "rec1qkGWNg6DJVhXo",
+          "recHIbJdIQjIKii2F",
+          "recjYtTYlxXIZUmx9"
+        ],
+        "ISO 27002 (114)": [
+          "recBZXyjLXDVglxtQ"
+        ],
+        "ISO 27002 (93)": [
+          "recqTkxxjvl4ULSAJ"
+        ],
+        "Kode": "IN",
+        "ID": "IN-133"
+      }
+    },
+    {
+      "id": "recyMM32KtObN2rm9",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Patch VM/OS og HW",
+        "Pri": "MÅ",
+        "Løpenummer": 134,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "recCybtgXPN0fzSmN",
+          "recPC9OGcMjvjrCzA",
+          "recMILa5klGYHB22D"
+        ],
+        "Aktivitiet": "Sikker patching av VM/OS og nettverkskomponenter",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "rec9abhVIZKYMkFz8"
+        ],
+        "NIST CSF 2.0": [
+          "recnJ6INvWsyZf2iO"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recya2WcCQYJKLSdU",
+          "recPjy4ZJpilwj7BT"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recRk8B16vTJbdltd",
+          "recoOQXn75RKCgUaR",
+          "reck70Jf8fZvMOaPY",
+          "rec5dlYTMv9WamCCG",
+          "recFouIUeYwZjTiCy",
+          "rec3AGNiHQRgNRCNu",
+          "reclaPkBEEZLsygtv",
+          "recwg0xyIRt1aTln6",
+          "recH1ZODEvZGMe5te",
+          "recgomOSvplkAOaFg",
+          "recXrPVRY4Pyosvk5",
+          "recHVlmj4zV8KaToW",
+          "reckbr6NmI2aBkJ2B",
+          "recVt1Ixs5fUBmlz2",
+          "reczylgqffYDDCyzl",
+          "recp58vRgzdlAKs8X"
+        ],
+        "ISO 27002 (93)": [
+          "recmPCtLyFO3Azzvh"
+        ],
+        "Kode": "IN",
+        "ID": "IN-134"
+      }
+    },
+    {
+      "id": "rec5gV7hB7GYU8Z9f",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Mikrosegmenter nettverket",
+        "Pri": "MÅ",
+        "Løpenummer": 135,
+        "Ledetid": "Lang (> 3 mnd)",
+        "NSA CTR NISG": [
+          "reczHbz4ZkHxMoERb"
+        ],
+        "Aktivitiet": "Zero-trust og kryptering mellom logiske og fysiske komponenter",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recImbf2zY7C3i2Wy",
+          "recwVlBZ5YBhkZTQb",
+          "reclwf5ski7jLrv1r",
+          "rec1hZ88bsa7ozYGd",
+          "reczWxt7xslDZt1oD",
+          "reciKu1SfXKsArtkw"
+        ],
+        "NIST CSF 2.0": [
+          "rec8rXjGoPxOs2v86",
+          "recKSgxypLTxvmg4Y",
+          "recTceQ7389gKjyfU",
+          "recGsGQU3AtoglFDy",
+          "recc6I9lWe08HLl2o"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recYn4K3JpJPGOEuz"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "rec7m5So4cMrF1EGi",
+          "rec5nNGBKQhzE2BGl",
+          "rec7mgQdxXfjHVaaX",
+          "recCLinFcF9ASG7cf",
+          "rec0PudR1e1UZ14so",
+          "recc3lzvQhs95J91j",
+          "recWrOTvLlVr5sOYB",
+          "rec433QBx0u5v2boB"
+        ],
+        "ISO 27002 (114)": [
+          "rec2YJNOSkNpNcRNG"
+        ],
+        "ISO 27002 (93)": [
+          "recYl5EMuPZy2AAXq"
+        ],
+        "Kode": "IN",
+        "ID": "IN-135"
+      }
+    },
+    {
+      "id": "recMQqzol2ufNSHI9",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recVpVb9pIQLoKu9d"
+        ],
+        "Kortnavn": "Beskytt nettverket",
+        "Pri": "MÅ",
+        "Løpenummer": 136,
+        "Ledetid": "Lang (> 3 mnd)",
+        "NSA CTR NISG": [
+          "recZvvBefIrqhtSzu",
+          "recJX29XOhskde1eK",
+          "rec8obcyAhowJPZZc",
+          "rectjZbnNzbkpLAj7",
+          "recDsFfWeZmyiTEKJ",
+          "recW6WJeofgFWxrFc",
+          "rec6veQgGclJKOv0d",
+          "recx6QsSVARdaVGUg",
+          "recYEvvRevWnEcbOP",
+          "recGTkPvcUISCuxIH",
+          "recsNWmv9GahiwkeS",
+          "recs9FPNHfbMj4qqo",
+          "recyNcNL3R6Hvr4z7",
+          "recHAyEawihplUov4",
+          "recA8SYYeHVO7RgNG",
+          "recGz59kpghKGUxPH",
+          "recgQxiGVLR8GpxUu",
+          "reccybJvLqt36XL9p",
+          "rec6rf8koL4r826LN",
+          "recxQr7A89Nk5iVil"
+        ],
+        "Aktivitiet": "Beskyttelse for all nettverkstrafikk, bla mikroTLS",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recRPh6Y7zRvfbNHT",
+          "rec8K4QDCPHGNg7NE",
+          "rec0TLBQOKCNHU32o",
+          "recsYepuJWUooMWpD",
+          "recyTX4r2Vtvig73n",
+          "recImbf2zY7C3i2Wy",
+          "recwVlBZ5YBhkZTQb",
+          "recAzSf1qN74WAWj3",
+          "recHFic6MRchK3vz2"
+        ],
+        "NIST CSF 2.0": [
+          "rec8rXjGoPxOs2v86",
+          "recKSgxypLTxvmg4Y",
+          "recTceQ7389gKjyfU",
+          "recGsGQU3AtoglFDy",
+          "recc6I9lWe08HLl2o",
+          "recqCceszyrDZq4A1"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "recRkuO1UqxzxfSiZ",
+          "rec72eB089GJkkqEA",
+          "recUC2BTDX44l7g4a",
+          "recEiUkV9zWH2pbQE",
+          "rec5ndUF2VvcSW6hA",
+          "recsgHAjHQ4RUZkkV",
+          "recrMKqYBBQecwAl9",
+          "rec6HGBA3Vohu2OWe",
+          "recFyfXbNnPEE2DJl",
+          "recG1uCrIKDMkqOZK",
+          "recVn1pG0WamxuwBH",
+          "recNWdfgsCWVPVNVn",
+          "recuCfpBGkiSHE7ei"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "rech5Smmb4irPTZGc",
+          "recCLinFcF9ASG7cf",
+          "recbxPHIiJ0qgr9sH"
+        ],
+        "ISO 27002 (114)": [
+          "recW6iV45ccNqkkak"
+        ],
+        "ISO 27002 (93)": [
+          "recR67MKg5lg3frXL",
+          "recFyHFWksL4VapuN"
+        ],
+        "Kode": "IN",
+        "ID": "IN-136"
+      }
+    },
+    {
+      "id": "rec2Q2FhF7M4w9D5O",
+      "createdTime": "2024-03-07T14:30:34.000Z",
+      "fields": {
+        "Kortnavn": "Ha NAC-løsning",
+        "Pri": "BØR",
+        "Løpenummer": 137,
+        "Ledetid": "Lang (> 3 mnd)",
+        "NSA CTR NISG": [
+          "rec0IlfaNLWAPNpBi",
+          "reco15f1JBQpIE95N",
+          "recTsNXKzyskCOxJR"
+        ],
+        "Aktivitiet": "Ha en løsning for å oppdage og hindre ukjent tilknytning til nettverket\n",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "rec8ge6mqKjKJKc57",
+          "recLBETJGmxz9lGO6"
+        ],
+        "ISO 27002 (114)": [
+          "recW6iV45ccNqkkak"
+        ],
+        "ISO 27002 (93)": [
+          "recHjjZuHoyJCtgZU",
+          "recR67MKg5lg3frXL",
+          "recFyHFWksL4VapuN"
+        ],
+        "Kode": "IN",
+        "ID": "IN-137"
+      }
+    },
+    {
+      "id": "recEk4gsD7bt3xTPK",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Monitorer nettverket",
+        "Pri": "MÅ",
+        "Løpenummer": 138,
+        "Ledetid": "Lang (> 3 mnd)",
+        "NSA CTR NISG": [
+          "reco15f1JBQpIE95N"
+        ],
+        "Aktivitiet": "Monitoring av nettverkstrafikk for å oppdage og hindre uønsket atferd",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recI5trMpAL28PrCw",
+          "reccPQSgn49rCRPaM"
+        ],
+        "NIST CSF 2.0": [
+          "recdoHXOVzolr86Ri",
+          "rec9zuhUFUOD7FNQl"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Sikkerhetsloven": [
+          "recPAkHPfBhqZDEHN",
+          "recKbhgHbC6Fj1Ivf"
+        ],
+        "SCF 2024.1.1": [
+          "recv4QDIZgw6QTNch",
+          "recSOC64UYb9Pe8de"
+        ],
+        "Kode": "IN",
+        "ID": "IN-138"
+      }
+    },
+    {
+      "id": "recsaiT0fUmG07aoE",
+      "createdTime": "2024-03-07T09:19:32.000Z",
+      "fields": {
+        "Kortnavn": "Audit-log infra-endringer",
+        "Pri": "MÅ",
+        "Løpenummer": 139,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "recZ3xbm3eRmvlxBO"
+        ],
+        "Aktivitiet": "Logg hvem som gjør endringer i infrastrukturen ",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recvzz3yecRGmFLQP",
+          "recjMpt8OdTTEEO2p",
+          "rec1Zi8ZWkzNCID4S"
+        ],
+        "ISO 27002 (114)": [
+          "recoAO2Y7uAeDf9ML"
+        ],
+        "ISO 27002 (93)": [
+          "rec3CNeaIYCcXnPyK"
+        ],
+        "Kode": "IN",
+        "ID": "IN-139"
+      }
+    },
+    {
+      "id": "reczNHBxFT6D1irJY",
+      "createdTime": "2024-03-07T09:18:28.000Z",
+      "fields": {
+        "Kortnavn": "Sentralisert loggløsning (infra)",
+        "Pri": "MÅ",
+        "Løpenummer": 140,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "recI7HAh6fQxAlDOY",
+          "rec5R1SVNfrsvZtla",
+          "recCSfInyDavVeGSP",
+          "recTsNXKzyskCOxJR"
+        ],
+        "Aktivitiet": "Samle logger fra servere og nettverkskomponenter i en sentralisert løsning, med tilgangsstyring og audit-logging",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recCULXGwrMWBQG5R",
+          "recT2MbsDaT73kM90",
+          "recAdP5akWha53HWB",
+          "rec3Qlh1eOB0UzWKw"
+        ],
+        "ISO 27002 (114)": [
+          "reccpBnJqdrQRfbI0"
+        ],
+        "ISO 27002 (93)": [
+          "recniudyutLR0VLuM",
+          "rechHoILh2peFg5qv"
+        ],
+        "Kode": "IN",
+        "ID": "IN-140"
+      }
+    },
+    {
+      "id": "rec0JBkJOTrzXlphN",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recR8b5z0eWWvU4ku"
+        ],
+        "Kortnavn": "DoS-beskytt nettverket",
+        "Pri": "MÅ",
+        "Løpenummer": 141,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Sørg for beskyttelse mot DoS-angrep",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "recTceQ7389gKjyfU",
+          "recGsGQU3AtoglFDy"
+        ],
+        "OWASP ASVS 4.0.3": [
+          "rec3Lxe4ddTtxl2HZ"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Kode": "IN",
+        "ID": "IN-141"
+      }
+    },
+    {
+      "id": "recqhTIo3ztW1dscq",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Beskytt mot strømbrudd",
+        "Pri": "MÅ",
+        "Løpenummer": 142,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Beskytt mot strømbrudd, også lokale og regionale",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "recaHuOg09WrVI737",
+          "recQn0K9bD6gPjhRz"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "ISO 27002 (114)": [
+          "rec7sz36Q6nliHqpl"
+        ],
+        "ISO 27002 (93)": [
+          "recMCNsYfjUcxbkq6",
+          "rec4O2cn4weKFrc0R"
+        ],
+        "Kode": "IN",
+        "ID": "IN-142"
+      }
+    },
+    {
+      "id": "receuxNK1Zs39cO2I",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Sikre fysisk anlegg",
+        "Pri": "MÅ",
+        "Løpenummer": 143,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Beskyttelse mot innbrudd, brann, flom etc",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "recQn0K9bD6gPjhRz",
+          "rec3SnRdDdiqA3mqE",
+          "recaHuOg09WrVI737",
+          "recGGCDKv7pOBGHYJ"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "Sikkerhetsloven": [
+          "recPAkHPfBhqZDEHN",
+          "recKbhgHbC6Fj1Ivf",
+          "rectiUpfIx9aeZ1AC"
+        ],
+        "SCF 2024.1.1": [
+          "recBjPlHi1T9GKIoR"
+        ],
+        "ISO 27002 (114)": [
+          "recZBwouS9e9i6dZp",
+          "rec5Z2N7HZuixD7Cq"
+        ],
+        "ISO 27002 (93)": [
+          "recfmrxapXNWEGEqQ",
+          "recMCNsYfjUcxbkq6"
+        ],
+        "Kode": "IN",
+        "ID": "IN-143"
+      }
+    },
+    {
+      "id": "recqUCnO5GV81smqc",
+      "createdTime": "2024-03-10T16:22:22.000Z",
+      "fields": {
+        "Kortnavn": "Segmenter fysiske områder",
+        "Pri": "BØR",
+        "Løpenummer": 144,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Skill kontorer/lokaler med ulike type sikkerhetskrav. Sørg for adgangskontroll mellom",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "SCF 2024.1.1": [
+          "recBjPlHi1T9GKIoR",
+          "rec7m5So4cMrF1EGi",
+          "recHIbJdIQjIKii2F",
+          "reczV7yOvkZOxyLYw",
+          "recady2jzKHPrJEel",
+          "rec0PudR1e1UZ14so"
+        ],
+        "ISO 27002 (114)": [
+          "rec0FB3J9UFYi8wCy",
+          "rec7rdQrzc1Oslaun",
+          "recvoyCXpAu1uK3FJ",
+          "reclAKQDRkW6EdbZ6",
+          "recUKpqfiqz9C13uQ"
+        ],
+        "ISO 27002 (93)": [
+          "recvw7Qqt8LfwHYyv",
+          "recEiuwGXUlltu7uN",
+          "rec8tdztRG13Zvl1V"
+        ],
+        "Kode": "IN",
+        "ID": "IN-144"
+      }
+    },
+    {
+      "id": "rec42Rkw77UpG1O3Q",
+      "createdTime": "2024-03-02T10:10:59.000Z",
+      "fields": {
+        "Kortnavn": "Beskytt mot kabelbrudd",
+        "Pri": "MÅ",
+        "Løpenummer": 145,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Beskytt mot brudd på strøm og nettverkskabler, inklusive trådløst, utenfor anlegg",
+        "NIST CSF 2.0": [
+          "recQn0K9bD6gPjhRz",
+          "recaHuOg09WrVI737",
+          "recGGCDKv7pOBGHYJ"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam"
+        ],
+        "ISO 27002 (114)": [
+          "rec7sz36Q6nliHqpl",
+          "recnyOpUpJ9TauV1s"
+        ],
+        "ISO 27002 (93)": [
+          "recILD0Z3rAihkvXK"
+        ],
+        "Kode": "IN",
+        "ID": "IN-145"
+      }
+    },
+    {
+      "id": "recH9TyBtAgFXVxMa",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Ha person- og adgangskontroll ",
+        "Pri": "MÅ",
+        "Løpenummer": 146,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Sørg for person- og adgangskontroll ",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recyvqFNMrPJsiV5Z"
+        ],
+        "NIST CSF 2.0": [
+          "recksxGKBBXnXFNpy",
+          "recMnY6YA1XlLW5dM",
+          "rec3SnRdDdiqA3mqE"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "IT"
+        ],
+        "Sikkerhetsloven": [
+          "recZr27qTN4iVKSVN"
+        ],
+        "ISO 27002 (114)": [
+          "recZBwouS9e9i6dZp",
+          "rec0FB3J9UFYi8wCy",
+          "rec7rdQrzc1Oslaun",
+          "recUKpqfiqz9C13uQ"
+        ],
+        "ISO 27002 (93)": [
+          "recXFfAZafE4dsFH0"
+        ],
+        "Kode": "IN",
+        "ID": "IN-146"
+      }
+    },
+    {
+      "id": "recVSj7wZggeHPZic",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Gjennomfør beredskapsøvelse (infra)",
+        "Pri": "MÅ",
+        "Løpenummer": 147,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Gjennomføre beredskapsøvelse, inkl overgang til katastrofeløsning og reetablering av infrastruktur",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "reckuHNEJgeCj5Nsp",
+          "recMogp2exfUr5OQ9"
+        ],
+        "NIST CSF 2.0": [
+          "rec1M6A18KBL3m3yJ",
+          "recVXqLbvFFenwemo",
+          "recAe3u38w6crhYUZ"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam",
+          "IT"
+        ],
+        "Sikkerhetsloven": [
+          "recPcvZd796QRGdjH"
+        ],
+        "SCF 2024.1.1": [
+          "rec7tSRPEbQpWf4V5"
+        ],
+        "Kode": "IN",
+        "ID": "IN-147"
+      }
+    },
+    {
+      "id": "rectnRtEOfvzBBTxM",
+      "createdTime": "2024-02-18T09:16:29.000Z",
+      "fields": {
+        "Kortnavn": "Sertifiser infrastruktur",
+        "Pri": "BØR",
+        "Løpenummer": 148,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Gjennomføre ekstern sikkerhetsgjennomgang (NSM)",
+        "Steg 0": true,
+        "NIST CSF 2.0": [
+          "recSy4uEqDJEYdkSc"
+        ],
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "IT",
+          "Infrastrukturteam"
+        ],
+        "Sikkerhetsloven": [
+          "recBYhyXWJs96bjEI",
+          "recSWcfLC3Ev93S4Q",
+          "recPcvZd796QRGdjH"
+        ],
+        "SCF 2024.1.1": [
+          "recJh4NoG91dvfpKB"
+        ],
+        "ISO 27002 (93)": [
+          "recdz0px6gFfXigaq"
+        ],
+        "Kode": "IN",
+        "ID": "IN-148"
+      }
+    },
+    {
+      "id": "rec3oUNNVGvCnRf8Y",
+      "createdTime": "2024-02-23T11:11:37.000Z",
+      "fields": {
+        "Kortnavn": "Forvalt lisenser",
+        "Pri": "MÅ",
+        "Løpenummer": 149,
+        "Ledetid": "Middels (1-3 mnd)",
+        "Aktivitiet": "Sjekk at lisensavtaler er oppfylt; skaler opp og ned bruk; hold oversikt over tidspunkt for fornyelser",
+        "NSMs grunnprinsipper": [
+          "reciLkMzohJYFi3ES",
+          "recW3liJr7WF31IZB",
+          "recwq3UalovO6Y8Li",
+          "recr4ghPZ8iqaGNlG"
+        ],
+        "NIST CSF 2.0": [
+          "recq8ZCNHif2SknlY",
+          "rec5H9Sn4naiV6lw9"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "recbcxk75HBOLbJOh",
+          "rec1ND9ElJs0l4cfl"
+        ],
+        "ISO 27002 (114)": [
+          "recmOtRbTE3OSkfPk",
+          "recezt1HsSQkXtMeF"
+        ],
+        "ISO 27002 (93)": [
+          "recwWx0v1g8pRQzqA"
+        ],
+        "Kode": "OP",
+        "ID": "OP-149"
+      }
+    },
+    {
+      "id": "rec4MVHOJcWlCopq8",
+      "createdTime": "2024-03-12T20:05:00.000Z",
+      "fields": {
+        "Kortnavn": "Datavask lagringsmedia",
+        "Løpenummer": 159,
+        "Aktivitiet": "Slett data fra disker og minnepinner før de sendes videre",
+        "Område": "Drift (OP)",
+        "SCF 2024.1.1": [
+          "rech8BjKwI4qEgKOH",
+          "reck3aC3hpFxlVXh5"
+        ],
+        "ISO 27002 (93)": [
+          "recownLZ5KjLml9Ne"
+        ],
+        "Kode": "OP",
+        "ID": "OP-159"
+      }
+    },
+    {
+      "id": "recL2G8SbN3cIS5qX",
+      "createdTime": "2024-02-18T09:16:02.000Z",
+      "fields": {
+        "Oscars liste": [
+          "recVphRKRMA3vGsiP",
+          "recpGmhAyrWKPWFGC"
+        ],
+        "Kortnavn": "Fjern ubrukt software",
+        "Pri": "MÅ",
+        "Løpenummer": 150,
+        "Ledetid": "Lang (> 3 mnd)",
+        "Aktivitiet": "Plan for å skru av software i stort og smått, inklusive WebLogic  app-servere. Hold øye med point-of-return for kritiske overganger",
+        "Steg 0": true,
+        "NSMs grunnprinsipper": [
+          "recr4ghPZ8iqaGNlG",
+          "rec3k9yZksALsyxD5"
+        ],
+        "NIST CSF 2.0": [
+          "recq8ZCNHif2SknlY",
+          "rec5H9Sn4naiV6lw9",
+          "recrArQ3RM9uQlpBZ",
+          "recgNV219nbFbfbjP"
+        ],
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "reca01gi3ByyBCOWz",
+          "rec27pzbifOy6JtS7",
+          "rec1ND9ElJs0l4cfl"
+        ],
+        "ISO 27002 (114)": [
+          "recqPLoHXi0D16Oex"
+        ],
+        "Kode": "OP",
+        "ID": "OP-150"
+      }
+    },
+    {
+      "id": "recj1ncxt1xPD9bK4",
+      "createdTime": "2024-03-05T17:06:44.000Z",
+      "fields": {
+        "Kortnavn": "Off-board teammedlem",
+        "Pri": "MÅ",
+        "Løpenummer": 151,
+        "Ledetid": "Kort (< 1 mnd)",
+        "Aktivitiet": "Fjern tilganger og rettigheter for folk som forlater teamet",
+        "Område": "Drift (OP)",
+        "Hvem": [
+          "Ops-team",
+          "Produktteam"
+        ],
+        "SCF 2024.1.1": [
+          "recxj0W3ZPgqfISlV",
+          "reczwDJMvU3p9ta2x",
+          "recIYwoIb6zl33lvu",
+          "recICeUlSMuQkdSxt",
+          "recIj0B04vNEmNsqP",
+          "recf84x1CLWhs9AFi",
+          "recZyBIZElFztHkDV"
+        ],
+        "Kode": "OP",
+        "ID": "OP-151"
+      }
+    },
+    {
+      "id": "recuSThz4dJ6fVkN5",
+      "createdTime": "2024-03-07T09:20:34.000Z",
+      "fields": {
+        "Kortnavn": "Deny-by-default trafikk",
+        "Pri": "MÅ",
+        "Løpenummer": 152,
+        "Ledetid": "Middels (1-3 mnd)",
+        "NSA CTR NISG": [
+          "reco15f1JBQpIE95N",
+          "recjbrtNkbLt7zh8w"
+        ],
+        "Aktivitiet": "Krev eksplisitt åpning av ut- og inngående trafikk",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam",
+          "IT"
+        ],
+        "SCF 2024.1.1": [
+          "recz3t6tVkC4FYMYW",
+          "rec6Tsx8G0S0qtYNY"
+        ],
+        "Kode": "IN",
+        "ID": "IN-152"
+      }
+    },
+    {
+      "id": "recV7rVcHVLEWmoQD",
+      "createdTime": "2024-03-07T09:23:09.000Z",
+      "fields": {
+        "Kortnavn": "Flere nettverkslag",
+        "Pri": "MÅ",
+        "Løpenummer": 153,
+        "Ledetid": "Lang (> 3 mnd)",
+        "NSA CTR NISG": [
+          "recTsNXKzyskCOxJR"
+        ],
+        "Aktivitiet": "DMZ med tosidig firewall for inngående trafikk",
+        "Område": "Infrastruktur (IN)",
+        "Hvem": [
+          "Infrastrukturteam",
+          "IT"
+        ],
+        "SCF 2024.1.1": [
+          "recvP7PBZvIyq4RHx",
+          "recb2saQ7kb9wdGDA",
+          "recEgrIlwxoWw4RXy",
+          "recqCrC3PouKZvyvD",
+          "recouEI4Gv2mOoVCH",
+          "recHHg69S7jvyLLQN",
+          "recnd3KvO6Ym6d2db",
+          "recbxPHIiJ0qgr9sH"
+        ],
+        "ISO 27002 (114)": [
+          "recW6iV45ccNqkkak",
+          "rec2YJNOSkNpNcRNG"
+        ],
+        "ISO 27002 (93)": [
+          "recR67MKg5lg3frXL",
+          "recFyHFWksL4VapuN",
+          "recYl5EMuPZy2AAXq"
+        ],
+        "Kode": "IN",
+        "ID": "IN-153"
+      }
+    },
+    {
+      "id": "recOlGmA2NiRg2Q7U",
+      "createdTime": "2024-03-12T06:56:40.000Z",
+      "fields": {
+        "Kortnavn": "Dekket (høynivå)",
+        "Løpenummer": 154,
+        "NSA CTR NISG": [
+          "recOPcppp0pTEn9Zg"
+        ],
+        "Aktivitiet": "Dekket av mange kontrollere",
+        "Område": "Ubrukt (--)",
+        "Datatilsynet - innebygd personvern": [
+          "recR0aI17VuzfSNBa",
+          "recl86uJHvDHTx99C",
+          "rec67ziNkslQuctLR",
+          "recQ2aH1hgXOfynYY",
+          "recGQ1r0T9QzQjdC9"
+        ],
+        "SCF 2024.1.1": [
+          "recHPrb5mIrxmtLq3",
+          "recIWh1HoWQlsUDZl",
+          "rec3ARbwNCA9bdLqt",
+          "recdAiJDG2nC7arEw",
+          "recaaq15SvRIoCblp",
+          "recA23NAvoNNvIQMp",
+          "recfNfnZyAXfZJqZs",
+          "rech6iHCtOlVlny7n",
+          "recep8SewRxcYOwol",
+          "recCNYaDuRT02YyHj",
+          "recR6aSdIcdGyDQFS",
+          "rech7HHgtA6AXJ2Kg",
+          "recet5VaEJM4lQnGb",
+          "recYWPn6AvPQnPfDY",
+          "recR2ICjAMOCCHQJ1",
+          "recquO1kYjr0jt9bi",
+          "recCwJMdtvU7gEb1D",
+          "recB370Xd0KiI3iEB",
+          "reccfdxpwl9ZvjVUL",
+          "rec2VL4xo9xWxiV3j",
+          "rec8OYICs2IEabQhV",
+          "recV06IQXdlLfs1ke",
+          "reczllWRosALWR2tv",
+          "recbWhSWAGxWGQ1Fp",
+          "rec7GwT7rbflpyCD9",
+          "recIQoPAvexIBnmSC",
+          "recBVRFmZjSJbqJNt",
+          "recOcINWA2oB3wWRF",
+          "recHFY0m2CqwBScJr",
+          "recizOiaNtF09aVyT",
+          "recWr9hNEOAtvV8kC",
+          "recwYbTjdJ9ZukA6t",
+          "recrAUUCNq0X9s0fH",
+          "recYKkNNAyFkXL5Lw",
+          "recv3sMnIYLLnlaBJ",
+          "reci6HpWfKW9LuiNu",
+          "recP3dlmdWeD6fCDY",
+          "recfPf46XddT3AkEx",
+          "recDJvzU0OxIOWl3q",
+          "recmNoqRKVnYFTrlL",
+          "recBwEbzxwSpknGcp",
+          "reclA51455DvX3I1q",
+          "recxAEgdW58JGIMof",
+          "reccLrz8onOpemuTA",
+          "recWJx8vUH6xLmJRb",
+          "recHPONEu91D3lg9T",
+          "recDCMo3sYqjDb131",
+          "recvNvV40hbADOBXO"
+        ],
+        "ISO 27002 (114)": [
+          "recLClIZTZ20GrsXp",
+          "recihkACqh7YJUFGP",
+          "recM5uPlXkShl3FZ5"
+        ],
+        "ISO 27002 (93)": [
+          "recvv3J24vS5VHAJq",
+          "recl3K61MLawWop9N",
+          "recxQIDoH3GcEp0iI",
+          "recHp1W6s4F8OQDgP"
+        ],
+        "Kode": "--",
+        "ID": "---154"
+      }
+    },
+    {
+      "id": "rec1EuIqjBn45diUM",
+      "createdTime": "2024-03-12T06:59:20.000Z",
+      "fields": {
+        "Kortnavn": "Ikke relevant",
+        "Løpenummer": 155,
+        "Aktivitiet": "Ikke relevant",
+        "Område": "Ubrukt (--)",
+        "SCF 2024.1.1": [
+          "recTsaJMWBRBmUyhB",
+          "rec38oXgnwo9J61Ow",
+          "recYFzicb75cNmfMy",
+          "recwTf45BBIuev5E9",
+          "recSjrrUUkvJO8UsD",
+          "recV3F9HOgylK8XWL",
+          "recHssEvln0Q6WKKP",
+          "recNaXgQkpzbwGaj3",
+          "recEn018RLPT2oHzL",
+          "recNLbYyjPUklYLB9",
+          "recWDlPR9mOT5Pckb",
+          "rec6WQcAsjqFDWqsA",
+          "reclwGjkwxiCjnnlu",
+          "recW5UEeu3FtnfwN3",
+          "rec2Nsgtw9TSa0UQ7",
+          "rec9ikjy5bgXN8IcS",
+          "recrnBmuJIaMTnJoz",
+          "recCN1bAX33Ujoqlv",
+          "recEPSwus7JBXz6Vz",
+          "rec9u5Mq1jtriRkxQ",
+          "recjp9nis4w9hNYjm",
+          "recv4keOXdj30blcv",
+          "rec5LSLHdpaZ1VsFe",
+          "recUBLFuYfwCgyqOK",
+          "recwB0iy38hLX41UT",
+          "recjOsZaZhNfmqVpM",
+          "recYOeUJLGCu1lGxn",
+          "rect26rsx2kD8VDDk",
+          "reca582vJo6UQr1CZ",
+          "recYfGUe0Z44ekOPy",
+          "recaZFuTAOQCYPADw",
+          "recXUe7atkktIItrS",
+          "recZThjdKYfIkyVgF",
+          "recHiEENxUogU3YkF",
+          "rec0fvYILpRPxXGYk",
+          "recgBUv0tY45grFbv",
+          "recQla607k7ZjZ6BX",
+          "recVVXUmHiKkBH6sk",
+          "recXbOfwHbl7Hn5I9",
+          "reczmhjIRv9DPeJLQ",
+          "recoDIdz2MoHwusWx",
+          "rec4xs4EDEcghdu6k",
+          "recpENUxevE4MUSCr",
+          "receLvbGYiWWmR7DT",
+          "recAxmLXsU2D8q9Vv",
+          "recjYdEGihjHb7ql4",
+          "recnAkEgpBCbLoRF5",
+          "recybkATwKVTMYz7I",
+          "recjK9PO5sbL2nCv7",
+          "recynEOXgC96TFJWg",
+          "rec6ydCWK6XoMZemT",
+          "recWhR86n1Gdd3eXS",
+          "recIN0BZY4hAAQxMF",
+          "recEAwXn7ABJOrmjQ",
+          "recPH1RgeseYCfN2w",
+          "rec0kimAQK8OZQy4Q",
+          "recWlsKdgvY8fTI1n",
+          "recpj5uFPSbKIzZOT",
+          "rectFBgaNbBN1BqSd",
+          "recB3O79wPYg1pQ35",
+          "rec32DDSexj4YBKuI",
+          "rec9tkf0uvsijrv5y",
+          "recxtXqvH6TPZSvC5",
+          "recniPb2wcSPZBbfC",
+          "rec1Mmb7KA47Bj6tf",
+          "recfyoU35v81lW9IQ",
+          "recfbGw78Gu02mTBS",
+          "rec86mhKjNlXFHF1w",
+          "recK7PifmgZsCOm0Q",
+          "recmHGI5rBX5et9SE",
+          "rechHpaLpGocZjhql",
+          "rect96GuaKr58hyz7",
+          "recxg5G7MxeMgfz9V",
+          "recgYHkwmpUO5JbNH",
+          "reczvjWPP8ZLqo7Aa",
+          "recsMxgpb6yArQOpw",
+          "recICScTRyJvt9A7g"
+        ],
+        "ISO 27002 (93)": [
+          "rec8fkW5jqXTQRSHB"
+        ],
+        "Kode": "--",
+        "ID": "---155"
+      }
+    },
+    {
+      "id": "rec7GCtvSGPFPAGA3",
+      "createdTime": "2024-03-12T07:01:17.000Z",
+      "fields": {
+        "Kortnavn": "Utenfor skop",
+        "Løpenummer": 156,
+        "Aktivitiet": "Dekkes av annet metodeverk, eller på annet nivå",
+        "Område": "Ubrukt (--)",
+        "ISO 27002 (114)": [
+          "recDBmpIhIQERXWjJ",
+          "recDZlIzXuADMA3Uk",
+          "recAqhrpXyRRNQn5X",
+          "recM4DxorU2H87flU",
+          "recoSB44t7SC1ql1B",
+          "recmTt34HXczcUJ3P",
+          "rec7yNXpytlysVhCt"
+        ],
+        "ISO 27002 (93)": [
+          "recnGldtAs5yQwLMG",
+          "recYiVjNehHqazJN8",
+          "recGgmQ0WTB1CmC1a",
+          "reclX5scfgw0oJ6A2",
+          "recnqcOVkWb43seOE",
+          "recSxPq2jTjSam1X7"
+        ],
+        "Kode": "--",
+        "ID": "---156"
+      }
+    },
+    {
+      "id": "recSZo0O4XX5BewA7",
+      "createdTime": "2024-03-12T10:16:13.000Z",
+      "fields": {
+        "Kortnavn": "Definisjon/intro",
+        "Løpenummer": 157,
+        "NSA CTR NISG": [
+          "recI7FrfIGxIPjsoi",
+          "recrQSW5bgILQZjzv"
+        ],
+        "Aktivitiet": "Rammeverk gir intro/definisjon av tema",
+        "Område": "Ubrukt (--)",
+        "Kode": "--",
+        "ID": "---157"
+      }
+    },
+    {
+      "id": "reci10ldHW2VvsbE7",
+      "createdTime": "2024-04-21T13:59:30.000Z",
+      "fields": {
+        "Kortnavn": "Driftskontinuitet plattform",
+        "Løpenummer": 166,
+        "Aktivitiet": "Etabler gjenopprettelsemål/-punkter (RTO/RPO) som understøtter produktenes RTO/RPO",
+        "Område": "Plattform (PF)",
+        "SCF 2024.1.1": [
+          "recuKczqtE9PAYsiR",
+          "rec8qVDrTgOtkaVEr",
+          "recDaPeThbLLiiR8N"
+        ],
+        "Kode": "PF",
+        "ID": "PF-166"
+      }
+    },
+    {
+      "id": "rec8iF9ZgBeksqu7p",
+      "createdTime": "2024-04-21T14:01:07.000Z",
+      "fields": {
+        "Kortnavn": "Driftskontinuitet infrastruktur",
+        "Løpenummer": 167,
+        "Aktivitiet": "Etabler gjenopprettelsemål/-punkter (RTO/RPO) som understøtter plattformens RTO/RPO",
+        "Område": "Infrastruktur (IN)",
+        "SCF 2024.1.1": [
+          "recuKczqtE9PAYsiR",
+          "rec8qVDrTgOtkaVEr",
+          "recDaPeThbLLiiR8N"
+        ],
+        "Kode": "IN",
+        "ID": "IN-167"
+      }
+    },
+    {
+      "id": "recTAhw03sPhQisYs",
+      "createdTime": "2024-04-26T14:00:11.000Z",
+      "fields": {
+        "Kortnavn": "On-board teammedlem",
+        "Løpenummer": 168,
+        "Aktivitiet": "Gjennomgå retningslinger, avtaler og gi tilganger",
+        "Område": "Drift (OP)",
+        "SCF 2024.1.1": [
+          "rec9uFImmqK4S9xrW"
+        ],
+        "Kode": "OP",
+        "ID": "OP-168"
+      }
+    },
+    {
+      "id": "reccLYhjEQprOL0sb",
+      "createdTime": "2024-05-10T05:11:45.000Z",
+      "fields": {
+        "Kortnavn": "Vedlikehold avhengigheter",
+        "Pri": "MÅ",
+        "Løpenummer": 170,
+        "Ledetid": "Kort (< 1 mnd)",
+        "Aktivitiet": "Vurder og minimer hvilke avhengigheter som trekkes inn, og fjern ubrukte. Hvis det er åpen kildekode, vurder forvaltningsevne og sikkerhet. ",
+        "OSS-spørsmål": [
+          "recwufi2FuhxRxHbP",
+          "recyY6FQugMaRucZv",
+          "recN7NOIukKoHLoUB",
+          "rec09RipENkLxm0kJ",
+          "recvO0XBj7nftPnbO",
+          "recNjrzEQhpM8hzXR",
+          "rec9fU2nJV78KvzC5",
+          "recXmMbuOC146DUhd",
+          "recMPltRdT3sX6LaQ",
+          "recYS26Kv6fIqbEwM",
+          "recFs3EePXU2ZfgJM",
+          "recSktAKuK9sRqh6A",
+          "rec5UwGn9FUFrOKty",
+          "rechFNmyXE2vkVPT6",
+          "rechP1KNzEPZcfz11"
+        ],
+        "Område": "Systemutvikling (UT)",
+        "Hvem": [
+          "Produktteam"
+        ],
+        "Kode": "UT",
+        "ID": "UT-170"
+      }
+    }
+  ]
+}

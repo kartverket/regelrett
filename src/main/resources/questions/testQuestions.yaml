@@ -1,0 +1,186 @@
+name: "YAML-data"
+columns:
+  - type: "OPTION_SINGLE"
+    name: "Kortnavn"
+  - type: "OPTION_SINGLE"
+    name: "ID"
+  - type: "OPTION_SINGLE"
+    name: "Kontroller"
+  - type: "OPTION_SINGLE"
+    name: "Svar"
+  - type: "OPTION_SINGLE"
+    name: "Priority"
+    options:
+      - name: "MÅ"
+        color: "orangeDark1"
+      - name: "KAN"
+        color: "greenBright"
+records:
+  - id: "Z-420"
+    question: "How many countries are there in the world?"
+    metadata:
+      answerMetadata:
+        type: "SELECT_SINGLE"
+        options:
+          - "180"
+          - "190"
+          - "195"
+          - "205"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-420"
+        - key: "Kontroller"
+          value:
+            - "How many countries are there in the world?"
+        - key: "Kortnavn"
+          value:
+            - "Antall land"
+        - key: "Priority"
+          value:
+            - "MÅ"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"
+  - id: "Z-421"
+    question: "What is the capital of France?"
+    metadata:
+      answerMetadata:
+        type: "TEXT_SINGLE_LINE"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-421"
+        - key: "Kontroller"
+          value:
+            - "What is the capital of France?"
+        - key: "Subject"
+          value:
+            - "Geography"
+            - "History"
+          type: "OPTION_MULTIPLE"
+          options:
+            - "Geography"
+            - "History"
+            - "Science"
+        - key: "Priority"
+          value:
+            - "KAN"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"
+  - id: "Z-422"
+    question: "What is the capital of Spain?"
+    metadata:
+      answerMetadata:
+        type: "TEXT_SINGLE_LINE"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-422"
+        - key: "Kontroller"
+          value:
+            - "What is the capital of Spain?"
+        - key: "Kortnavn"
+          value:
+            - "Antall land"
+        - key: "Priority"
+          value:
+            - "BURDE"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"
+  - id: "Z-423"
+    question: "Andel av requestene som gir tjenestefeil"
+    metadata:
+      answerMetadata:
+        type: "PERCENT"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-423"
+        - key: "Kontroller"
+          value:
+            - "Andel av requestene som gir tjenestefeil"
+        - key: "Kortnavn"
+          value:
+            - "Andel tjenestefeil"
+        - key: "Priority"
+          value:
+            - "MÅ"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"
+  - id: "Z-424"
+    question: "Hvor lang er gjennomsnittlig responstid?"
+    metadata:
+      answerMetadata:
+        type: "TIME"
+        units:
+          - "ms"
+          - "sek"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-424"
+        - key: "Kontroller"
+          value:
+            - "Hvor lang er gjennomsnittlig responstid?"
+        - key: "Kortnavn"
+          value:
+            - "Gjennomsnittlig responstid"
+        - key: "Priority"
+          value:
+            - "MÅ"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"
+  - id: "Z-425"
+    question: "Fullført sikkerhetssjekk"
+    metadata:
+      answerMetadata:
+        type: "CHECKBOX"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-425"
+        - key: "Kontroller"
+          value:
+            - "Fullført sikkerhetssjekk"
+        - key: "Kortnavn"
+          value:
+            - "Sikkerhetssjekk"
+        - key: "Priority"
+          value:
+            - "MÅ"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"
+  - id: "Z-426"
+    question: "Skriv noe fint om deg selv"
+    metadata:
+      answerMetadata:
+        type: "TEXT_MULTI_LINE"
+      optionalFields:
+        - key: "ID"
+          value:
+            - "Z-426"
+        - key: "Kontroller"
+          value:
+            - "Skriv noe fint om deg selv"
+        - key: "Kortnavn"
+          value:
+            - "Noe fint"
+        - key: "Priority"
+          value:
+            - "MÅ"
+          type: "OPTION_SINGLE"
+          options:
+            - "MÅ"
+            - "KAN"

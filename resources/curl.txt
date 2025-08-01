@@ -1,0 +1,64 @@
+Curl-kommandoer for å hente ut informasjon fra AirTable-tabellene. Forutsetter gyldig token
+
+Metodeverk for deling:
+
+
+https://airtable.com/appzJQ8Tkmm8DobrJ/shrSiMBbhREpMRyV0/tblLZbUqA0XnUgC2v
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v" \
+-H "Authorization: Bearer $TOKEN"
+
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v" \
+-H "Authorization: Bearer $TOKEN"
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?offset=itrEBNYNjNHE6o6gX/recc7IE7PBvvkrcHN" \
+-H "Authorization: Bearer $TOKEN"
+
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?view=viw2XliGUJu5448Hk" \
+-H "Authorization: Bearer $TOKEN"
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?view=viw2XliGUJu5448Hk&offset=itrudhieToHuw2ZEt/recXVaggbJhBIsTTe" \
+-H "Authorization: Bearer $TOKEN"
+
+
+
+
+Hente ut informasjon fra ulike records:
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v/recoLfk5vlyM96vd6" \
+-H "Authorization: Bearer $TOKEN"
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v/recdOhcX8zVd1sfZy" \
+-H "Authorization: Bearer $TOKEN"
+
+
+Alle:
+
+https://airtable.com/appsIiBWlCCSsMmRB/shrc3XLwuVLg99qSG/tbl4pNqNp2wLyI6iv
+
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?view=viw2XliGUJu5448Hk" \
+-H "Authorization: Bearer $TOKEN"
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?fields=ID&fields=Aktivitiet&fields=Pri&fields=Kortnavn" \
+-H "Authorization: Bearer $TOKEN"
+
+curl "https://api.airtable.com/v0/appzJQ8Tkmm8DobrJ/tblLZbUqA0XnUgC2v?view=viwCjOnfZlhMBNVJj" \
+-H "Authorization: Bearer $TOKEN"
+
+curl "https://api.airtable.com/v0/meta/bases/appzJQ8Tkmm8DobrJ/views" \
+-H "Authorization: Bearer $TOKEN"
+
+{"error":{"type":"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND","message":"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct."}}%
+
+curl "https://api.airtable.com/v0/meta/bases" \
+-H "Authorization: Bearer $TOKEN"
+
+{"bases":[{"id":"appzJQ8Tkmm8DobrJ","name":"Metodeverk","permissionLevel":"create"}]
+
+curl "https://api.airtable.com/v0/meta/bases/appzJQ8Tkmm8DobrJ/tables" \
+-H "Authorization: Bearer $TOKEN"
+
+https://api.airtable.com/v0/meta/bases/{baseId}/tables
