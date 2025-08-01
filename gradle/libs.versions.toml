@@ -10,6 +10,7 @@ mamoe-yamlkt-version = "0.13.0"
 zaxxer-hikari-version = "6.3.0"
 ben-manes-caffeine-version = "3.2.0"
 testcontainers-version = "1.21.3"
+postgresql-driver-version = "42.7.7"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-version" }
@@ -39,6 +40,7 @@ flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql
 ajalt-clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "ajalt-clikt-version" }
 mamoe-yamlkt = { module = "net.mamoe.yamlkt:yamlkt", version.ref = "mamoe-yamlkt-version" }
 zaxxer-hikari = { module = "com.zaxxer:HikariCP", version.ref = "zaxxer-hikari-version" }
+postgresql-driver = { module = "org.postgresql:postgresql", version.ref = "postgresql-driver-version" }
 ben-manes-caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "ben-manes-caffeine-version" }
 testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers-version" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-version" }

@@ -47,7 +47,9 @@ dependencies {
     implementation(libs.ajalt.clikt)
     implementation(libs.mamoe.yamlkt)
     implementation(libs.zaxxer.hikari)
+    implementation(libs.postgresql.driver)
     implementation(libs.flyway.database.core)
+    implementation(libs.flyway.database.postgresql)
     implementation(libs.ben.manes.caffeine)
 
     testImplementation(libs.testcontainers.testcontainers)

@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import KvLogo from "@/assets/kartverketlogo.svg";
+import BekkLogo from "@/assets/Bekk__Hovedlogo_Natt.svg";
 import { LogOut, UserCircle } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 
@@ -17,7 +17,7 @@ export default function ProtectedRoute() {
             className="ml-2 cursor-pointer font-bold text-lg"
             onClick={() => navigate("/")}
           >
-            <img src={KvLogo} alt="Kartverket logo" />
+            <img src={BekkLogo} width="50px" alt="Bekk logo" />
           </div>
         </header>
         <div className="flex flex-row gap-2 items-center justify-end ">
