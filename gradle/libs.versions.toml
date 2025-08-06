@@ -44,6 +44,7 @@ postgresql-driver = { module = "org.postgresql:postgresql", version.ref = "postg
 ben-manes-caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "ben-manes-caffeine-version" }
 testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers-version" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-version" }
+junit-platform-launcher = { module = 'org.junit.platform:junit-platform-launcher' }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }

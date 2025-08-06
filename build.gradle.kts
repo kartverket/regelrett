@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -16,12 +18,6 @@ application {
 repositories {
     mavenCentral()
 }
-
-// buildscript {
-//     dependencies {
-//         implementation(libs.flyway.database.postgresql)
-//     }
-// }
 
 dependencies {
     implementation(libs.ktor.server.core)
@@ -56,4 +52,25 @@ dependencies {
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks {
+    withType<ShadowJar> {
+        isZip64 = true
+        mergeServiceFiles()
+    }
+    withType<Test> {
+        testLogging {
+            showCauses = true
+            showExceptions = true
+            exceptionFormat = TestExceptionFormat.FULL
+            events("passed", "skipped", "failed")
+        }
+        useJUnitPlatform {
+            if (!project.hasProperty("integrationTest")) {
+                excludeTags = setOf("IntegrationTest")
+            }
+        }
+    }
 }
