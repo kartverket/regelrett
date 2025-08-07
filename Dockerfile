@@ -16,7 +16,6 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml ./
-COPY public public
 COPY app app
 COPY conf/defaults.yaml ./conf/defaults.yaml
 
