@@ -47,6 +47,7 @@ export const TableFilter = <TData,>({
 
     setSearchParams(
       (current) => {
+        current.delete('page');
         current.getAll('filter').forEach((value) => {
           if (value.startsWith(column.id)) {
             current.delete('filter', value);

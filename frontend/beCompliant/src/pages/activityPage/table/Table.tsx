@@ -65,6 +65,8 @@ export function TableComponent({
 
   const [search] = useSearchParams();
   const filterSearchParams = search.getAll('filter');
+  const pageParam = search.get('page');
+  const pageIndex = pageParam ? parseInt(pageParam) - 1 : 0;
 
   function urlFilterParamsToColumnFilterState(params: string[]) {
     const grouped: Record<string, string[]> = {};
@@ -241,6 +243,10 @@ export function TableComponent({
     state: {
       columnVisibility,
       sorting,
+      pagination: {
+        pageIndex: pageIndex,
+        pageSize: 10,
+      },
     },
     onSortingChange: setSorting,
     autoResetAll: false,
@@ -250,10 +256,6 @@ export function TableComponent({
     getPaginationRowModel: getPaginationRowModel(),
     globalFilterFn: globalFilterFn,
     initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
       columnFilters: search.has(`filter`)
         ? urlFilterParamsToColumnFilterState(filterSearchParams)
         : JSON.parse(localStorage.getItem(`filters_${tableData.id}`) || `[]`),

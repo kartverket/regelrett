@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useFetchQuestion } from '../../hooks/useFetchQuestion';
 import { ErrorState } from '../../components/ErrorState';
 import { LoadingState } from '../../components/LoadingState';
@@ -55,7 +55,6 @@ export default function QuestionPage() {
 
   const [isCommentEditing, setIsCommentEditing] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
   if (
     questionIsLoading ||
@@ -78,9 +77,7 @@ export default function QuestionPage() {
   }
 
   const handleDiscard = () => {
-    navigate(
-      location.pathname.substring(0, location.pathname.lastIndexOf('/')) || '/'
-    );
+    navigate(-1);
   };
 
   const handleBackButton = () => {
