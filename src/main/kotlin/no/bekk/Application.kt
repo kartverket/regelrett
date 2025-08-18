@@ -16,7 +16,6 @@ import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.sessions.*
 import kotlinx.coroutines.*
-import no.bekk.authentication.UserSession
 import no.bekk.authentication.initializeAuthentication
 import no.bekk.configuration.CommandLineArgs
 import no.bekk.configuration.Config
@@ -134,13 +133,6 @@ fun Application.configureAPILayer(
     }
     install(ContentNegotiation) {
         json()
-    }
-
-    install(Sessions) {
-        cookie<UserSession>("user_session") {
-            cookie.path = "/"
-            cookie.httpOnly = false
-        }
     }
 
     install(XForwardedHeaders)

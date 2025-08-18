@@ -8,17 +8,19 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.uri
 import io.ktor.server.response.*
+import io.ktor.server.sessions.*
 import io.ktor.server.util.url
 import kotlinx.serialization.Serializable
 import no.bekk.configuration.Config
 import no.bekk.configuration.getIssuer
 import no.bekk.configuration.getJwksUrl
 import no.bekk.di.Redirects
+import no.bekk.util.logger
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
 @Serializable
-data class UserSession(val state: String, val token: String)
+data class UserSession(val state: String, val token: String, val expiresAt: Long)
 
 fun Application.initializeAuthentication(config: Config, httpClient: HttpClient, redirects: Redirects) {
     val issuer = getIssuer(config.oAuth)
@@ -29,6 +31,13 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
         .cached(10, 24, TimeUnit.HOURS)
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
+
+    install(Sessions) {
+        cookie<UserSession>("user_session") {
+            cookie.path = "/"
+            cookie.httpOnly = false
+        }
+    }
 
     install(Authentication) {
         oauth("auth-oauth-azure") {
@@ -49,7 +58,6 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                             redirects.r[state] = it
                         }
                     },
-
                 )
             }
             client = httpClient
@@ -57,18 +65,25 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
 
         session<UserSession>("auth-session") {
             validate { session ->
-                if (session.state != "" && session.token != "") {
+                if (session.state != "" && session.token != "" && System.currentTimeMillis() < session.expiresAt) {
                     session
                 } else {
+                    if (System.currentTimeMillis() > session.expiresAt) {
+                        logger.debug("Invalid session ${session.state}: Token expired.")
+                    } else {
+                        logger.debug("Invalid session ${session.state}: Missing token or state.")
+                    }
                     null
                 }
             }
+
             challenge {
                 val redirectUrl = call.url {
                     path("/login")
                     parameters.append("redirectUrl", call.request.uri)
                     build()
                 }
+
                 call.respondRedirect(redirectUrl)
             }
         }
@@ -79,13 +94,19 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                 acceptLeeway(3)
                 withAudience(clientId)
             }
+
             validate { jwtCredential ->
-                JWTPrincipal(jwtCredential.payload)
-            }
-            challenge { _, _ ->
-                if (call.request.local.uri.startsWith("/api")) {
-                    call.respond(HttpStatusCode.Unauthorized, "You are unauthenticated")
+                if (jwtCredential.audience.contains(clientId)) {
+                    logger.debug("Validating token: accepted.")
+                    JWTPrincipal(jwtCredential.payload)
+                } else {
+                    logger.debug("Validating token: rejected.")
+                    null
                 }
+            }
+
+            challenge { _, _ ->
+                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }
     }

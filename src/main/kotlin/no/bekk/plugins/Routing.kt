@@ -23,7 +23,7 @@ fun Application.configureRouting(
         call.respondText("Health OK", ContentType.Text.Plain)
     }
 
-    get("/schemas") {
+    get("/api/schemas") {
         val schemas = dependencies.formService.getFormProviders().map {
             it.getSchema()
         }
@@ -37,10 +37,11 @@ fun Application.configureRouting(
 
         get("/callback") {
             val currentPrincipal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+
             currentPrincipal?.let { principal ->
                 principal.state?.let { state ->
-                    call.sessions.set(UserSession(state, principal.accessToken))
-                    dependencies.redirects.r[state]?.let { redirect ->
+                    call.sessions.set(UserSession(state, principal.accessToken, System.currentTimeMillis() + principal.expiresIn * 1000))
+                    dependencies.redirects.r.remove(state)?.let { redirect ->
                         call.respondRedirect(redirect)
                         return@get
                     }
@@ -52,6 +53,7 @@ fun Application.configureRouting(
 
     authenticate("auth-session") {
         webRouting(config.frontendDevServer, config.homePath)
+
         get("/logout") {
             call.sessions.clear<UserSession>()
             call.respondRedirect("/")

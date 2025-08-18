@@ -25,7 +25,7 @@ fun Route.webRouting(cfg: FrontendDevServerConfig, homePath: String) {
 
         // Proxy static asset requests to dev server
         get("/app/{...}") {
-            call.respondRedirect("${cfg.host}:${cfg.httpPort}${call.request.local.uri}")
+            call.respondRedirect("http://${cfg.host}:${cfg.httpPort}${call.request.local.uri}")
         }
     } else {
         val frontendBuild = "$homePath/dist"
@@ -103,7 +103,7 @@ class RootTemplate(val cfg: FrontendDevServerConfig, val m: Manifest, val entry:
                 link(href = "/$s", rel = "stylesheet") {}
             }
         }
-        body {
+        body(classes = "kartverket") {
             div { id = "root" }
         }
     }
@@ -144,7 +144,7 @@ class DevTemplate(val cfg: FrontendDevServerConfig) : Template<HTML> {
             script(type = "module", src = "${cfg.devUrl}/@vite/client") {}
             script(type = "module", src = "${cfg.devUrl}/app/main.tsx") {}
         }
-        body {
+        body(classes = "kartverket") {
             div { id = "root" }
         }
     }

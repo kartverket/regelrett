@@ -13,9 +13,8 @@ import no.bekk.util.logger
 fun Route.userInfoRouting(authService: AuthService) {
     route("/userinfo") {
         get {
+            logger.debug("Received GET /userinfo")
             withContext(Dispatchers.Default) {
-                logger.debug("Received GET /userinfo")
-
                 val groups = async { authService.getGroupsOrEmptyList(call) }
                 val user = async { authService.getCurrentUser(call) }
                 val superuser = async { authService.hasSuperUserAccess(call) }

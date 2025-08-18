@@ -78,7 +78,7 @@ class ApplicationTest {
             // Get all registered routes and filter out those that match any of the public endpoint regex patterns
 
             val nonPublicRoutes = routingRoot.getAllRoutes().filter { route ->
-                route.toString().startsWith("/api")
+                route.toString().startsWith("/api") && !route.toString().contains("schemas")
             }
 
             assertAll(

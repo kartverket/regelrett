@@ -17,12 +17,12 @@ data class MicrosoftGraphGroup(
 data class MicrosoftGraphUser(
     val id: String,
     val displayName: String,
-    val mail: String,
+    val mail: String?,
 )
 
 @Serializable
 data class UserInfoResponse(
     val groups: List<MicrosoftGraphGroup>,
     val user: MicrosoftGraphUser,
-    val superuser: Boolean
+    val superuser: Boolean,
 )
