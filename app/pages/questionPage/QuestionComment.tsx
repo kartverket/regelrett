@@ -1,4 +1,5 @@
-import { type KeyboardEvent, useEffect, useRef, useState } from "react";
+import type { KeyboardEvent} from "react";
+import { useEffect, useRef, useState } from "react";
 import { DeleteCommentModal } from "../../components/DeleteCommentModal";
 import type { Question, User } from "../../api/types";
 import { useSubmitComment } from "../../hooks/useComments";

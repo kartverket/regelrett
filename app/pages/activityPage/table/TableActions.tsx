@@ -30,10 +30,12 @@ export const TableActions = <TData,>({
   const resetAllFilters = () => {
     table.setColumnFilters([]);
     localStorage.removeItem(`filters_${formId}`);
+    table.setPageIndex(0);
     setSearchParams(
       (current) => {
         const newParams = new URLSearchParams(current);
         newParams.delete("filter");
+        newParams.delete("page");
         return newParams;
       },
       { replace: true },
@@ -44,7 +46,7 @@ export const TableActions = <TData,>({
     <div
       className={`sticky bg-background w-full ${storedRedirect ? "top-10" : "top-0"} z-20  px-10 py-5 flex flex-col gap-2 `}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 text-foreground/80">
         <ListFilter className="size-5" />
         <h4 className="text-sm font-normal">FILTER</h4>
       </div>

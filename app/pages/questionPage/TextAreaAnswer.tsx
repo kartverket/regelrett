@@ -24,7 +24,7 @@ export function TextAreaAnswer({
     <Textarea
       value={answerInput}
       onChange={(e) => setAnswerInput(e.target.value)}
-      className="w-1/2 resize-y bg-input"
+      className="w-1/2 resize-y bg-card"
       onBlur={() => {
         if (answerInput !== latestAnswer) {
           submitAnswer(answerInput ?? "");

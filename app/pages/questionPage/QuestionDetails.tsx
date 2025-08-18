@@ -10,8 +10,19 @@ import { Badge } from "../../components/ui/badge";
 
 type Props = {
   question: Question;
-  answerUpdated: Date;
+  answerUpdated: Date | undefined;
   formId: string;
+};
+
+type Value = {
+  value: string;
+  backgroundColor: string | null;
+  useWhiteText: boolean;
+};
+
+type FieldData = {
+  key: string;
+  value: Value[];
 };
 
 export function QuestionDetails({ question, answerUpdated, formId }: Props) {
@@ -25,29 +36,33 @@ export function QuestionDetails({ question, answerUpdated, formId }: Props) {
   if (columnsError)
     return <ErrorState message="Noe gikk galt, prøv gjerne igjen" />;
 
-  const findFieldValue = (key: string) =>
-    question.metadata.optionalFields?.find((field) => field.key === key)
-      ?.value[0];
+  const findFieldValue = (key: string): string[] | undefined =>
+    question.metadata.optionalFields?.find((field) => field.key === key)?.value;
 
-  const getColumnColor = (key: string) =>
+  const getBackgroundColor = (key: string, value: string): string =>
     columns
       .find((column) => column.name === key)
-      ?.options?.find((option) => option.name === findFieldValue(key))?.color;
+      ?.options?.find((option) => option.name === value)?.color ?? "grayLight1";
 
-  const fieldData = question.metadata.optionalFields?.slice(3).map((field) => {
-    const fieldValue = findFieldValue(field.key) || "Ikke oppgitt";
-    const fieldColor = getColumnColor(field.key) || "grayLight1";
-    const fieldBackgroundColorHex = colorUtils.getHexForColor(fieldColor);
-    const fieldUseWhiteTextColor =
-      colorUtils.shouldUseLightTextOnColor(fieldColor);
+  const fieldData: FieldData[] | undefined = question.metadata.optionalFields
+    ?.slice(3)
+    .map((field) => {
+      const fieldValue = findFieldValue(field.key) || ["Ikke oppgitt"];
+      return {
+        key: field.key,
+        value: fieldValue.map((value) => {
+          const airtableColor = getBackgroundColor(field.key, value);
+          const shouldUseWhiteText =
+            colorUtils.shouldUseLightTextOnColor(airtableColor);
 
-    return {
-      key: field.key,
-      value: fieldValue,
-      backgroundColor: fieldBackgroundColorHex ?? "#FFFFFF",
-      useWhiteText: fieldUseWhiteTextColor,
-    };
-  });
+          return {
+            value: value,
+            backgroundColor: colorUtils.getHexForColor(airtableColor),
+            useWhiteText: shouldUseWhiteText,
+          };
+        }),
+      };
+    });
 
   const description =
     findFieldValue("Sikkerhetskontroller") || findFieldValue("Beskrivelse");
@@ -61,14 +76,19 @@ export function QuestionDetails({ question, answerUpdated, formId }: Props) {
         {fieldData?.map((field) => (
           <div className="flex items-center gap-4" key={field.key}>
             <div className="font-bold min-w-24">{field.key}:</div>
-            <Badge
-              style={{
-                backgroundColor: field.backgroundColor ?? "#FFFFFF",
-              }}
-              className={`text-${field.useWhiteText ? "white" : "black"}`}
-            >
-              {field.value}
-            </Badge>
+            <div className="flex flex-row gap-1">
+              {field.value?.map((value) => (
+                <Badge
+                  style={{
+                    backgroundColor: value.backgroundColor ?? "#FFFFFF",
+                  }}
+                  className={`text-${value.useWhiteText ? "white" : "black"}`}
+                  key={value.value}
+                >
+                  {value.value}
+                </Badge>
+              ))}
+            </div>
           </div>
         ))}
         <div className="flex items-center gap-4">
@@ -76,20 +96,20 @@ export function QuestionDetails({ question, answerUpdated, formId }: Props) {
           <p
             className={
               isOlderThan(
-                answerUpdated,
+                answerUpdated ?? new Date(),
                 question.metadata.answerMetadata.expiry,
               )
                 ? "text-destructive"
                 : "text-black"
             }
           >
-            {formatDateTime(answerUpdated)}
+            {answerUpdated ? formatDateTime(answerUpdated) : "Aldri"}
           </p>
         </div>
       </div>
       <div className="bg-secondary p-4 rounded-xl">
         <p className="font-bold">Beskrivelse:</p>
-        <Markdown components={markdownComponents}>{description}</Markdown>
+        <Markdown components={markdownComponents}>{description?.[0]}</Markdown>
       </div>
     </div>
   );

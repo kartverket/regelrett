@@ -46,19 +46,20 @@ export const TableStatistics = ({ filteredData, table }: Props) => {
   };
 
   return (
-    <div className="max-w-[40%]">
+    <div className="w-full max-w-[40%]">
       <div className="flex items-center gap-2">
         <Progress
           value={isNaN(percentageAnswered) ? 0 : percentageAnswered}
           className="flex-1"
         />
-        <span className="text-sm font-semibold">
-          {numberOfAnswers}/{numberOfQuestions} spørsmål besvart (
-          {percentageAnswered}%)
+        <span className="text-sm">
+          <span className="font-semibold">{numberOfAnswers}</span> av{" "}
+          {numberOfQuestions} spørsmål besvart (
+          <span className="font-semibold">{percentageAnswered}</span>%)
         </span>
       </div>
       {hasActiveFilters && (
-        <div className="font-bold">
+        <div className="font-semibold flex gap-2">
           Vis for aktivt filter{" "}
           <Switch
             onCheckedChange={(e) => updateShowForActiveFilters(e)}

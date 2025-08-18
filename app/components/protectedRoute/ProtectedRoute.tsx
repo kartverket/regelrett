@@ -1,29 +1,25 @@
-import { Outlet, useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
+import { Link, Outlet } from "react-router";
 import { Separator } from "@/components/ui/separator";
-import BekkLogo from "@/assets/Bekk__Hovedlogo_Natt.svg";
-import { LogOut, UserCircle } from "lucide-react";
+import RRLogo from "@/assets/regelrettlogo.svg";
+import { Button } from "../ui/button";
+import { LogOut, User } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 
 export default function ProtectedRoute() {
   const { data, isSuccess } = useUser();
-  const navigate = useNavigate();
 
   return (
     <div className="bg-background pb-8 min-h-screen">
       <div className="bg-secondary flex flex-row justify-between">
         <header className="flex items-center  px-4 py-3 ">
-          <div
-            className="ml-2 cursor-pointer font-bold text-lg"
-            onClick={() => navigate("/")}
-          >
-            <img src={BekkLogo} width="50px" alt="Bekk logo" />
-          </div>
+          <Link className="ml-2 cursor-pointer font-bold text-lg" to={"/"}>
+            <img src={RRLogo} alt="Regelrett logo" />
+          </Link>
         </header>
         <div className="flex flex-row gap-2 items-center justify-end ">
           {isSuccess && (
             <div className="flex flex-row gap-2 items-center ">
-              <UserCircle />
+              <User />
               <p>{data.user.displayName}</p>
             </div>
           )}

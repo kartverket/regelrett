@@ -15,6 +15,7 @@ import RedirectBackButton from "../../components/buttons/RedirectBackButton";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function ActivityPage() {
   const params = useParams();
@@ -87,7 +88,7 @@ export default function ActivityPage() {
     <>
       <RedirectBackButton />
       <Page>
-        <div className="flex flex-col max-w-full self-center gap-4">
+        <div className="flex flex-col max-w-full self-center gap-2">
           <div className="flex flex-col gap-2 px-10">
             <SkeletonLoader
               loading={contextIsPending || tableIsPending}
@@ -95,24 +96,28 @@ export default function ActivityPage() {
               height="h-8"
             >
               <div className="flex justify-between">
-                <h3 className="text-2xl font-bold">{`${context?.name} - ${tableData?.name}`}</h3>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  aria-label="Edit context"
-                  onClick={() => setSettingsOpen(true)}
-                  className="text-primary hover:text-primary"
-                >
-                  <Settings className="size-5" />
-                </Button>
+                <div className="flex flex-col">
+                  <p className="font-semibold text-foreground/80">
+                    {tableData?.name}
+                  </p>
+                  <div className="flex items-center">
+                    <h3 className="text-2xl font-bold">{context?.name}</h3>
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      aria-label="Edit context"
+                      onClick={() => setSettingsOpen(true)}
+                      className="text-primary hover:text-primary"
+                    >
+                      <Settings className="size-5" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex-col items-start bg-color-badge-grey text-secondary-foreground">
+                  <p className="text-xs">Team - skjemaeier</p>
+                  <p className="text-sm font-semibold">{teamName}</p>
+                </div>
               </div>
-            </SkeletonLoader>
-            <SkeletonLoader
-              loading={contextIsPending || userinfoIsPending}
-              width="w-full"
-              height="h-8"
-            >
-              <p className="text-lg font-semibold"> Team: {teamName} </p>
             </SkeletonLoader>
           </div>
           <SkeletonLoader

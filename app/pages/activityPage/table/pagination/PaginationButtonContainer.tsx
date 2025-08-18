@@ -3,12 +3,14 @@ import { PaginationActionButton } from "./PaginationActionButton";
 import { PaginationRelativeButtons } from "./PaginationRelativeButtons";
 import { useRef, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useSearchParams } from "react-router";
 
 interface Props<TData> {
   table: Table<TData>;
 }
 
 export function PaginationButtonContainer<TData>({ table }: Props<TData>) {
+  const [_, setSearchParams] = useSearchParams();
   const state = table.getState().pagination;
   const index = state.pageIndex;
   const pageSize = state.pageSize;
@@ -16,6 +18,17 @@ export function PaginationButtonContainer<TData>({ table }: Props<TData>) {
   const numberOfPages = Math.ceil(numberOfRows / pageSize);
   const ref = useRef<HTMLDivElement>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  const setPageRequestParam = (page: number) => {
+    setSearchParams((current) => {
+      if (page === 1) {
+        current.delete("page");
+      } else {
+        current.set("page", page.toString());
+      }
+      return current;
+    });
+  };
 
   useEffect(() => {
     if (ref.current) {
@@ -39,14 +52,14 @@ export function PaginationButtonContainer<TData>({ table }: Props<TData>) {
         ariaLabel={"Gå til forrige side"}
         isDisplayed={table.getCanPreviousPage()}
         onClick={() => {
-          table.previousPage();
+          setPageRequestParam(index);
         }}
       >
         <ChevronLeft className="size-6" />
       </PaginationActionButton>
       <PaginationActionButton
         onClick={() => {
-          table.setPageIndex(0);
+          setPageRequestParam(1);
         }}
         ariaLabel={"Gå til side 1"}
         isCurrent={index === 0}
@@ -57,14 +70,14 @@ export function PaginationButtonContainer<TData>({ table }: Props<TData>) {
         numberOfPages={numberOfPages}
         currentIndex={index}
         setIndex={(index: Updater<number>) => {
-          table.setPageIndex(index);
+          setPageRequestParam(+index + 1);
         }}
       />
 
       {numberOfPages > 1 && (
         <PaginationActionButton
           onClick={() => {
-            table.setPageIndex(numberOfPages - 1);
+            setPageRequestParam(numberOfPages);
           }}
           ariaLabel={"Gå til siste side"}
           isCurrent={index === numberOfPages - 1}
@@ -74,7 +87,7 @@ export function PaginationButtonContainer<TData>({ table }: Props<TData>) {
       )}
       <PaginationActionButton
         onClick={() => {
-          table.nextPage();
+          setPageRequestParam(index + 2);
         }}
         ariaLabel={"Gå til neste side"}
         isDisplayed={table.getCanNextPage()}

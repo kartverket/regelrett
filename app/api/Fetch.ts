@@ -1,10 +1,10 @@
 import type {
-  AxiosError} from "axios";
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig} from "axios";
 import axios, {
-  AxiosHeaders,
-  type AxiosRequestConfig,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
+  AxiosHeaders
 } from "axios";
 import Cookies from "js-cookie";
 
