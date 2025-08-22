@@ -16,6 +16,8 @@
 # #################################### Server ##############################
 #
 # server:
+#   # The http protocol to use
+#   protocol: http
 #   # The http port to use
 #   http_port: 8080
 #
@@ -24,6 +26,10 @@
 #
 #   # The public facing domain name used to access regelrett from a browser
 #   domain: localhost
+#
+#   # This is the full URL used to access Grafana from a web browser. This is important if you use OAuth authentication (for the callback URL to be correct).
+#   # Falls back to <protocol>://<domain>:<port>/ if not set
+#   root_url: null
 #
 #   # Log web requests
 #   router_logging: false

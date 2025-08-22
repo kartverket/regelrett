@@ -18,13 +18,18 @@ services:
     ports:
       - 8080:8080
     environment:
-      - RR_OAUTH_AIRTABLE_ACCESS_TOKEN
+      - RR_AIRTABLE_ACCESS_TOKEN
       - RR_OAUTH_TENANT_ID
       - RR_OAUTH_CLIENT_ID
       - RR_OAUTH_CLIENT_SECRET
       - RR_DATABASE_HOST=regelrett-db:5432
+    volumes:
+      - type: bind
+        target: /etc/regelrett/provisioning
+        source: ./conf/provisioning/
     depends_on:
       regelrett-db:
         condition: service_healthy
         restart: true
+
 
