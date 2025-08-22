@@ -10,9 +10,7 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "gradle"
-    directories:
-      - "/"
-      - "/gradle"
+    directory: "/"
     schedule:
       interval: "daily"
       time: "02:00"
