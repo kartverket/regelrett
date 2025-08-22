@@ -1,0 +1,47 @@
+name: Backend Unit Tests
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  push:
+    branches:
+      - main
+      - release-*.*.*
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  regelrett:
+    name: Regelrett
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup gradle
+      uses: gradle/actions/setup-gradle@v4.4.2
+    - name: Restore Gradle Cache
+      uses: actions/cache@v4
+      with:
+        key: gradle-test-cache-${{ github.ref_name }}
+        restore-keys: |
+          gradle-test-cache-${{ github.base_ref }}
+          gradle-test-cache-main
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+    - name: Run unit tests
+      run: ./gradlew test --no-daemon
+
+
