@@ -10,7 +10,7 @@ on:
     paths-ignore:
       - compose.yaml
       - README**
-      - **/*.md
+      - '**/*.md'
   pull_request:
     branches:
       - main
