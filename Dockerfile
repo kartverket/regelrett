@@ -16,7 +16,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml ./
-COPY app app
+COPY app/ app/
 COPY conf/defaults.yaml ./conf/defaults.yaml
 
 FROM js-base AS js-prod-deps
@@ -26,7 +26,7 @@ FROM js-base AS js-builder
 COPY tsconfig.json vite.config.ts components.json eslint.config.ts .editorconfig .prettierrc ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 ENV NODE_ENV=production
-RUN pnpm run build
+RUN pnpm build
 
 
 FROM ${GRADLE_IMAGE} AS kt-cache
