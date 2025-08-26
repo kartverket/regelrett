@@ -4,6 +4,8 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.options.*
 import com.github.ajalt.clikt.parameters.types.*
+import com.sun.net.httpserver.HttpServer
+import io.ktor.client.plugins.HttpSend
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStopped
@@ -15,7 +17,10 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.sessions.*
+import io.netty.handler.codec.http.HttpObjectDecoder
+import io.netty.handler.codec.http.HttpServerCodec
 import kotlinx.coroutines.*
+import kotlinx.html.Entities
 import no.bekk.authentication.initializeAuthentication
 import no.bekk.configuration.CommandLineArgs
 import no.bekk.configuration.Config
@@ -49,6 +54,13 @@ class Regelrett : CliktCommand() {
             Netty,
             appProperties,
         ) {
+            httpServerCodec = {
+                HttpServerCodec(
+                    HttpObjectDecoder.DEFAULT_MAX_INITIAL_LINE_LENGTH,
+                    16 * 1024, // max header size
+                    HttpObjectDecoder.DEFAULT_MAX_CHUNK_SIZE
+                )
+            }
             connectors.add(
                 EngineConnectorBuilder().apply {
                     port = cfg.server.httpPort
