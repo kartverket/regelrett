@@ -102,15 +102,35 @@ fun cleanupAnswersHistory(database: Database) {
 }
 
 fun Application.main(config: Config) {
-    val dependencies = rootComposer(config)
+    logger.info("Starting Regelrett application in {} mode", config.mode)
+    logger.debug("Server configuration: host={}, port={}", config.server.httpAddr, config.server.httpPort)
+    
+    try {
+        val dependencies = rootComposer(config)
+        logger.info("Successfully initialized application dependencies")
 
-    dependencies.provisioningService.runInitialProvisioners()
-    configureAPILayer(config, dependencies)
-    configureBackgroundTasks(dependencies.formService)
-    launchCleanupJob(config.answerHistoryCleanup.cleanupIntervalWeeks, dependencies.database)
+        logger.info("Running initial provisioners")
+        dependencies.provisioningService.runInitialProvisioners()
+        
+        logger.info("Configuring API layer")
+        configureAPILayer(config, dependencies)
+        
+        logger.info("Configuring background tasks")
+        configureBackgroundTasks(dependencies.formService)
+        
+        logger.info("Starting cleanup job with interval: {} weeks", config.answerHistoryCleanup.cleanupIntervalWeeks)
+        launchCleanupJob(config.answerHistoryCleanup.cleanupIntervalWeeks, dependencies.database)
 
-    monitor.subscribe(ApplicationStopped) {
-        (dependencies.database as JDBCDatabase).closePool()
+        monitor.subscribe(ApplicationStopped) {
+            logger.info("Application stopping - closing database pool")
+            (dependencies.database as JDBCDatabase).closePool()
+            logger.info("Database pool closed")
+        }
+        
+        logger.info("Regelrett application started successfully")
+    } catch (e: Exception) {
+        logger.error("Failed to start Regelrett application", e)
+        throw e
     }
 }
 
