@@ -9,6 +9,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import no.bekk.authentication.AuthService
 import no.bekk.database.*
+import no.bekk.exception.ConflictException
+import no.bekk.exception.ValidationException
+import no.bekk.plugins.ErrorHandlers
+import no.bekk.util.RequestContext.getOrCreateCorrelationId
+import no.bekk.util.RequestContext.getRequestInfo
 import no.bekk.util.logger
 
 fun Route.contextRouting(
@@ -57,19 +62,12 @@ fun Route.contextRouting(
                 }
                 call.respond(HttpStatusCode.Created, Json.encodeToString(insertedContext))
                 return@post
-            } catch (e: UniqueConstraintViolationException) {
-                logger.warn("Unique constraint violation: ${e.message}")
-                call.respond(
-                    HttpStatusCode.Conflict,
-                    mapOf("error" to e.message)
-                )
+            } catch (e: ConflictException) {
+                ErrorHandlers.handleConflictException(call, e)
                 return@post
             } catch (e: Exception) {
-                logger.error("Unexpected error: ${e.message}")
-                call.respond(
-                    HttpStatusCode.InternalServerError,
-                    mapOf("error" to "An unexpected error occurred.")
-                )
+                logger.error("${call.getRequestInfo()} Unexpected error in POST /contexts", e)
+                ErrorHandlers.handleGenericException(call, e)
                 return@post
             }
         }

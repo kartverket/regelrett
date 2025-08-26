@@ -26,6 +26,7 @@ import no.bekk.di.Dependencies
 import no.bekk.di.rootComposer
 import no.bekk.plugins.RequestLoggingPlugin
 import no.bekk.plugins.configureCors
+import no.bekk.plugins.configureErrorHandling
 import no.bekk.plugins.configureRouting
 import no.bekk.util.configureBackgroundTasks
 import no.bekk.util.logger
@@ -136,6 +137,10 @@ fun Application.configureAPILayer(
     }
 
     install(XForwardedHeaders)
+    
+    // Configure global error handling
+    configureErrorHandling()
+    
     if (config.server.routerLogging) {
         install(RequestLoggingPlugin)
     }

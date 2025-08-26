@@ -2,6 +2,9 @@ package no.bekk.database
 
 import io.ktor.server.plugins.*
 import no.bekk.configuration.Database
+import no.bekk.exception.ConflictException
+import no.bekk.exception.DatabaseException
+import no.bekk.exception.NotFoundException
 import no.bekk.util.logger
 import java.util.*
 import java.sql.SQLException
@@ -44,9 +47,11 @@ class ContextRepositoryImpl(private val database: Database) : ContextRepository 
             }
         } catch (e: SQLException) {
             if (e.sqlState == "23505") { // PostgreSQL unique_violation
-                throw UniqueConstraintViolationException("A context with the same team_id, table_id and name already exists.")
+                logger.warn("Unique constraint violation when inserting context: ${e.message}")
+                throw ConflictException("A context with the same team_id, table_id and name already exists.")
             } else {
-                throw e
+                logger.error("Database error when inserting context: ${e.message}", e)
+                throw DatabaseException("Failed to insert context", "insertContext", e)
             }
         }
     }
@@ -113,8 +118,8 @@ class ContextRepositoryImpl(private val database: Database) : ContextRepository 
                 }
             }
         } catch (e: SQLException) {
-            logger.error("Error fetching contexts for team: $teamId and form: $formId")
-            throw RuntimeException("Error fetching contexts for team and form from database", e)
+            logger.error("Database error fetching contexts for team: $teamId and form: $formId", e)
+            throw DatabaseException("Failed to fetch contexts for team and form", "getContextByTeamIdAndFormId", e)
         }
     }
 
@@ -156,8 +161,8 @@ class ContextRepositoryImpl(private val database: Database) : ContextRepository 
                 }
             }
         } catch (e: SQLException) {
-            logger.error("Error deleting context: $id", e)
-            throw RuntimeException("Error deleting context: $id from database", e)
+            logger.error("Database error deleting context: $id", e)
+            throw DatabaseException("Failed to delete context: $id", "deleteContext", e)
         }
     }
 
@@ -173,10 +178,10 @@ class ContextRepositoryImpl(private val database: Database) : ContextRepository 
                 }
             }
         } catch (e: SQLException) {
-            logger.error("Error updating team for context $contextId with teamId $newTeamId")
-            throw RuntimeException("Error updating team for context $contextId from database", e)
+            logger.error("Database error updating team for context $contextId with teamId $newTeamId", e)
+            throw DatabaseException("Failed to update team for context $contextId", "changeTeam", e)
         }
     }
 }
 
-class UniqueConstraintViolationException(message: String) : RuntimeException(message)
+

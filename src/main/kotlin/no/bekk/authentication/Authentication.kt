@@ -66,12 +66,13 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
         session<UserSession>("auth-session") {
             validate { session ->
                 if (session.state != "" && session.token != "" && System.currentTimeMillis() < session.expiresAt) {
+                    logger.debug("Session validation successful for state: ${session.state}")
                     session
                 } else {
                     if (System.currentTimeMillis() > session.expiresAt) {
-                        logger.debug("Invalid session ${session.state}: Token expired.")
+                        logger.info("Session validation failed for state: ${session.state} - Token expired at ${session.expiresAt}, current time: ${System.currentTimeMillis()}")
                     } else {
-                        logger.debug("Invalid session ${session.state}: Missing token or state.")
+                        logger.info("Session validation failed for state: ${session.state} - Missing token or state. Token present: ${session.token != ""}, State present: ${session.state != ""}")
                     }
                     null
                 }
@@ -83,7 +84,8 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                     parameters.append("redirectUrl", call.request.uri)
                     build()
                 }
-
+                
+                logger.debug("Session authentication challenge triggered for ${call.request.uri}, redirecting to: $redirectUrl")
                 call.respondRedirect(redirectUrl)
             }
         }
@@ -96,16 +98,19 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
             }
 
             validate { jwtCredential ->
+                logger.debug("JWT validation started - Issuer: ${jwtCredential.payload.issuer}, Subject: ${jwtCredential.payload.subject}, Audience: ${jwtCredential.audience}")
+                
                 if (jwtCredential.audience.contains(clientId)) {
-                    logger.debug("Validating token: accepted.")
+                    logger.debug("JWT validation successful - Token accepted for clientId: $clientId")
                     JWTPrincipal(jwtCredential.payload)
                 } else {
-                    logger.debug("Validating token: rejected.")
+                    logger.warn("JWT validation failed - Token audience ${jwtCredential.audience} does not contain expected clientId: $clientId")
                     null
                 }
             }
 
             challenge { _, _ ->
+                logger.info("JWT authentication challenge triggered for ${call.request.uri}")
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }
