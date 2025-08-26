@@ -5,6 +5,10 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.bekk.authentication.AuthService
 import no.bekk.configuration.Database
+import no.bekk.exception.AuthorizationException
+import no.bekk.exception.DatabaseException
+import no.bekk.plugins.ErrorHandlers
+import no.bekk.util.RequestContext.getRequestInfo
 import no.bekk.util.logger
 import java.io.StringWriter
 import java.sql.ResultSet
@@ -15,29 +19,36 @@ import java.util.*
 fun Route.uploadCSVRouting(authService: AuthService, database: Database) {
     route("/dump-csv") {
         get {
-            logger.info("Received GET /dump-csv")
-            if (!authService.hasSuperUserAccess(call)) {
-                call.respond(HttpStatusCode.Unauthorized)
-                return@get
+            try {
+                logger.info("${call.getRequestInfo()} Received GET /dump-csv")
+                
+                if (!authService.hasSuperUserAccess(call)) {
+                    logger.warn("${call.getRequestInfo()} Unauthorized access attempt to CSV dump")
+                    throw AuthorizationException("Superuser access required for CSV dump")
+                }
+                
+                val csvData = getLatestAnswersAndComments(database)
+                val csv = csvData.toCsv()
+
+                val fileName = "data.csv"
+                call.response.header(
+                    HttpHeaders.ContentDisposition,
+                    ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, fileName).toString()
+                )
+
+                logger.info("${call.getRequestInfo()} Successfully generated CSV dump with ${csvData.size} records")
+                call.respondBytes(
+                    bytes = csv.toByteArray(Charsets.UTF_8),
+                    contentType = ContentType.Text.CSV.withCharset(Charsets.UTF_8)
+                )
+            } catch (e: AuthorizationException) {
+                ErrorHandlers.handleAuthorizationException(call, e)
+            } catch (e: Exception) {
+                logger.error("${call.getRequestInfo()} Error generating CSV dump", e)
+                ErrorHandlers.handleGenericException(call, e)
             }
-            val csvData = getLatestAnswersAndComments(database)
-            val csv = csvData.toCsv()
-
-            val fileName = "data.csv"
-            call.response.header(
-                HttpHeaders.ContentDisposition,
-                ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, fileName).toString()
-            )
-
-            call.respondBytes(
-                bytes = csv.toByteArray(Charsets.UTF_8),
-                contentType = ContentType.Text.CSV.withCharset(Charsets.UTF_8)
-            )
-            return@get
-
         }
     }
-
 }
 
 fun getLatestAnswersAndComments(database: Database): List<AnswersCSVDump> {
@@ -68,7 +79,7 @@ fun getLatestAnswersAndComments(database: Database): List<AnswersCSVDump> {
             a.answer IS NOT NULL AND TRIM(a.answer) != '';
     """.trimIndent()
 
-    try {
+    return try {
         val resultList = mutableListOf<AnswersCSVDump>()
         database.getConnection().use { conn ->
             conn.prepareStatement(sqlStatement).use { statement ->
@@ -78,9 +89,11 @@ fun getLatestAnswersAndComments(database: Database): List<AnswersCSVDump> {
                 }
             }
         }
-        return resultList
+        logger.debug("Successfully fetched ${resultList.size} records for CSV dump")
+        resultList
     } catch (e: SQLException) {
-        throw e
+        logger.error("Database error while fetching data for CSV dump", e)
+        throw DatabaseException("Failed to fetch data for CSV dump", "getLatestAnswersAndComments", e)
     }
 }
 

@@ -9,5 +9,8 @@
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
-    <logger name="no.bekk.logger" level="INFO"/>
+    <!-- Enhanced logging for debugging -->
+    <logger name="no.bekk.logger" level="DEBUG"/>
+    <logger name="no.bekk.authentication" level="DEBUG"/>
+    <logger name="no.bekk.plugins" level="DEBUG"/>
 </configuration>

@@ -4,73 +4,97 @@ import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.bekk.exception.NotFoundException
+import no.bekk.exception.ValidationException
+import no.bekk.plugins.ErrorHandlers
 import no.bekk.services.FormService
 import no.bekk.services.FormsMetadataDto
+import no.bekk.util.RequestContext.getRequestInfo
 import no.bekk.util.logger
 
 fun Route.formRouting(formService: FormService) {
     route("/forms") {
         get {
-            logger.info("Received GET /forms")
-            val forms =
-                formService.getFormProviders().map {
+            try {
+                logger.info("${call.getRequestInfo()} Received GET /forms")
+                val forms = formService.getFormProviders().map {
                     it.getForm().let { FormsMetadataDto(it.id, it.name) }
                 }
-            call.respond(forms)
-        }
-        get("/{formId}") {
-            val formId = call.parameters["formId"]
-            logger.info("Received GET /forms with id $formId")
-            if (formId == null) {
-                logger.warn("Request missing tableId")
-                call.respond(HttpStatusCode.BadRequest, "FormId is missing")
-                return@get
+                call.respond(forms)
+            } catch (e: Exception) {
+                logger.error("${call.getRequestInfo()} Error retrieving forms", e)
+                ErrorHandlers.handleGenericException(call, e)
             }
-
+        }
+        
+        get("/{formId}") {
             try {
+                val formId = call.parameters["formId"]
+                logger.info("${call.getRequestInfo()} Received GET /forms with id $formId")
+                
+                if (formId == null) {
+                    logger.warn("${call.getRequestInfo()} Missing formId parameter")
+                    throw ValidationException("formId parameter is required", field = "formId")
+                }
+
                 val table = formService.getFormProvider(formId).getForm()
                 call.respond(table)
+            } catch (e: ValidationException) {
+                ErrorHandlers.handleValidationException(call, e)
             } catch (e: IllegalArgumentException) {
-                logger.error("Error occurred while retrieving table for formId: $formId", e)
-                call.respond(HttpStatusCode.InternalServerError, "An error occured: ${e.message}")
+                logger.error("${call.getRequestInfo()} Form not found: ${call.parameters["formId"]}", e)
+                ErrorHandlers.handleNotFoundException(call, NotFoundException("Form not found"))
+            } catch (e: Exception) {
+                logger.error("${call.getRequestInfo()} Error retrieving form", e)
+                ErrorHandlers.handleGenericException(call, e)
             }
         }
         get("/{formId}/{recordId}") {
-            val formId = call.parameters["formId"]
-            val recordId = call.parameters["recordId"]
-            logger.info("Received GET /forms with id $formId and recordId $recordId")
-            if (formId == null || recordId == null) {
-                logger.warn("Request missing tableId or recordId")
-                call.respond(HttpStatusCode.BadRequest, "FormId is missing")
-                return@get
-            }
             try {
+                val formId = call.parameters["formId"]
+                val recordId = call.parameters["recordId"]
+                logger.info("${call.getRequestInfo()} Received GET /forms with id $formId and recordId $recordId")
+                
+                if (formId == null) {
+                    logger.warn("${call.getRequestInfo()} Missing formId parameter")
+                    throw ValidationException("formId parameter is required", field = "formId")
+                }
+                
+                if (recordId == null) {
+                    logger.warn("${call.getRequestInfo()} Missing recordId parameter")
+                    throw ValidationException("recordId parameter is required", field = "recordId")
+                }
+                
                 val question = formService.getFormProvider(formId).getQuestion(recordId)
-                logger.info("Successfully retrieved question: $question")
+                logger.info("${call.getRequestInfo()} Successfully retrieved question: $question")
                 call.respond(question)
+            } catch (e: ValidationException) {
+                ErrorHandlers.handleValidationException(call, e)
             } catch (e: NotFoundException) {
-                logger.error("Question with recordId: $recordId was not found", e)
-                call.respond(HttpStatusCode.NotFound, "An error occured: ${e.message}")
+                logger.error("${call.getRequestInfo()} Question not found for recordId: ${call.parameters["recordId"]}", e)
+                ErrorHandlers.handleNotFoundException(call, e)
             } catch (e: Exception) {
-                logger.error("Error occurred while retrieving question for recordId: $recordId", e)
-                call.respond(HttpStatusCode.InternalServerError, "An error occured: ${e.message}")
+                logger.error("${call.getRequestInfo()} Error retrieving question for recordId: ${call.parameters["recordId"]}", e)
+                ErrorHandlers.handleGenericException(call, e)
             }
         }
         get("/{formId}/columns") {
-            val formId = call.parameters["formId"]
-            logger.info("Received GET /forms/formId/columns with id $formId")
-            if (formId == null) {
-                logger.warn("Request missing FormId")
-                call.respond(HttpStatusCode.BadRequest, "FormId is missing")
-                return@get
-            }
             try {
+                val formId = call.parameters["formId"]
+                logger.info("${call.getRequestInfo()} Received GET /forms/formId/columns with id $formId")
+                
+                if (formId == null) {
+                    logger.warn("${call.getRequestInfo()} Missing formId parameter")
+                    throw ValidationException("formId parameter is required", field = "formId")
+                }
+                
                 val columns = formService.getFormProvider(formId).getColumns()
-                logger.info("Successfully retrieved columns: $columns")
+                logger.info("${call.getRequestInfo()} Successfully retrieved columns: $columns")
                 call.respond(columns)
+            } catch (e: ValidationException) {
+                ErrorHandlers.handleValidationException(call, e)
             } catch (e: Exception) {
-                logger.error("Error occurred while retrieving columns from form: $formId", e)
-                call.respond(HttpStatusCode.InternalServerError, "An error occured: ${e.message}")
+                logger.error("${call.getRequestInfo()} Error retrieving columns from form: ${call.parameters["formId"]}", e)
+                ErrorHandlers.handleGenericException(call, e)
             }
         }
     }
