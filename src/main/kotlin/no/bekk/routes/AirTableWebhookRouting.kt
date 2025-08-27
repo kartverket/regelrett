@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 import no.bekk.providers.AirTableProvider
 import no.bekk.services.FormService
 import no.bekk.exception.AuthorizationException
+import no.bekk.exception.ExternalServiceException
 import no.bekk.exception.NotFoundException
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
 import no.bekk.util.logger
@@ -128,7 +129,7 @@ private suspend fun processWebhook(webhookId: String, formService: FormService) 
         logger.info("Successfully processed webhook for provider: ${provider.name}")
     } catch (e: Exception) {
         logger.error("Failed to process webhook for provider: ${provider.name}", e)
-        throw Exception("Webhook processing failed: ${e.message}", e)
+        throw ExternalServiceException("AirTable", "Webhook processing failed: ${e.message}", cause = e)
     }
 }
 

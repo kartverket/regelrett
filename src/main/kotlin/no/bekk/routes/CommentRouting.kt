@@ -20,7 +20,6 @@ fun Route.commentRouting(authService: AuthService, commentRepository: CommentRep
 
     post("/comments") {
         try {
-            val correlationId = call.getOrCreateCorrelationId()
             val commentRequestJson = call.receiveText()
             logger.info("${call.getRequestInfo()} Received POST /comments with request body")
 

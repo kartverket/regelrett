@@ -14,6 +14,7 @@ import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphGroupsResponse
 import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.domain.MicrosoftOnBehalfOfTokenResponse
+import no.bekk.exception.AuthenticationException
 import no.bekk.exception.ExternalServiceException
 import no.bekk.util.logger
 
@@ -30,7 +31,7 @@ class MicrosoftServiceImpl(private val config: Config, private val client: HttpC
     override suspend fun requestTokenOnBehalfOf(jwtToken: String?): String {
         if (jwtToken == null) {
             logger.error("No JWT token provided for on-behalf-of flow")
-            throw ExternalServiceException("Microsoft", "No JWT token provided", cause = IllegalStateException("No stored UserSession"))
+            throw AuthenticationException("No JWT token provided - session may be expired or invalid")
         }
 
         return try {
@@ -86,7 +87,13 @@ class MicrosoftServiceImpl(private val config: Config, private val client: HttpC
             val responseBody = response.body<String>()
             logger.debug("Successfully fetched groups from Microsoft Graph")
 
-            val microsoftGraphGroupsResponse: MicrosoftGraphGroupsResponse = json.decodeFromString(responseBody)
+            val microsoftGraphGroupsResponse: MicrosoftGraphGroupsResponse = try {
+                json.decodeFromString(responseBody)
+            } catch (e: Exception) {
+                logger.error("Failed to parse Microsoft Graph groups response", e)
+                throw ExternalServiceException("Microsoft Graph", "Invalid response format", cause = e)
+            }
+            
             microsoftGraphGroupsResponse.value.map {
                 MicrosoftGraphGroup(
                     id = it.id,

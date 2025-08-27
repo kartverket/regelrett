@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.origin
 import io.ktor.server.request.*
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
+import no.bekk.util.RequestContext.getRequestInfo
 import no.bekk.util.logger
 
 val RequestLoggingPlugin =
@@ -21,7 +22,6 @@ val RequestLoggingPlugin =
       }
       
       onCallRespond { call ->
-        val correlationId = call.getOrCreateCorrelationId()
-        logger.info("[${call.request.httpMethod.value} ${call.request.uri}] [correlationId: $correlationId] Response: ${call.response.status()}")
+        logger.info("${call.getRequestInfo()} Response: ${call.response.status()}")
       }
     }

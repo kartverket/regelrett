@@ -15,6 +15,7 @@ import no.bekk.configuration.Config
 import no.bekk.configuration.getIssuer
 import no.bekk.configuration.getJwksUrl
 import no.bekk.di.Redirects
+import no.bekk.util.RequestContext.getRequestInfo
 import no.bekk.util.logger
 import java.net.URI
 import java.util.concurrent.TimeUnit
@@ -85,7 +86,7 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                     build()
                 }
                 
-                logger.debug("Session authentication challenge triggered for ${call.request.uri}, redirecting to: $redirectUrl")
+                logger.info("${call.getRequestInfo()} Session authentication challenge triggered - missing or invalid session, redirecting to: $redirectUrl")
                 call.respondRedirect(redirectUrl)
             }
         }
@@ -110,7 +111,7 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
             }
 
             challenge { _, _ ->
-                logger.info("JWT authentication challenge triggered for ${call.request.uri}")
+                logger.info("${call.getRequestInfo()} JWT authentication challenge triggered - invalid or expired token")
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }
