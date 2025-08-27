@@ -49,6 +49,9 @@ class Regelrett : CliktCommand() {
             Netty,
             appProperties,
         ) {
+            maxInitialLineLength = 16384
+            maxHeaderSize = 32768
+            maxChunkSize = 32768
             connectors.add(
                 EngineConnectorBuilder().apply {
                     port = cfg.server.httpPort
