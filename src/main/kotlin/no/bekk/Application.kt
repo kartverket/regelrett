@@ -29,10 +29,12 @@ import no.bekk.plugins.configureCors
 import no.bekk.plugins.configureErrorHandling
 import no.bekk.plugins.configureRouting
 import no.bekk.util.configureBackgroundTasks
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import kotlin.io.path.pathString
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
+
+private val logger = LoggerFactory.getLogger("no.bekk.Application")
 
 class Regelrett : CliktCommand() {
     val homepath by option(help = "The homepath of your Regelrett application").path(canBeFile = false)

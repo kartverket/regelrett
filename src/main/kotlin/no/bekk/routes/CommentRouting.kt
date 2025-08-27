@@ -14,9 +14,10 @@ import no.bekk.exception.ValidationException
 import no.bekk.plugins.ErrorHandlers
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 fun Route.commentRouting(authService: AuthService, commentRepository: CommentRepository) {
+    val logger = LoggerFactory.getLogger("no.bekk.routes.CommentRouting")
 
     post("/comments") {
         try {

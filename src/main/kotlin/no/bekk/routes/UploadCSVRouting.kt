@@ -9,12 +9,13 @@ import no.bekk.exception.AuthorizationException
 import no.bekk.exception.DatabaseException
 import no.bekk.plugins.ErrorHandlers
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.io.StringWriter
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
 
+private val logger = LoggerFactory.getLogger("no.bekk.routes.UploadCSVRouting")
 
 fun Route.uploadCSVRouting(authService: AuthService, database: Database) {
     route("/dump-csv") {

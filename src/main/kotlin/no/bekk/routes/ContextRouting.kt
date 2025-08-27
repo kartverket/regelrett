@@ -14,7 +14,7 @@ import no.bekk.exception.ValidationException
 import no.bekk.plugins.ErrorHandlers
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 fun Route.contextRouting(
     authService: AuthService,
@@ -22,6 +22,7 @@ fun Route.contextRouting(
     contextRepository: ContextRepository,
     commentRepository: CommentRepository
 ) {
+    val logger = LoggerFactory.getLogger("no.bekk.routes.ContextRouting")
     route("/contexts") {
         post {
             try {

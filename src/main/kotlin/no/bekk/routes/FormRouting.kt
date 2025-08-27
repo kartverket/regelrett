@@ -9,9 +9,10 @@ import no.bekk.plugins.ErrorHandlers
 import no.bekk.services.FormService
 import no.bekk.services.FormsMetadataDto
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 fun Route.formRouting(formService: FormService) {
+    val logger = LoggerFactory.getLogger("no.bekk.routes.FormRouting")
     route("/forms") {
         get {
             try {

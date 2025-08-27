@@ -11,9 +11,10 @@ import no.bekk.domain.UserInfoResponse
 import no.bekk.exception.ValidationException
 import no.bekk.plugins.ErrorHandlers
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 fun Route.userInfoRouting(authService: AuthService) {
+    val logger = LoggerFactory.getLogger("no.bekk.routes.UserInfoRouting")
     route("/userinfo") {
         get {
             try {

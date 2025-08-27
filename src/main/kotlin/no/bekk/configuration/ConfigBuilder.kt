@@ -3,13 +3,15 @@ package no.bekk.configuration
 import net.mamoe.yamlkt.YamlMap
 import net.mamoe.yamlkt.toYamlElement
 import no.bekk.configuration.decodeYamlFromFile
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import kotlin.collections.emptyList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.pathString
+
+private val logger = LoggerFactory.getLogger("no.bekk.configuration.ConfigBuilder")
 
 class ConfigBuilder {
     private lateinit var homePath: String

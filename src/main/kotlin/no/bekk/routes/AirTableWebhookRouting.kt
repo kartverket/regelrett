@@ -12,7 +12,7 @@ import no.bekk.exception.AuthorizationException
 import no.bekk.exception.ExternalServiceException
 import no.bekk.exception.NotFoundException
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -33,6 +33,8 @@ data class Base(
 data class Webhook(
     val id: String,
 )
+
+private val logger = LoggerFactory.getLogger("no.bekk.routes.AirTableWebhookRouting")
 
 fun Route.airTableWebhookRouting(formService: FormService) {
     post("/webhook") {

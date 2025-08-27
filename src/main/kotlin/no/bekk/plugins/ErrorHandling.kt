@@ -6,7 +6,7 @@ import io.ktor.server.response.*
 import kotlinx.serialization.Serializable
 import no.bekk.exception.*
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 /**
  * Standard error response format
@@ -25,6 +25,7 @@ data class ErrorResponse(
  * For now, we'll handle exceptions in individual routes until StatusPages is available.
  */
 fun Application.configureErrorHandling() {
+    val logger = LoggerFactory.getLogger("no.bekk.plugins.ErrorHandling")
     // Enhanced logging is already configured via RequestLoggingPlugin
     // Exception handling will be done in individual routes for now
     logger.info("Error handling configuration completed - using route-level exception handling")
@@ -34,6 +35,7 @@ fun Application.configureErrorHandling() {
  * Utility functions for consistent error handling across routes
  */
 object ErrorHandlers {
+    private val logger = LoggerFactory.getLogger("no.bekk.plugins.ErrorHandlers")
     
     suspend fun handleAuthenticationException(call: ApplicationCall, cause: AuthenticationException) {
         logger.warn("${call.getRequestInfo()} Authentication failed: ${cause.message}", cause)

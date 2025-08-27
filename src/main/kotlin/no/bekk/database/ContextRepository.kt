@@ -5,7 +5,7 @@ import no.bekk.configuration.Database
 import no.bekk.exception.ConflictException
 import no.bekk.exception.DatabaseException
 import no.bekk.exception.NotFoundException
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.util.*
 import java.sql.SQLException
 
@@ -19,6 +19,7 @@ interface ContextRepository {
 }
 
 class ContextRepositoryImpl(private val database: Database) : ContextRepository {
+    private val logger = LoggerFactory.getLogger(ContextRepositoryImpl::class.java)
     override fun insertContext(context: DatabaseContextRequest): DatabaseContext {
         logger.debug("Inserting context: {}", context)
         val sqlStatement =

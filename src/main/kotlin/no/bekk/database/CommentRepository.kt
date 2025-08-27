@@ -1,7 +1,7 @@
 package no.bekk.database
 
 import no.bekk.configuration.Database
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
@@ -16,6 +16,7 @@ interface CommentRepository {
 }
 
 class CommentRepositoryImpl(private val database: Database) : CommentRepository {
+    private val logger = LoggerFactory.getLogger(CommentRepositoryImpl::class.java)
     override fun getCommentsByContextIdFromDatabase(contextId: String): List<DatabaseComment> {
         logger.debug("Fetching comments for context: $contextId")
 

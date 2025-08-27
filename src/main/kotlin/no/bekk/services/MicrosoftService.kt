@@ -16,7 +16,7 @@ import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.domain.MicrosoftOnBehalfOfTokenResponse
 import no.bekk.exception.AuthenticationException
 import no.bekk.exception.ExternalServiceException
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 interface MicrosoftService {
     suspend fun requestTokenOnBehalfOf(jwtToken: String?): String
@@ -26,6 +26,7 @@ interface MicrosoftService {
 }
 
 class MicrosoftServiceImpl(private val config: Config, private val client: HttpClient = HttpClient(CIO)) : MicrosoftService {
+    private val logger = LoggerFactory.getLogger(MicrosoftServiceImpl::class.java)
     val json = Json { ignoreUnknownKeys = true }
 
     override suspend fun requestTokenOnBehalfOf(jwtToken: String?): String {

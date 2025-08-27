@@ -5,10 +5,11 @@ import io.ktor.server.plugins.origin
 import io.ktor.server.request.*
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 val RequestLoggingPlugin =
     createApplicationPlugin(name = "RequestLoggingPlugin") {
+      val logger = LoggerFactory.getLogger("no.bekk.plugins.RequestLogging")
       onCall { call ->
         // Generate correlation ID for request tracking
         val correlationId = call.getOrCreateCorrelationId()

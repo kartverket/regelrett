@@ -7,11 +7,13 @@ import net.mamoe.yamlkt.YamlMap
 import net.mamoe.yamlkt.YamlNull
 import net.mamoe.yamlkt.asLiteralOrNull
 import net.mamoe.yamlkt.literalContentOrNull
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 import kotlin.io.path.readText
+
+private val logger = LoggerFactory.getLogger("no.bekk.configuration.YamlConfig")
 
 class YamlConfig(
     private val config: YamlMap,

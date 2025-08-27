@@ -11,7 +11,7 @@ import no.bekk.database.ContextRepository
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.services.MicrosoftService
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 interface AuthService {
     suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup>
@@ -34,6 +34,7 @@ class AuthServiceImpl(
     private val contextRepository: ContextRepository,
     private val oAuthConfig: OAuthConfig,
 ) : AuthService {
+    private val logger = LoggerFactory.getLogger(AuthServiceImpl::class.java)
     override suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup> {
         val jwtToken =
             call.request.headers["Authorization"]?.removePrefix("Bearer ")

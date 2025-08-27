@@ -7,7 +7,7 @@ import no.bekk.providers.YamlProvider
 import no.bekk.providers.clients.AirTableClient
 import no.bekk.services.provisioning.schemasources.UpsertDataFromConfig
 import no.bekk.util.generateNewUid
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 
 @Serializable
 data class FormsMetadataDto(
@@ -35,6 +35,7 @@ interface FormService {
 class FormProviderNotFoundException(message: String? = null, cause: Throwable? = null) : IllegalArgumentException(message, cause)
 
 class FormServiceImpl : FormService {
+    private val logger = LoggerFactory.getLogger(FormServiceImpl::class.java)
     private val providers: MutableMap<String, FormProvider> = mutableMapOf()
 
     override fun getFormProvider(formId: String): FormProvider = providers.get(formId) ?: throw FormProviderNotFoundException("Form $formId not found")

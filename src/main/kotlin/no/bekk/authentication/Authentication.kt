@@ -16,12 +16,14 @@ import no.bekk.configuration.getIssuer
 import no.bekk.configuration.getJwksUrl
 import no.bekk.di.Redirects
 import no.bekk.util.RequestContext.getRequestInfo
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
 @Serializable
 data class UserSession(val state: String, val token: String, val expiresAt: Long)
+
+private val logger = LoggerFactory.getLogger("no.bekk.authentication.Authentication")
 
 fun Application.initializeAuthentication(config: Config, httpClient: HttpClient, redirects: Redirects) {
     val issuer = getIssuer(config.oAuth)
@@ -86,7 +88,13 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                     build()
                 }
                 
-                logger.info("${call.getRequestInfo()} Session authentication challenge triggered - missing or invalid session, redirecting to: $redirectUrl")
+                val sessionCookie = call.request.cookies["user_session"]
+                val challengeReason = when {
+                    sessionCookie == null -> "No session cookie found"
+                    else -> "Invalid or expired session"
+                }
+                
+                logger.info("${call.getRequestInfo()} Session authentication challenge triggered - $challengeReason, redirecting to: $redirectUrl")
                 call.respondRedirect(redirectUrl)
             }
         }
@@ -101,17 +109,27 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
             validate { jwtCredential ->
                 logger.debug("JWT validation started - Issuer: ${jwtCredential.payload.issuer}, Subject: ${jwtCredential.payload.subject}, Audience: ${jwtCredential.audience}")
                 
-                if (jwtCredential.audience.contains(clientId)) {
-                    logger.debug("JWT validation successful - Token accepted for clientId: $clientId")
+                val expectedAudience = clientId
+                val actualAudiences = jwtCredential.audience
+                val hasValidAudience = actualAudiences.contains(expectedAudience)
+                
+                if (hasValidAudience) {
+                    logger.debug("JWT validation successful - Token accepted for clientId: $expectedAudience")
                     JWTPrincipal(jwtCredential.payload)
                 } else {
-                    logger.warn("JWT validation failed - Token audience ${jwtCredential.audience} does not contain expected clientId: $clientId")
+                    logger.warn("JWT validation failed - Token audience mismatch. Expected: [$expectedAudience], Actual: $actualAudiences")
                     null
                 }
             }
 
-            challenge { _, _ ->
-                logger.info("${call.getRequestInfo()} JWT authentication challenge triggered - invalid or expired token")
+            challenge { defaultScheme, realm ->
+                val failureReason = when {
+                    call.request.headers["Authorization"] == null -> "Missing Authorization header"
+                    call.request.headers["Authorization"]?.startsWith("Bearer ") != true -> "Invalid Authorization header format (must start with 'Bearer ')"
+                    else -> "Invalid or expired JWT token"
+                }
+                
+                logger.info("${call.getRequestInfo()} JWT authentication challenge triggered - $failureReason")
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }
