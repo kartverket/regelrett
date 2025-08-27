@@ -3,7 +3,7 @@ package no.bekk.services.provisioning
 import no.bekk.configuration.Config
 import no.bekk.services.FormService
 import no.bekk.services.provisioning.schemasources.SchemaSourceProvisioner
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 
@@ -24,6 +24,8 @@ class ProvisioningServiceImpl(
     private val formService: FormService,
     private val provisionSchemaSourcesFunc: (String, FormService) -> Unit,
 ) : ProvisioningService {
+    private val logger = LoggerFactory.getLogger(ProvisioningServiceImpl::class.java)
+    
     override fun runInitialProvisioners() {
         try {
             provisionSchemaSources()

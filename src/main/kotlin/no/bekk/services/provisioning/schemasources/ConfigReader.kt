@@ -2,13 +2,15 @@ package no.bekk.services.provisioning.schemasources
 
 import kotlinx.serialization.serializer
 import net.mamoe.yamlkt.Yaml
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.pathString
 import kotlin.io.path.readText
 import kotlin.text.substring
+
+val logger = LoggerFactory.getLogger("no.bekk.services.provisioning.schemasources.ConfigReader")
 
 class ConfigReader {
     fun readConfig(configPath: String): List<Configs> {
