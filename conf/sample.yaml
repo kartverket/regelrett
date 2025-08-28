@@ -3,9 +3,8 @@
 # Everything has defaults so you only need to uncomment things you want to
 # change
 #
-#
 # base:
-# # possible values : production, development
+#   # possible values : production, development
 #   mode: "production"
 #
 # #################################### Server ##############################
@@ -37,6 +36,11 @@
 #   # allowed_origins is a comma-separated list of origins that can establish connection with Regelrett Live.
 #   # If not set then origin will be matched over root_url. Supports wildcard symbol "*".
 #   allowed_origins: "localhost:5173,localhost:8080"
+#
+#   # Configure http request limits for the netty server
+#   max_initial_line_length: 4096
+#   max_header_size: 8192
+#   max_chunk_size: 8192
 #
 # #################################### Auth ##############################
 #
@@ -80,10 +84,10 @@
 #   log_queries: false
 #
 #   # Lock the database for the migrations, default is true.
-#   migration_locking : true
+#   migration_locking: true
 #
 #   # 3000Only if migrationLocking is set. How many seconds to wait before failing to lock the database for the migrations, default is 0.
-#   locking_attempt_timeout_sec : 0
+#   locking_attempt_timeout_sec: 0
 #
 # answer_history_cleanup:
 #   cleanup_interval_weeks: "4"
