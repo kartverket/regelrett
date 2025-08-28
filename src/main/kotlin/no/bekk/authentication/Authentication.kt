@@ -15,12 +15,15 @@ import no.bekk.configuration.Config
 import no.bekk.configuration.getIssuer
 import no.bekk.configuration.getJwksUrl
 import no.bekk.di.Redirects
-import no.bekk.util.logger
+import no.bekk.util.RequestContext.getRequestInfo
+import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
 @Serializable
 data class UserSession(val state: String, val token: String, val expiresAt: Long)
+
+private val logger = LoggerFactory.getLogger("no.bekk.authentication.Authentication")
 
 fun Application.initializeAuthentication(config: Config, httpClient: HttpClient, redirects: Redirects) {
     val issuer = getIssuer(config.oAuth)
@@ -66,12 +69,13 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
         session<UserSession>("auth-session") {
             validate { session ->
                 if (session.state != "" && session.token != "" && System.currentTimeMillis() < session.expiresAt) {
+                    logger.debug("Session validation successful for state: ${session.state}")
                     session
                 } else {
                     if (System.currentTimeMillis() > session.expiresAt) {
-                        logger.debug("Invalid session ${session.state}: Token expired.")
+                        logger.info("Session validation failed for state: ${session.state} - Token expired at ${session.expiresAt}, current time: ${System.currentTimeMillis()}")
                     } else {
-                        logger.debug("Invalid session ${session.state}: Missing token or state.")
+                        logger.info("Session validation failed for state: ${session.state} - Missing token or state. Token present: ${session.token != ""}, State present: ${session.state != ""}")
                     }
                     null
                 }
@@ -83,7 +87,14 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
                     parameters.append("redirectUrl", call.request.uri)
                     build()
                 }
-
+                
+                val sessionCookie = call.request.cookies["user_session"]
+                val challengeReason = when {
+                    sessionCookie == null -> "No session cookie found"
+                    else -> "Invalid or expired session"
+                }
+                
+                logger.info("${call.getRequestInfo()} Session authentication challenge triggered - $challengeReason, redirecting to: $redirectUrl")
                 call.respondRedirect(redirectUrl)
             }
         }
@@ -96,16 +107,29 @@ fun Application.initializeAuthentication(config: Config, httpClient: HttpClient,
             }
 
             validate { jwtCredential ->
-                if (jwtCredential.audience.contains(clientId)) {
-                    logger.debug("Validating token: accepted.")
+                logger.debug("JWT validation started - Issuer: ${jwtCredential.payload.issuer}, Subject: ${jwtCredential.payload.subject}, Audience: ${jwtCredential.audience}")
+                
+                val expectedAudience = clientId
+                val actualAudiences = jwtCredential.audience
+                val hasValidAudience = actualAudiences.contains(expectedAudience)
+                
+                if (hasValidAudience) {
+                    logger.debug("JWT validation successful - Token accepted for clientId: $expectedAudience")
                     JWTPrincipal(jwtCredential.payload)
                 } else {
-                    logger.debug("Validating token: rejected.")
+                    logger.warn("JWT validation failed - Token audience mismatch. Expected: [$expectedAudience], Actual: $actualAudiences")
                     null
                 }
             }
 
-            challenge { _, _ ->
+            challenge { defaultScheme, realm ->
+                val failureReason = when {
+                    call.request.headers["Authorization"] == null -> "Missing Authorization header"
+                    call.request.headers["Authorization"]?.startsWith("Bearer ") != true -> "Invalid Authorization header format (must start with 'Bearer ')"
+                    else -> "Invalid or expired JWT token"
+                }
+                
+                logger.info("${call.getRequestInfo()} JWT authentication challenge triggered - $failureReason")
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }

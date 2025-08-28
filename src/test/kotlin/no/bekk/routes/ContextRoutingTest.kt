@@ -12,7 +12,7 @@ import no.bekk.TestUtils.generateTestToken
 import no.bekk.TestUtils.testModule
 import no.bekk.database.DatabaseContext
 import no.bekk.database.DatabaseContextRequest
-import no.bekk.database.UniqueConstraintViolationException
+import no.bekk.exception.ConflictException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -82,7 +82,7 @@ class ContextRoutingTest {
         application {
             testModule(
                 contextRepository = object : MockContextRepository {
-                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext = throw UniqueConstraintViolationException("A context with the same team_id, table_id and name already exists.")
+                    override fun insertContext(context: DatabaseContextRequest): DatabaseContext = throw ConflictException("A context with the same team_id, table_id and name already exists.")
                 },
                 authService = object : MockAuthService {
                     override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean = true

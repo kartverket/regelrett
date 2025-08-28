@@ -11,6 +11,7 @@ import no.bekk.database.ContextRepository
 import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.services.MicrosoftService
+import org.slf4j.LoggerFactory
 
 interface AuthService {
     suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup>
@@ -33,6 +34,7 @@ class AuthServiceImpl(
     private val contextRepository: ContextRepository,
     private val oAuthConfig: OAuthConfig,
 ) : AuthService {
+    private val logger = LoggerFactory.getLogger(AuthServiceImpl::class.java)
     override suspend fun getGroupsOrEmptyList(call: ApplicationCall): List<MicrosoftGraphGroup> {
         val jwtToken =
             call.request.headers["Authorization"]?.removePrefix("Bearer ")
@@ -63,22 +65,46 @@ class AuthServiceImpl(
     }
 
     override suspend fun hasTeamAccess(call: ApplicationCall, teamId: String?): Boolean {
-        if (teamId == null || teamId == "") return false
+        if (teamId == null || teamId == "") {
+            logger.debug("Team access denied - teamId is null or empty")
+            return false
+        }
 
         val groupsClaim = call.principal<JWTPrincipal>()?.payload?.getClaim("groups")
-        val groups = groupsClaim?.asArray(String::class.java) ?: return false
+        val groups = groupsClaim?.asArray(String::class.java)
+        
+        if (groups == null || groups.isEmpty()) {
+            logger.debug("Team access denied for teamId: $teamId - No groups found in JWT token")
+            return false
+        }
 
-        if (groups.isEmpty()) return false
-
-        return teamId in groups
+        val hasAccess = teamId in groups
+        if (hasAccess) {
+            logger.debug("Team access granted for teamId: $teamId")
+        } else {
+            logger.debug("Team access denied for teamId: $teamId - Team not in user's groups: ${groups.contentToString()}")
+        }
+        
+        return hasAccess
     }
 
     override suspend fun hasContextAccess(
         call: ApplicationCall,
         contextId: String,
     ): Boolean {
-        val context = contextRepository.getContext(contextId)
-        return hasTeamAccess(call, context.teamId)
+        return try {
+            val context = contextRepository.getContext(contextId)
+            val hasAccess = hasTeamAccess(call, context.teamId)
+            if (hasAccess) {
+                logger.debug("Context access granted for contextId: $contextId (teamId: ${context.teamId})")
+            } else {
+                logger.debug("Context access denied for contextId: $contextId (teamId: ${context.teamId})")
+            }
+            hasAccess
+        } catch (e: Exception) {
+            logger.warn("Context access check failed for contextId: $contextId - ${e.message}")
+            false
+        }
     }
 
     override suspend fun hasSuperUserAccess(

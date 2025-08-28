@@ -4,6 +4,7 @@ import io.ktor.server.plugins.*
 import no.bekk.TestDatabase
 import no.bekk.configuration.Database
 import no.bekk.configuration.JDBCDatabase
+import no.bekk.exception.NotFoundException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -103,4 +104,3 @@ class ContextRepositoryTest {
         }
     }
 }
-

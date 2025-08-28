@@ -14,6 +14,8 @@ import no.bekk.domain.MicrosoftGraphGroup
 import no.bekk.domain.MicrosoftGraphGroupsResponse
 import no.bekk.domain.MicrosoftGraphUser
 import no.bekk.domain.MicrosoftOnBehalfOfTokenResponse
+import no.bekk.exception.AuthenticationException
+import no.bekk.exception.ExternalServiceException
 import org.slf4j.LoggerFactory
 
 interface MicrosoftService {
@@ -24,12 +26,17 @@ interface MicrosoftService {
 }
 
 class MicrosoftServiceImpl(private val config: Config, private val client: HttpClient = HttpClient(CIO)) : MicrosoftService {
-    private val logger = LoggerFactory.getLogger(MicrosoftService::class.java)
+    private val logger = LoggerFactory.getLogger(MicrosoftServiceImpl::class.java)
     val json = Json { ignoreUnknownKeys = true }
 
     override suspend fun requestTokenOnBehalfOf(jwtToken: String?): String {
-        val response: HttpResponse = jwtToken?.let {
-            client.post(getTokenUrl(config.oAuth)) {
+        if (jwtToken == null) {
+            logger.error("No JWT token provided for on-behalf-of flow")
+            throw AuthenticationException("No JWT token provided - session may be expired or invalid")
+        }
+
+        return try {
+            val response: HttpResponse = client.post(getTokenUrl(config.oAuth)) {
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody(
                     FormDataContent(
@@ -37,73 +44,120 @@ class MicrosoftServiceImpl(private val config: Config, private val client: HttpC
                             append("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
                             append("client_id", config.oAuth.clientId)
                             append("client_secret", config.oAuth.clientSecret)
-                            append("assertion", it)
+                            append("assertion", jwtToken)
                             append("scope", "GroupMember.Read.All")
                             append("requested_token_use", "on_behalf_of")
                         },
                     ),
                 )
             }
-        } ?: throw IllegalStateException("No stored UserSession")
 
-        val responseBody = response.body<String>()
-        val microsoftOnBehalfOfTokenResponse: MicrosoftOnBehalfOfTokenResponse = json.decodeFromString(responseBody)
-        return microsoftOnBehalfOfTokenResponse.accessToken
+            if (response.status != HttpStatusCode.OK) {
+                val errorBody = response.body<String>()
+                logger.error("Microsoft token request failed with status ${response.status}: $errorBody")
+                throw ExternalServiceException("Microsoft", "Token request failed", response.status.value)
+            }
+
+            val responseBody = response.body<String>()
+            val microsoftOnBehalfOfTokenResponse: MicrosoftOnBehalfOfTokenResponse = json.decodeFromString(responseBody)
+            logger.debug("Successfully obtained on-behalf-of token")
+            microsoftOnBehalfOfTokenResponse.accessToken
+        } catch (e: ExternalServiceException) {
+            throw e
+        } catch (e: Exception) {
+            logger.error("Unexpected error during Microsoft token request", e)
+            throw ExternalServiceException("Microsoft", "Token request failed: ${e.message}", cause = e)
+        }
     }
 
     override suspend fun fetchGroups(bearerToken: String): List<MicrosoftGraphGroup> {
-        // The relevant groups from Entra ID have a known prefix.
-        val url =
-            "${config.microsoftGraph.baseUrl + config.microsoftGraph.memberOfPath}?\$count=true&\$select=id,displayName"
+        val url = "${config.microsoftGraph.baseUrl + config.microsoftGraph.memberOfPath}?\$count=true&\$select=id,displayName"
 
-        val response: HttpResponse = client.get(url) {
-            bearerAuth(bearerToken)
-            header("ConsistencyLevel", "eventual")
-        }
-        val responseBody = response.body<String>()
+        return try {
+            val response: HttpResponse = client.get(url) {
+                bearerAuth(bearerToken)
+                header("ConsistencyLevel", "eventual")
+            }
 
-        if (response.status != HttpStatusCode.OK) {
-            logger.warn("Failed to get groups: $responseBody")
-            throw IllegalStateException()
-        }
+            if (response.status != HttpStatusCode.OK) {
+                val responseBody = response.body<String>()
+                logger.warn("Failed to fetch groups from Microsoft Graph - Status: ${response.status}, Body: $responseBody")
+                throw ExternalServiceException("Microsoft Graph", "Failed to fetch groups", response.status.value)
+            }
 
-        val microsoftGraphGroupsResponse: MicrosoftGraphGroupsResponse =
-            json.decodeFromString(responseBody)
-        return microsoftGraphGroupsResponse.value.map {
-            MicrosoftGraphGroup(
-                id = it.id,
-                displayName = it.displayName,
-            )
+            val responseBody = response.body<String>()
+            logger.debug("Successfully fetched groups from Microsoft Graph")
+
+            val microsoftGraphGroupsResponse: MicrosoftGraphGroupsResponse = try {
+                json.decodeFromString(responseBody)
+            } catch (e: Exception) {
+                logger.error("Failed to parse Microsoft Graph groups response", e)
+                throw ExternalServiceException("Microsoft Graph", "Invalid response format", cause = e)
+            }
+            
+            microsoftGraphGroupsResponse.value.map {
+                MicrosoftGraphGroup(
+                    id = it.id,
+                    displayName = it.displayName,
+                )
+            }
+        } catch (e: ExternalServiceException) {
+            throw e
+        } catch (e: Exception) {
+            logger.error("Unexpected error fetching groups from Microsoft Graph", e)
+            throw ExternalServiceException("Microsoft Graph", "Failed to fetch groups: ${e.message}", cause = e)
         }
     }
 
     override suspend fun fetchCurrentUser(bearerToken: String): MicrosoftGraphUser {
         val url = "${config.microsoftGraph.baseUrl}/v1.0/me?\$select=id,displayName,mail"
 
-        val response: HttpResponse = client.get(url) {
-            bearerAuth(bearerToken)
-            header("ConsistencyLevel", "eventual")
-        }
+        return try {
+            val response: HttpResponse = client.get(url) {
+                bearerAuth(bearerToken)
+                header("ConsistencyLevel", "eventual")
+            }
 
-        val responseBody = response.body<String>()
-        return json.decodeFromString<MicrosoftGraphUser>(responseBody)
+            if (response.status != HttpStatusCode.OK) {
+                val responseBody = response.body<String>()
+                logger.error("Failed to fetch current user - Status: ${response.status}, Body: $responseBody")
+                throw ExternalServiceException("Microsoft Graph", "Failed to fetch current user", response.status.value)
+            }
+
+            val responseBody = response.body<String>()
+            logger.debug("Successfully fetched current user from Microsoft Graph")
+            json.decodeFromString<MicrosoftGraphUser>(responseBody)
+        } catch (e: ExternalServiceException) {
+            throw e
+        } catch (e: Exception) {
+            logger.error("Unexpected error fetching current user from Microsoft Graph", e)
+            throw ExternalServiceException("Microsoft Graph", "Failed to fetch current user: ${e.message}", cause = e)
+        }
     }
 
     override suspend fun fetchUserByUserId(bearerToken: String, userId: String): MicrosoftGraphUser {
         val url = "${config.microsoftGraph.baseUrl}/v1.0/users/$userId"
 
-        val response: HttpResponse = client.get(url) {
-            bearerAuth(bearerToken)
-            header("ConsistencyLevel", "eventual")
+        return try {
+            val response: HttpResponse = client.get(url) {
+                bearerAuth(bearerToken)
+                header("ConsistencyLevel", "eventual")
+            }
+
+            if (response.status != HttpStatusCode.OK) {
+                val responseBody = response.body<String>()
+                logger.error("Failed to fetch user by ID $userId - Status: ${response.status}, Body: $responseBody")
+                throw ExternalServiceException("Microsoft Graph", "Failed to fetch user with ID $userId", response.status.value)
+            }
+
+            val responseBody = response.body<String>()
+            logger.debug("Successfully fetched user $userId from Microsoft Graph")
+            json.decodeFromString<MicrosoftGraphUser>(responseBody)
+        } catch (e: ExternalServiceException) {
+            throw e
+        } catch (e: Exception) {
+            logger.error("Unexpected error fetching user $userId from Microsoft Graph", e)
+            throw ExternalServiceException("Microsoft Graph", "Failed to fetch user $userId: ${e.message}", cause = e)
         }
-
-        val responseBody = response.body<String>()
-
-        if (response.status != HttpStatusCode.OK) {
-            logger.error("Error fetching user. Status: {}, Response: {}", response.status, responseBody)
-            throw IllegalStateException("Failed to fetch user with ID $userId. Status: ${response.status}")
-        }
-
-        return json.decodeFromString<MicrosoftGraphUser>(responseBody)
     }
 }

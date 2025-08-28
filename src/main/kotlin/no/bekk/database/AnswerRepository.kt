@@ -1,7 +1,7 @@
 package no.bekk.database
 
 import no.bekk.configuration.Database
-import no.bekk.util.logger
+import org.slf4j.LoggerFactory
 import java.sql.SQLException
 import java.util.*
 
@@ -14,6 +14,7 @@ interface AnswerRepository {
 }
 
 class AnswerRepositoryImpl(private val database: Database) : AnswerRepository {
+    private val logger = LoggerFactory.getLogger(AnswerRepositoryImpl::class.java)
     override fun getLatestAnswersByContextIdFromDatabase(contextId: String): List<DatabaseAnswer> {
         logger.debug("Fetching latest answers from database for contextId: $contextId")
 
