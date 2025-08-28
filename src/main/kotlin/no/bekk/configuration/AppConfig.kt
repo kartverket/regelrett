@@ -80,6 +80,9 @@ data class ServerConfig(
     val httpPort: Int,
     val routerLogging: Boolean,
     val allowedOrigins: List<String>,
+    val maxInitialLineLength: Int,
+    val maxHeaderSize: Int,
+    val maxChunkSize: Int,
 )
 
 class DatabaseConfig(
