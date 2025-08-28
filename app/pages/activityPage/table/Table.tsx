@@ -5,7 +5,8 @@ import type {
   FilterFn,
   Row,
   RowData,
-  SortingState} from "@tanstack/react-table";
+  SortingState,
+} from "@tanstack/react-table";
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -28,7 +29,6 @@ import type {
 } from "../../../api/types";
 import { getSortFuncForColumn } from "./TableSort";
 import { TableActions } from "./TableActions";
-import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { DataTableSearch } from "./DataTableSearch";
 import { CSVDownload } from "./csvDownload/CSVDownload";
@@ -36,6 +36,7 @@ import { ColumnActions } from "@/pages/activityPage/table/ColumnActions";
 import { cn } from "@/lib/utils";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { TableStatistics } from "../TableStatistics";
+import { useLocalstorageState } from "@/hooks/useStorageState";
 
 type Props = {
   tableMetadata: Column[];
@@ -81,17 +82,10 @@ export function TableComponent({
     return Object.entries(grouped).map(([id, value]) => ({ id, value }));
   }
 
-  const initialSorting: SortingState = JSON.parse(
-    localStorage.getItem(`sortingState_${tableData.id}`) || "[]",
+  const [sorting, setSorting] = useLocalstorageState<SortingState>(
+    `sortingState_${tableData.id}`,
+    [],
   );
-  const [sorting, setSorting] = useState<SortingState>(initialSorting);
-
-  useEffect(() => {
-    localStorage.setItem(
-      `sortingState_${tableData.id}`,
-      JSON.stringify(sorting),
-    );
-  }, [sorting, tableData.id]);
 
   const columns: ColumnDef<any, any>[] = tableData.columns.map(
     (field, index) => ({
