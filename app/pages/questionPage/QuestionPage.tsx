@@ -1,53 +1,30 @@
 import { useNavigate, useParams } from "react-router";
-import { useFetchQuestion } from "../../hooks/useFetchQuestion";
-import { ErrorState } from "../../components/ErrorState";
-import { LoadingState } from "../../components/LoadingState";
+import { useFetchQuestion } from "@/hooks/useFetchQuestion";
+import { ErrorState } from "@/components/ErrorState";
+import { LoadingState } from "@/components/LoadingState";
 import { QuestionDetails } from "./QuestionDetails";
 import { QuestionAnswer } from "./QuestionAnswer";
 import { QuestionComment } from "./QuestionComment";
 import { UnsavedChangesModal } from "./UnsavedChangesModal";
 import { useState } from "react";
 import { QuestionHistory } from "./QuestionHistory";
-import { useUser } from "../../hooks/useUser";
-import { useContext } from "../../hooks/useContext";
-import { useFetchCommentsForQuestion } from "../../hooks/useComments";
-import { useFetchAnswersForQuestion } from "../../hooks/useAnswers";
+import { useUser } from "@/hooks/useUser";
+import { useContext } from "@/hooks/useContext";
+import { useFetchCommentsForQuestion } from "@/hooks/useComments";
+import { useFetchAnswersForQuestion } from "@/hooks/useAnswers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft } from "lucide-react";
+import QuestionNavigation from "./QuestionNavigation";
 
 export default function QuestionPage() {
   const { recordId, contextId } = useParams();
 
-  const {
-    data: context,
-    error: contextError,
-    isPending: contextIsLoading,
-  } = useContext(contextId);
-
-  const {
-    data: question,
-    error: questionError,
-    isPending: questionIsLoading,
-  } = useFetchQuestion(context?.formId, recordId);
-
-  const {
-    data: answers,
-    error: answersError,
-    isPending: answersIsLoading,
-  } = useFetchAnswersForQuestion(contextId, recordId);
-
-  const {
-    data: comments,
-    error: commentsError,
-    isPending: commentsIsLoading,
-  } = useFetchCommentsForQuestion(contextId, recordId);
-
-  const {
-    data: userinfo,
-    error: userinfoError,
-    isPending: userinfoIsLoading,
-  } = useUser();
+  const contextQuery = useContext(contextId);
+  const questionQuery = useFetchQuestion(contextQuery.data?.formId, recordId);
+  const answersQuery = useFetchAnswersForQuestion(contextId, recordId);
+  const commentsQuery = useFetchCommentsForQuestion(contextId, recordId);
+  const userQuery = useUser();
 
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
   const onDiscardOpen = () => setIsDiscardOpen(true);
@@ -57,40 +34,34 @@ export default function QuestionPage() {
   const navigate = useNavigate();
 
   if (
-    questionIsLoading ||
-    answersIsLoading ||
-    commentsIsLoading ||
-    userinfoIsLoading ||
-    contextIsLoading
+    questionQuery.isPending ||
+    answersQuery.isPending ||
+    commentsQuery.isPending ||
+    userQuery.isPending ||
+    contextQuery.isPending
   ) {
     return <LoadingState />;
   }
 
   if (
-    questionError ||
-    answersError ||
-    commentsError ||
-    userinfoError ||
-    contextError
+    questionQuery.error ||
+    answersQuery.error ||
+    commentsQuery.error ||
+    userQuery.error ||
+    contextQuery.error ||
+    recordId == undefined ||
+    contextId == undefined
   ) {
     return <ErrorState message="Noe gikk galt, prøv gjerne igjen" />;
   }
-
-  const handleDiscard = () => {
-    navigate(-1);
-  };
 
   const handleBackButton = () => {
     if (isCommentEditing) {
       onDiscardOpen();
     } else {
-      handleDiscard();
+      navigate("..", { relative: "path" });
     }
   };
-
-  if (!context.formId || !recordId || !contextId) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col mt-8">
@@ -106,34 +77,39 @@ export default function QuestionPage() {
         onOpen={onDiscardOpen}
         onClose={onDiscardClose}
         isOpen={isDiscardOpen}
-        onDiscard={handleDiscard}
+        onDiscard={() => navigate("..", { relative: "path" })}
       />
       <div className="self-center flex flex-col gap-2 w-full lg:w-1/2 p-10 lg:p-0">
+        <QuestionNavigation
+          formId={contextQuery.data.formId}
+          recordId={recordId}
+          contextId={contextId}
+        />
         <QuestionDetails
-          question={question}
-          answerUpdated={answers.at(-1)?.updated}
-          formId={context.formId}
+          question={questionQuery.data}
+          answerUpdated={answersQuery.data.at(-1)?.updated}
+          formId={contextQuery.data.formId}
         />
         <Separator className="my-10" />
         <QuestionAnswer
-          question={question}
-          answers={answers}
+          question={questionQuery.data}
+          answers={answersQuery.data}
           contextId={contextId}
-          user={userinfo.user}
-          choices={question.metadata.answerMetadata.options}
-          answerExpiry={question.metadata.answerMetadata.expiry}
+          user={userQuery.data.user}
+          choices={questionQuery.data.metadata.answerMetadata.options}
+          answerExpiry={questionQuery.data.metadata.answerMetadata.expiry}
         />
         <Separator className="my-10" />
         <QuestionComment
-          question={question}
-          latestComment={comments.at(-1)?.comment ?? ""}
+          question={questionQuery.data}
+          latestComment={commentsQuery.data.at(-1)?.comment ?? ""}
           contextId={contextId}
           isEditing={isCommentEditing}
           setIsEditing={setIsCommentEditing}
-          user={userinfo.user}
+          user={userQuery.data.user}
         />
         <Separator className="my-10" />
-        <QuestionHistory answers={answers} />
+        <QuestionHistory answers={answersQuery.data} />
       </div>
     </div>
   );
