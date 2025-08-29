@@ -8,14 +8,14 @@ import org.slf4j.LoggerFactory
 
 val RequestLoggingPlugin =
     createApplicationPlugin(name = "RequestLoggingPlugin") {
-      val logger = LoggerFactory.getLogger("no.bekk.plugins.RequestLogging")
-      onCall { call ->
-        call.request.origin.apply {
-          logger.info("[${call.request.httpMethod.value} $uri] Request started")
+        val logger = LoggerFactory.getLogger("no.bekk.plugins.RequestLogging")
+        onCall { call ->
+            call.request.origin.apply {
+                logger.info("${call.getRequestInfo()} Request started")
+            }
         }
-      }
-      
-      onCallRespond { call ->
-        logger.info("${call.getRequestInfo()} Response: ${call.response.status()}")
-      }
+
+        onCallRespond { call ->
+            logger.info("${call.getRequestInfo()} Response: ${call.response.status()}")
+        }
     }
