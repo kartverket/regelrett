@@ -6,8 +6,7 @@ import colorUtils from "../../../utils/colorUtils";
 import Markdown from "react-markdown";
 import { markdownComponents } from "../../../utils/markdownComponents";
 import { Badge } from "@/components/ui/badge";
-import { useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 type Props = {
   contextId: string;
@@ -27,8 +26,6 @@ export const TableCell = ({
   answerable = false,
   user,
 }: Props) => {
-  const navigate = useNavigate();
-
   if (answerable) {
     return (
       <AnswerCell
@@ -94,14 +91,13 @@ export const TableCell = ({
   if (column.name === "Kortnavn" || column.name === "Navn") {
     return (
       <div className="max-w-[650px] whitespace-normal">
-        <Button
+        <Link
+          to={row.original.recordId}
           aria-label="Se detaljer"
-          variant="link"
-          onClick={() => navigate(`${row.original.recordId}`)}
-          className="p-0 text-sm h-0 whitespace-normal text-left"
+          className="p-0 text-sm h-0 whitespace-normal text-left text-primary hover:underline"
         >
           {value.value[0]}
-        </Button>
+        </Link>
       </div>
     );
   }
