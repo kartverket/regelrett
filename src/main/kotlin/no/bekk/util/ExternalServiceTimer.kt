@@ -20,6 +20,10 @@ object ExternalServiceTimer {
         requestStartTime: Long? = null,
         block: suspend () -> T
     ): T {
+        if (!ExternalServiceTimingConfig.isEnabled) {
+            return block()
+        }
+        
         val startTime = System.currentTimeMillis()
         var result: T
         
@@ -38,7 +42,7 @@ object ExternalServiceTimer {
             "N/A"
         }
         
-        val correlationInfo = correlationId?.let { " [correlationId: $it]" } ?: ""
+        val correlationInfo = correlationId?.let { " [correlationId: $it]" } ?: " [correlationId: unknown]"
         logger.debug("External service call: $serviceName.$operation took ${duration}ms (${percentage}% of request)$correlationInfo")
         
         return result
@@ -52,6 +56,10 @@ object ExternalServiceTimer {
         operation: String,
         block: suspend () -> T
     ): T {
+        if (!ExternalServiceTimingConfig.isEnabled) {
+            return block()
+        }
+        
         val correlationId = RequestContext.run { getCorrelationId() }
         val requestStartTime = RequestContext.run { getRequestStartTime() }
         
