@@ -7,7 +7,7 @@ object ExternalServiceTimingConfig {
     @Volatile
     var isEnabled: Boolean = false
         private set
-    
+
     fun setEnabled(enabled: Boolean) {
         isEnabled = enabled
     }

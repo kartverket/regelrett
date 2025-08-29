@@ -9,6 +9,6 @@ import kotlin.coroutines.CoroutineContext
  */
 class RequestCallContext(val call: ApplicationCall) : CoroutineContext.Element {
     companion object Key : CoroutineContext.Key<RequestCallContext>
-    
+
     override val key: CoroutineContext.Key<*> = Key
 }

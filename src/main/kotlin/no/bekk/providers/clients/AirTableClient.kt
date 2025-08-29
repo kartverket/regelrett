@@ -42,57 +42,47 @@ class AirTableClient(private val accessToken: String, private val baseUrl: Strin
         }
     }
 
-    suspend fun getBases(): AirTableBasesResponse {
-        return ExternalServiceTimer.time("AirTable", "getBases") {
-            val response = client.get(baseUrl + "/v0/meta/bases")
-            val responseBody = response.bodyAsText()
-            json.decodeFromString<AirTableBasesResponse>(responseBody)
-        }
+    suspend fun getBases(): AirTableBasesResponse = ExternalServiceTimer.time("AirTable", "getBases") {
+        val response = client.get(baseUrl + "/v0/meta/bases")
+        val responseBody = response.bodyAsText()
+        json.decodeFromString<AirTableBasesResponse>(responseBody)
     }
 
-    suspend fun getBaseSchema(baseId: String): MetadataResponse {
-        return ExternalServiceTimer.time("AirTable", "getBaseSchema") {
-            val response = client.get(baseUrl + "/v0/meta/bases/$baseId/tables")
-            val responseBody = response.bodyAsText()
-            json.decodeFromString<MetadataResponse>(responseBody)
-        }
+    suspend fun getBaseSchema(baseId: String): MetadataResponse = ExternalServiceTimer.time("AirTable", "getBaseSchema") {
+        val response = client.get(baseUrl + "/v0/meta/bases/$baseId/tables")
+        val responseBody = response.bodyAsText()
+        json.decodeFromString<MetadataResponse>(responseBody)
     }
 
-    suspend fun getRecords(baseId: String, tableId: String, viewId: String? = null, offset: String? = null): AirtableResponse {
-        return ExternalServiceTimer.time("AirTable", "getRecords") {
-            val url = buildString {
-                append(baseUrl)
-                append("/v0/$baseId/$tableId")
-                if (viewId != null) {
-                    append("?view=$viewId")
-                    if (offset != null) {
-                        append("&offset=$offset")
-                    }
-                } else if (offset != null) {
-                    append("?offset=$offset")
+    suspend fun getRecords(baseId: String, tableId: String, viewId: String? = null, offset: String? = null): AirtableResponse = ExternalServiceTimer.time("AirTable", "getRecords") {
+        val url = buildString {
+            append(baseUrl)
+            append("/v0/$baseId/$tableId")
+            if (viewId != null) {
+                append("?view=$viewId")
+                if (offset != null) {
+                    append("&offset=$offset")
                 }
+            } else if (offset != null) {
+                append("?offset=$offset")
             }
-            val response = client.get(url)
-            val responseBody = response.bodyAsText()
-            json.decodeFromString<AirtableResponse>(responseBody)
         }
+        val response = client.get(url)
+        val responseBody = response.bodyAsText()
+        json.decodeFromString<AirtableResponse>(responseBody)
     }
 
-    suspend fun getRecord(baseId: String, tableId: String, recordId: String): Record {
-        return ExternalServiceTimer.time("AirTable", "getRecord") {
-            val response = client.get(baseUrl + "/v0/$baseId/$tableId/$recordId")
-            val responseBody = response.bodyAsText()
-            json.decodeFromString<Record>(responseBody)
-        }
+    suspend fun getRecord(baseId: String, tableId: String, recordId: String): Record = ExternalServiceTimer.time("AirTable", "getRecord") {
+        val response = client.get(baseUrl + "/v0/$baseId/$tableId/$recordId")
+        val responseBody = response.bodyAsText()
+        json.decodeFromString<Record>(responseBody)
     }
 
-    suspend fun refreshWebhook(baseId: String, webhookId: String): Int {
-        return ExternalServiceTimer.time("AirTable", "refreshWebhook") {
-            val url = "$baseUrl/v0/bases/$baseId/webhooks/$webhookId/refresh"
-            val response: HttpResponse = client.post(url) {
-                header("Authorization", "Bearer $accessToken")
-            }
-            response.status.value
+    suspend fun refreshWebhook(baseId: String, webhookId: String): Int = ExternalServiceTimer.time("AirTable", "refreshWebhook") {
+        val url = "$baseUrl/v0/bases/$baseId/webhooks/$webhookId/refresh"
+        val response: HttpResponse = client.post(url) {
+            header("Authorization", "Bearer $accessToken")
         }
+        response.status.value
     }
 }

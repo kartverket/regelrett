@@ -98,7 +98,7 @@ class MicrosoftServiceImpl(private val config: Config, private val client: HttpC
                     logger.error("Failed to parse Microsoft Graph groups response", e)
                     throw ExternalServiceException("Microsoft Graph", "Invalid response format", cause = e)
                 }
-                
+
                 microsoftGraphGroupsResponse.value.map {
                     MicrosoftGraphGroup(
                         id = it.id,

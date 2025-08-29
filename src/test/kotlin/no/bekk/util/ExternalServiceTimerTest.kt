@@ -10,21 +10,21 @@ class ExternalServiceTimerTest {
     @Test
     fun `should measure execution time correctly`() = runBlocking {
         val startTime = System.currentTimeMillis()
-        
+
         // Simulate external service call that takes ~100ms
         val result = ExternalServiceTimer.time(
             serviceName = "TestService",
             operation = "testOperation",
             correlationId = "test-123",
-            requestStartTime = startTime
+            requestStartTime = startTime,
         ) {
             delay(100)
             "test result"
         }
-        
+
         // Verify the result is returned correctly
         assertTrue(result == "test result")
-        
+
         // Test should complete in reasonable time (less than 200ms allowing for some overhead)
         val totalTime = System.currentTimeMillis() - startTime
         assertTrue(totalTime < 200, "Test took too long: ${totalTime}ms")
@@ -37,12 +37,12 @@ class ExternalServiceTimerTest {
             serviceName = "TestService",
             operation = "testOperation",
             correlationId = "test-123",
-            requestStartTime = null
+            requestStartTime = null,
         ) {
             delay(50)
             "test result"
         }
-        
+
         assertTrue(result == "test result")
     }
 }
