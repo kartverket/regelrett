@@ -1,9 +1,10 @@
 package no.bekk.plugins
 
 import io.ktor.server.application.*
-import no.bekk.util.RequestContext
+import kotlinx.coroutines.withContext
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
 import no.bekk.util.RequestContext.setRequestStartTime
+import no.bekk.util.RequestCallContext
 
 /**
  * Plugin that sets up request context (correlation ID and timing) for all requests.
@@ -11,10 +12,7 @@ import no.bekk.util.RequestContext.setRequestStartTime
  */
 val RequestContextPlugin =
     createApplicationPlugin(name = "RequestContextPlugin") {
-        onCall { call ->
-            // Store current call in ThreadLocal for external service timing
-            RequestContext.setCurrentCall(call)
-            
+        application.intercept(ApplicationCallPipeline.Setup) {
             // Set request start time for external service timing calculations
             call.setRequestStartTime(System.currentTimeMillis())
             
@@ -23,10 +21,10 @@ val RequestContextPlugin =
             
             // Add correlation ID to response headers for easier tracing
             call.response.headers.append("X-Correlation-ID", correlationId)
-        }
-        
-        onCallRespond { call ->
-            // Clear ThreadLocal to prevent memory leaks
-            RequestContext.clearCurrentCall()
+            
+            // Wrap the entire request processing with RequestCallContext
+            withContext(RequestCallContext(call)) {
+                proceed()
+            }
         }
     }

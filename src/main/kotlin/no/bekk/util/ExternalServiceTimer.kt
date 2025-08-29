@@ -24,7 +24,7 @@ object ExternalServiceTimer {
             return block()
         }
         
-        // Try to get ApplicationCall from ThreadLocal if correlation ID and start time not provided
+        // Try to get ApplicationCall from coroutine context if correlation ID and start time not provided
         val (actualCorrelationId, actualRequestStartTime) = if (correlationId == null || requestStartTime == null) {
             val currentCall = RequestContext.getCurrentCall()
             if (currentCall != null) {

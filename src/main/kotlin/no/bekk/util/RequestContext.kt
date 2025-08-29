@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.util.*
 import io.ktor.server.request.*
 import java.util.*
+import kotlin.coroutines.coroutineContext
 
 /**
  * Request context utilities for correlation tracking and structured logging
@@ -12,28 +13,11 @@ object RequestContext {
     private val CORRELATION_ID_KEY = AttributeKey<String>("correlationId")
     private val REQUEST_START_TIME_KEY = AttributeKey<Long>("requestStartTime")
     
-    // ThreadLocal to store current ApplicationCall for external service timing
-    private val currentCall = ThreadLocal<ApplicationCall>()
-    
     /**
-     * Set the current ApplicationCall for this thread
+     * Get the current ApplicationCall from the coroutine context
      */
-    fun setCurrentCall(call: ApplicationCall) {
-        currentCall.set(call)
-    }
-    
-    /**
-     * Clear the current ApplicationCall for this thread
-     */
-    fun clearCurrentCall() {
-        currentCall.remove()
-    }
-    
-    /**
-     * Get the current ApplicationCall for this thread
-     */
-    fun getCurrentCall(): ApplicationCall? {
-        return currentCall.get()
+    suspend fun getCurrentCall(): ApplicationCall? {
+        return coroutineContext[RequestCallContext]?.call
     }
     
     /**
