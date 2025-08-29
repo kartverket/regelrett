@@ -166,10 +166,6 @@ function getFilterFn(
       );
     }
 
-    map.forEach((bool) => {
-      if (!bool) return false;
-    });
-
-    return true;
+    return Array.from(map.values()).every((bool) => bool);
   };
 }
