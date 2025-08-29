@@ -66,7 +66,7 @@ export default function QuestionNavigation({
       </Badge>
       <div className="flex fixed h-16 lg:h-24 bottom-0 left-0 right-0 justify-between w-full bg-background shadow-[0px_0px_10px_20px_var(--background)]   lg:shadow-none lg:bg-transparent">
         {prev != undefined ? (
-          <Link className="flex " relative="path" to={`../${prev.recordId}`}>
+          <Link className="flex" relative="path" to={`../${prev.recordId}`}>
             <Button
               className="h-full px-8! font-bold hover:text-primary text-primary hover:bg-primary/10"
               variant="ghost"
