@@ -10,6 +10,7 @@ import java.util.*
  */
 object RequestContext {
     private val CORRELATION_ID_KEY = AttributeKey<String>("correlationId")
+    private val REQUEST_START_TIME_KEY = AttributeKey<Long>("requestStartTime")
     
     /**
      * Generate or retrieve correlation ID for the current request
@@ -26,6 +27,20 @@ object RequestContext {
      */
     fun ApplicationCall.getCorrelationId(): String? {
         return attributes.getOrNull(CORRELATION_ID_KEY)
+    }
+    
+    /**
+     * Set the request start time for tracking total request duration
+     */
+    fun ApplicationCall.setRequestStartTime(startTime: Long) {
+        attributes.put(REQUEST_START_TIME_KEY, startTime)
+    }
+    
+    /**
+     * Get the request start time
+     */
+    fun ApplicationCall.getRequestStartTime(): Long? {
+        return attributes.getOrNull(REQUEST_START_TIME_KEY)
     }
     
     /**

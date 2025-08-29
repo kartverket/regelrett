@@ -5,12 +5,16 @@ import io.ktor.server.plugins.origin
 import io.ktor.server.request.*
 import no.bekk.util.RequestContext.getOrCreateCorrelationId
 import no.bekk.util.RequestContext.getRequestInfo
+import no.bekk.util.RequestContext.setRequestStartTime
 import org.slf4j.LoggerFactory
 
 val RequestLoggingPlugin =
     createApplicationPlugin(name = "RequestLoggingPlugin") {
       val logger = LoggerFactory.getLogger("no.bekk.plugins.RequestLogging")
       onCall { call ->
+        // Set request start time for external service timing calculations
+        call.setRequestStartTime(System.currentTimeMillis())
+        
         // Generate correlation ID for request tracking
         val correlationId = call.getOrCreateCorrelationId()
         
