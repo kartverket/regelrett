@@ -1,8 +1,8 @@
 package no.bekk.util
 
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.util.*
+import io.ktor.server.request.*
 import java.util.*
 
 /**
@@ -11,6 +11,30 @@ import java.util.*
 object RequestContext {
     private val CORRELATION_ID_KEY = AttributeKey<String>("correlationId")
     private val REQUEST_START_TIME_KEY = AttributeKey<Long>("requestStartTime")
+    
+    // ThreadLocal to store current ApplicationCall for external service timing
+    private val currentCall = ThreadLocal<ApplicationCall>()
+    
+    /**
+     * Set the current ApplicationCall for this thread
+     */
+    fun setCurrentCall(call: ApplicationCall) {
+        currentCall.set(call)
+    }
+    
+    /**
+     * Clear the current ApplicationCall for this thread
+     */
+    fun clearCurrentCall() {
+        currentCall.remove()
+    }
+    
+    /**
+     * Get the current ApplicationCall for this thread
+     */
+    fun getCurrentCall(): ApplicationCall? {
+        return currentCall.get()
+    }
     
     /**
      * Generate or retrieve correlation ID for the current request

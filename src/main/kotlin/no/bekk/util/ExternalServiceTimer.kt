@@ -24,6 +24,23 @@ object ExternalServiceTimer {
             return block()
         }
         
+        // Try to get ApplicationCall from ThreadLocal if correlation ID and start time not provided
+        val (actualCorrelationId, actualRequestStartTime) = if (correlationId == null || requestStartTime == null) {
+            val currentCall = RequestContext.getCurrentCall()
+            if (currentCall != null) {
+                val contextCorrelationId = RequestContext.run { currentCall.getCorrelationId() }
+                val contextRequestStartTime = RequestContext.run { currentCall.getRequestStartTime() }
+                Pair(
+                    correlationId ?: contextCorrelationId,
+                    requestStartTime ?: contextRequestStartTime
+                )
+            } else {
+                Pair(correlationId, requestStartTime)
+            }
+        } else {
+            Pair(correlationId, requestStartTime)
+        }
+        
         val startTime = System.currentTimeMillis()
         var result: T
         
@@ -31,8 +48,8 @@ object ExternalServiceTimer {
             result = block()
         }
         
-        val percentage = if (requestStartTime != null) {
-            val totalRequestTime = System.currentTimeMillis() - requestStartTime
+        val percentage = if (actualRequestStartTime != null) {
+            val totalRequestTime = System.currentTimeMillis() - actualRequestStartTime
             if (totalRequestTime > 0) {
                 String.format("%.1f", (duration.toDouble() / totalRequestTime) * 100)
             } else {
@@ -42,7 +59,7 @@ object ExternalServiceTimer {
             "N/A"
         }
         
-        val correlationInfo = correlationId?.let { " [correlationId: $it]" } ?: " [correlationId: unknown]"
+        val correlationInfo = actualCorrelationId?.let { " [correlationId: $it]" } ?: " [correlationId: unknown]"
         logger.debug("External service call: $serviceName.$operation took ${duration}ms (${percentage}% of request)$correlationInfo")
         
         return result
